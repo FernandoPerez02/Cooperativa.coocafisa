@@ -1,0 +1,10 @@
+body {
+    background-color:green;
+    display: grid;
+    justify-content: center;
+}
+
+.login{
+    display: grid;
+    justify-items: center;
+}
