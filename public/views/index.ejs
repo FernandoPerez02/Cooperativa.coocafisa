@@ -22,9 +22,22 @@
                 </tr>
             </thead>    
             <tbody>
+                <% if (data.length > 0) { %>
+                <% data.forEach(row => { %>
                 <tr>
-                    <td></td>
+                    <td><%= row.nit %></td>
+                    <td><%= row.empresa %></td>
+                    <td><%= row.pago %></td>
+                    <td><%= row.descuento %></td>
+                    <td><%= row.retencion %></td>
+                    <td><%= formatDate(row.fecha_pago) %></td>
                 </tr>
+               <% }) %>
+            <% } else { %> 
+                <tr>
+                    <td colspan="6">No se encontraron resultados.</td>
+                </tr>
+            <% } %>
             </tbody>
         </table>
     </main>
