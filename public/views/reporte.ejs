@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes diarios</title>
+</head>
+<body>
+    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%; text-align: left;">
+        <thead>
+            <tr>
+                <th>NIT</th>
+                <th>Empresa</th>
+                <th>Descuento</th>
+                <th>Retención</th>
+                <th>Pago</th>
+                <th>Fecha de Pago</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach(function(item) { %>
+                <tr>
+                    <td><%= item.nit %></td>
+                    <td><%= item.empresa %></td>
+                    <td><%= item.descuento %></td>
+                    <td><%= item.retencion %></td>
+                    <td><%= item.pago %></td>
+                    <td><%= item.fecha_pago %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>    
+</body>
+</html>

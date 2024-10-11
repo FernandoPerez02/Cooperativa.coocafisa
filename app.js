@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const bcryptjs = require('bcryptjs');
+const emailScheduler = require('./services/emailscheduler');
+const {formatDate} = require('./services/globalfunctions') 
 
-// Es para capturar los datos del formulario 
+//Capturar los datos del formulario 
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
@@ -17,9 +20,6 @@ app.set('views', path.join(__dirname, 'public', 'views'));
 // Motor de platillas
 app.set('view engine', 'ejs');
 
-// Usamos a bcryptjs
-const bcryptjs = require('bcryptjs');
-
 // var de sesion
 const session = require ('express-session');
 const connection = require('./connectionBD/db');
@@ -29,13 +29,14 @@ app.use(session({
     saveUninitialized:false
 }));
 
-// Invocar la conexion a la base de datos
-/* require('./connectionBD/db'); */
-
 //Integracion de plantillas ejs
 app.get('/', (req, res)=>{
     res.render('login');
 });
+
+app.get('/reporte', (req, res)=> {
+    res.render('reporte');
+})
 
 app.get('/index', (req, res)=>{
     const nit = req.session.name;
@@ -55,11 +56,6 @@ app.get('/index', (req, res)=>{
                 ruta: "/"
             });
         }
-        function formatDate(dateString) {
-            const options = { day: '2-digit', month: 'numeric', year: 'numeric' };
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-ES', options);
-        }
         res.render('index', {data: results, formatDate});
     });
 });
@@ -77,7 +73,6 @@ app.post('/auth', async (req, res)=> {
         /* connection.query('SELECT * FROM usuario WHERE nit = ?', [user], async (error, results)=>{ */
         connection.query('SELECT * FROM usuario WHERE nit = ?', [user], (error, results)=>{
             if (error){
-                console.log(error);
                 return res.render('login', {
                     alert: true,
                     alertTitle: "Error",
@@ -100,12 +95,8 @@ app.post('/auth', async (req, res)=> {
                     ruta: "/"
                 });
             }// Verificar si la contraseña es correcta
-               const dbPassword = results[0].password;
-               console.log("Contraseña en la base de datos:", dbPassword);
-               console.log("Contraseña introducida:", password);
-   
+               const dbPassword = results[0].password;   
                if (password !== dbPassword) {
-                   console.log("Contraseña incorrecta.");
                    return res.render('login', {
                        alert: true,
                        alertTitle: "Error",
@@ -119,7 +110,6 @@ app.post('/auth', async (req, res)=> {
    
                // Si todo es correcto, iniciar sesión
                req.session.name = results[0].nit;
-               console.log("Usuario autenticado con éxito:", req.session.name);
                res.render('login', {
                    alert: true,
                    alertTitle: "Conexión Exitosa",
