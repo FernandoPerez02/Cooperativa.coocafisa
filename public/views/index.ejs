@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscador</title>
+    <link rel="stylesheet" href="resources/css/stile_index.css">
 </head>
 <body>
     <header>
-        <h1>Gestion de datos Tesoreria</h1>
+        <h1>Gestión de Datos Tesorería</h1>
     </header>
     <main>
-        <table border="1">
+        <table>
             <thead>
                 <tr>
-                    <th>Nit</th>
+                    <th>NIT</th>
                     <th>Empresa</th>
                     <th>Pago</th>
                     <th>Descuento</th>
@@ -32,12 +33,12 @@
                     <td><%= row.retencion %></td>
                     <td><%= formatDate(row.fecha_pago) %></td>
                 </tr>
-               <% }) %>
-            <% } else { %> 
+                <% }) %>
+                <% } else { %> 
                 <tr>
                     <td colspan="6">No se encontraron resultados.</td>
                 </tr>
-            <% } %>
+                <% } %>
             </tbody>
         </table>
     </main>

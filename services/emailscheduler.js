@@ -5,7 +5,7 @@ const OAuth2 = google.auth.OAuth2;
 const accountTransport = require("./account_transport.json");
 const ejs = require('ejs');
 const fs = require('fs');
-const htmlPdf = require('html-pdf');
+const puppeteer = require('puppeteer');
 const path = require('path');
 const { rejects } = require('assert');
 const {formatDate} = require('./globalfunctions.js');
@@ -65,20 +65,28 @@ if (!fs.existsSync(reportsDir)) {
 const generatePDF = async (data, nit, empresa, fecha_pago) => {
     try {
         const filePath = path.join(__dirname, '../public/views/reporte.ejs');
-        const htmlString = await ejs.renderFile(filePath, { data});
-        console.log('HTML Generado:', htmlString);
-
+        const htmlString = await ejs.renderFile(filePath, { data });
+        
+        // Asegúrate de que htmlString no esté vacío
+        if (!htmlString) {
+            throw new Error('El contenido HTML está vacío');
+        }
+        
         const reportingname = `${nit}_${empresa}_${fecha_pago}.pdf`;
         const routereport = path.join(reportsDir, reportingname);
-        await new Promise((resolve, reject)=>{
-            htmlPdf.create(htmlString).toFile(routereport, (err, res) =>{
-                if (err) {
-                    return reject(err);
-                }
-                console.log('PDF generado con exito', res.filename);
-                resolve(res);
-            });
+
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(htmlString);  // Establecer el contenido de la página
+        await page.pdf({
+            path: routereport,
+            format: 'A4',
+            printBackground: true
         });
+        await browser.close();
+
+        console.log('PDF generado con éxito', routereport);
+        return routereport;
     } catch (err) {
         console.log('Error al generar el PDF:', err);
         throw err;
@@ -110,4 +118,4 @@ const emailSend = async (data) => {
 
 
 // programacion de envio de correo
-schedule.scheduleJob('50 9 * * *', obtainData);
+schedule.scheduleJob('18 17 * * *', obtainData);

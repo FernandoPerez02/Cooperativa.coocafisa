@@ -7,26 +7,25 @@
     <link rel="stylesheet" href="resources/css/style.css">
 </head>
 <body>
-    <header>
-        <h1>Bienvenido a CooperaFinanzas</h1>
-        
-    </header>
-    <main>
+    <section>
         <div class="login">
+            <header>
+                <h1>Bienvenido a CoopFinanzas</h1>
+            </header>
             <form action="/auth" method="post">               
-                <div>
-                    <label for="nit">NIT</label>
+                <div class="stlnit">
+                    <label for="nit"><h4>Nit</h4></label>
                     <input type="text" name="nit" id="nit">
                 </div>
-                <div>
-                    <label for="password">Contraseña</label>
+                <div class="stlpass">
+                    <label for="password"><h4>Contraseña</h4></label>
                     <input type="password" name="password" id="password">
-                </div>        
-                <button type="submit">Ingresar</button>
+                    <button type="submit" class="btn_ingresar"><h3>Ingresar</h3></button>
+                </div> 
+                
             </form>
         </div>
-    </main>
-    <footer></footer>
+    </section>
 
     <!-- SweetAlert Script -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
