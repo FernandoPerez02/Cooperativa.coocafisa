@@ -7,27 +7,38 @@
     <link rel="stylesheet" href="resources/css/style.css">
 </head>
 <body>
-    <section>
-        <div class="login">
-            <header>
-                <h1>Bienvenido a CoopFinanzas</h1>
-            </header>
-            <form action="/auth" method="post">               
-                <div class="stlnit">
-                    <label for="nit"><h4>Nit</h4></label>
-                    <input type="text" name="nit" id="nit">
-                </div>
-                <div class="stlpass">
-                    <label for="password"><h4>Contraseña</h4></label>
-                    <input type="password" name="password" id="password">
-                    <button type="submit" class="btn_ingresar"><h3>Ingresar</h3></button>
-                </div> 
-                
-            </form>
-        </div>
-    </section>
-
-    <!-- SweetAlert Script -->
+    <main>
+        <section>
+            <div class="login">
+                <header>
+                    <div class="imglogo">
+                        <img src="resources/images/Logo.cooperativa.png" alt="logo" class="logo">
+                    </div>
+                    <div class="titletext">
+                        <h1>Bienvenido a CoopFinanzas</h1>
+                    </div>
+                </header>
+                <form action="/auth" method="post">               
+                    <div class="stlnit">
+                        <label for="nit"><h4>Nit</h4></label>
+                        <input type="text" name="nit" id="nit">
+                    </div>
+                    <div class="stlpass">
+                        <label for="password"><h4>Contraseña</h4></label>
+                        <input type="password" name="password" id="password">
+                        <button type="submit" class="btn_ingresar"><h3>Ingresar</h3></button>
+                    </div> 
+                    
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <h5>
+            <img src="resources/images/Drau.png" alt="imgautor" class="imgautors">
+            Todos los derechos reservados de coocafisa
+        </h5>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <% if (typeof alert != "undefined") { %>

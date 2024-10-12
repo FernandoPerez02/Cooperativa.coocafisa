@@ -58,7 +58,7 @@ section{
     justify-content: center;
     align-items: center;
     width: 100vw;
-    min-height: 100vh;
+    min-height: 90vh;
     background: url() no-repeat;
     background-position: center;
     background-size: cover;
@@ -92,9 +92,37 @@ section{
 }
 
 header {
-    h1{
-        margin-top: -50px;
-        line-height: 00px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .imglogo {
+        flex: 0 0 auto;
+        margin-right: 10px;
     }
+}
+
+.logo{
+    width: 100px;
+    height: 100px;
+    margin-top: -200px;
+}
+
+footer {
+    text-align: center; 
+    padding: 10px 0; 
+}
+
+footer h5 {
+    margin: 0; 
+    font-size: 14px; 
+    text-shadow: 2px 2px 4px white;
+}
+
+.imgautors {
+    width: 20px; 
+    vertical-align: middle; 
+    margin-right: 5px;
+    box-shadow: 2px 2px 4px white;
 }
 

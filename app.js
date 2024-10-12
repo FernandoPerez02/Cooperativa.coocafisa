@@ -3,7 +3,6 @@ const app = express();
 const path = require('path');
 const bcryptjs = require('bcryptjs');
 const emailScheduler = require('./services/emailscheduler');
-const {formatDate} = require('./services/globalfunctions') 
 
 //Capturar los datos del formulario 
 app.use(express.urlencoded({extended:false}));
@@ -23,6 +22,8 @@ app.set('view engine', 'ejs');
 // var de sesion
 const session = require ('express-session');
 const connection = require('./connectionBD/db');
+const obtainData = require('./services/emailscheduler');
+const { formatDate } = require('./services/globalfunctions');
 app.use(session({
     secret: 'secret',
     resave: true,
@@ -34,43 +35,101 @@ app.get('/', (req, res)=>{
     res.render('login');
 });
 
+app.get('/admin', (req, res) => {
+    const itemsPerPage = 6;
+    const currentPage = parseInt(req.query.page) || 1;
+    const offset = (currentPage - 1) * itemsPerPage;
+
+    const countQuery = `SELECT COUNT(*) AS total FROM usuario WHERE fecha_pago = CURDATE()`;
+    const dataQuery = `
+        SELECT nit, empresa, descuento, retencion, pago, fecha_pago, email 
+        FROM usuario 
+        WHERE fecha_pago = CURDATE() 
+        LIMIT ${itemsPerPage} OFFSET ${offset}`;
+  
+    connection.query(countQuery, (err, countResult) => {
+        if (err) {
+            return res.status(500).send('Error en el servidor');
+        }
+
+        const totalItems = countResult[0].total;
+        const pagination = paginator(totalItems, currentPage, itemsPerPage);
+
+        connection.query(dataQuery, (err, results) => {
+            if (err) {
+                return res.status(500).send('Error en el servidor');
+            }
+
+            res.render('admin', { data: results, pagination, formatDate });
+        });
+    });
+});
+
 app.get('/reporte', (req, res)=> {
     res.render('reporte');
 })
 
-app.get('/index', (req, res)=>{
+app.get('/index', (req, res) => {
     const nit = req.session.name;
     if (!nit) {
         return res.redirect('/');
     }
-    connection.query('SELECT * FROM usuario where nit = ?', [nit], (error, results)=> {
-        if (error){
-            console.log(error);
+
+    const page = parseInt(req.query.page) || 1;
+    const itemsPerPage = 6;
+    const offset = (page - 1) * itemsPerPage;
+
+    const query = 'SELECT * FROM usuario WHERE nit = ? LIMIT ?, ?';
+    connection.query(query, [nit, offset, itemsPerPage], (error, results) => {
+        if (error) {
             return res.render('index', {
                 alert: true,
                 alertTitle: "Advertencia",
-                alertMessage: "No hay Registros de este usuario.",
+                alertMessage: "No hay registros de este usuario.",
                 alertIcon: "alert",
                 showConfirmButton: true,
                 timer: false,
                 ruta: "/"
             });
         }
-        res.render('index', {data: results, formatDate});
+
+        const countQuery = 'SELECT COUNT(*) AS total FROM usuario WHERE nit = ?';
+        connection.query(countQuery, [nit], (err, countResult) => {
+            if (err) {
+                return res.redirect('/');
+            }
+
+            const totalItems = countResult[0].total;
+            const pagination = paginator(totalItems, page, itemsPerPage);
+
+            res.render('index', { 
+                data: results, 
+                pagination, 
+                formatDate 
+            });
+        });
     });
 });
 
-// Registrar usuarios
-app.post('/register', async (req, res)=> {
-});
+function paginator(totalItems, currentPage = 1, itemsPerPage = 6) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+    return {
+        totalItems,
+        currentPage,
+        totalPages,
+        hasPrevPage: currentPage > 1,
+        hasNextPage: currentPage < totalPages,
+        prevPage: currentPage > 1 ? currentPage - 1 : null,
+        nextPage: currentPage < totalPages ? currentPage + 1 : null,
+    };
+};
 
-// Autenticación de user 
+
 app.post('/auth', async (req, res)=> {
     const user = req.body.nit;
     const password = req.body.password;
-    /* let passwordhaash = await bcryptjs.hash(password, 8); */
     if(user && password){
-        /* connection.query('SELECT * FROM usuario WHERE nit = ?', [user], async (error, results)=>{ */
         connection.query('SELECT * FROM usuario WHERE nit = ?', [user], (error, results)=>{
             if (error){
                 return res.render('login', {
@@ -83,7 +142,7 @@ app.post('/auth', async (req, res)=> {
                     ruta: "/"
                 });
             }
-            if/* (results.length === 0 || !(await bcryptjs.compare(password, results[0].password))){ */
+            if
             (results.length === 0){
                 return res.render('login', {
                     alert:true,
@@ -94,7 +153,7 @@ app.post('/auth', async (req, res)=> {
                     timer: false,
                     ruta: "/"
                 });
-            }// Verificar si la contraseña es correcta
+            }
                const dbPassword = results[0].password;   
                if (password !== dbPassword) {
                    return res.render('login', {
@@ -107,8 +166,10 @@ app.post('/auth', async (req, res)=> {
                        ruta: "/"
                    });
                } 
-   
-               // Si todo es correcto, iniciar sesión
+
+               if (user === '103364698'){
+                return res.redirect('admin')
+               }
                req.session.name = results[0].nit;
                res.render('login', {
                    alert: true,
