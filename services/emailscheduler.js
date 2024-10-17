@@ -8,6 +8,7 @@ const fs = require('fs');
 const puppeteer = require('puppeteer');
 const path = require('path');
 const { formatDate } = require('./globalfunctions.js');
+const pool = require('../connectionBD/db.js');
 
 const transporter = async () => {
     const oauth2Client = new OAuth2(
@@ -31,12 +32,12 @@ const transporter = async () => {
 };
 
 const obtainData = async () => {
-    const connection = require('../connectionBD/db.js');
     const query = `SELECT nit, empresa, descuento, retencion, pago, fecha_pago, email 
                    FROM usuario WHERE fecha_pago = CURDATE()`;
-
+    let connection;
     try {
-        const [results] = await connection.promise().query(query); 
+        connection = await pool.getConnection();
+        const [results] = await connection.query(query); 
         if (results.length > 0) {
             const formattedResults = results.map(result => ({
                 ...result,
@@ -44,15 +45,25 @@ const obtainData = async () => {
             }));
 
             const groupedResults = formattedResults.reduce((acc, current) => {
-                (acc[current.nit] = acc[current.nit] || []).push(current);
+                if(!acc[current.nit]) {
+                    acc[current.nit] = [];
+                }
+                acc[current.nit].push(current);
                 return acc;
             }, {});
 
+            const emailsSent = [];
             await Promise.all(
-                Object.keys(groupedResults).map(nit =>
-                    emailSend(groupedResults[nit])
-                )
+                Object.keys(groupedResults).map(nit => {
+                    const data = groupedResults[nit];
+                    emailsSent.push(...data);
+                    return emailSend(data);
+                })
             );
+
+            const pdfPath = await generateRecipientPDF(emailsSent);
+
+            await sendNotificationEmail(emailsSent.length, pdfPath);
 
             console.log('Todos los correos fueron enviados exitosamente.');
         } else {
@@ -61,7 +72,7 @@ const obtainData = async () => {
     } catch (error) {
         console.error('Error al obtener los datos:', error);
     } finally {
-        connection.end();
+        if (connection) connection.release();
     }
 }
 
@@ -92,23 +103,23 @@ const generatePDF = async (data, nit, empresa, fecha_pago) => {
             throw new Error('El contenido HTML está vacío');
         }
 
-        const fechaFormateada = fecha_pago.replace(/\//g, '-');
-        const reportingname = `${nit}_${empresa}_${fechaFormateada}.pdf`;
-        const routereport = path.join(reportsDir, reportingname);
-        fs.mkdirSync(path.dirname(routereport), { recursive: true });
+        const dateFormate = fecha_pago.replace(/\//g, '-');
+        const reportingName = `${nit}_${empresa}_${dateFormate}.pdf`;
+        const routeReport = path.join(reportsDir, reportingName);
+        fs.mkdirSync(path.dirname(routeReport), { recursive: true });
 
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.setContent(htmlString, { waitUntil: 'networkidle0' });
         await page.pdf({
-            path: routereport,
+            path: routeReport,
             format: 'A4',
             printBackground: true
         });
         await browser.close();
 
-        console.log('PDF generado con éxito:', routereport);
-        return routereport;
+        console.log('PDF generado con éxito:', routeReport);
+        return routeReport;
     } catch (err) {
         console.error('Error al generar el PDF:', err);
         throw err;
@@ -135,10 +146,61 @@ const emailSend = async (data) => {
         };
 
         await transport.sendMail(mailOptions);
-        console.log('Correo enviado exitosamente a:', email);
     } catch (error) {
         console.error('Error al enviar el correo:', error);
     }
 };
 
-schedule.scheduleJob('26 15 * * *', obtainData);
+const sendNotificationEmail = async (count, pdfPath) => {
+    try {
+        const transport = await transporter();
+        const notificationOptions = {
+            from: 'soporte.coocafisa@gmail.com',
+            to: 'luis.osorio@coocafisa.com', 
+            subject: 'Notificación: Correos Enviados',
+            text: `Se han enviado un total de ${count} correos con informes exitosamente. Adjuntamos la lista completa de destinatarios.`,
+            attachments: [
+                {
+                    filename: 'Resumen_Destinatarios.pdf',
+                    path: pdfPath,
+                },
+            ],
+        };
+
+        await transport.sendMail(notificationOptions);
+        console.log('Correo de notificación enviado exitosamente.');
+    } catch (error) {
+        console.error('Error al enviar la notificación:', error);
+    }
+};
+
+const generateRecipientPDF = async (emails) => {
+    try {
+        const filePath = path.join(__dirname, '../public/views/reporte.ejs');
+        const logoPath = path.join(__dirname, '../public/images/Logo.cooperativa.png');
+        const logoBase64 = getImageBase64(logoPath);
+        const htmlString = await ejs.renderFile(filePath, { data: emails, logo: logoBase64 });
+
+        if (!htmlString) {
+            throw new Error('El contenido HTML está vacío');
+        }
+
+        const pdfPath = path.join(reportsDir, `Resumen_Destinatarios_${Date.now()}.pdf`);
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(htmlString, { waitUntil: 'networkidle0' });
+        await page.pdf({
+            path: pdfPath,
+            format: 'A4',
+            printBackground: true
+        });
+        await browser.close();
+
+        console.log('PDF de notificación generado con éxito:', pdfPath);
+        return pdfPath;
+    } catch (err) {
+        console.error('Error al generar el PDF de notificación:', err);
+        throw err;
+    }
+};
+schedule.scheduleJob('14 17 * * *', obtainData);

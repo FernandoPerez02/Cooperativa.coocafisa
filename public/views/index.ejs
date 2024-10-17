@@ -43,6 +43,10 @@
             </tbody>
         </table>
     </main>
+    <form action="/logout" method="POST">
+        <button type="submit" class="btn_salir">Salir</button>
+    </form>
+    
     <div class="pagination">
         <% if (pagination.totalPages > 1) { %>
             <% if (pagination.hasPrevPage) { %>
