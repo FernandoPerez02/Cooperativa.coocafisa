@@ -42,6 +42,9 @@ app.use('/', routestemplate);
 const resetPassword = require('./services/functions/resetPassword');
 app.use('/', resetPassword);
 
+const registerUser = require('./services/functions/registerUser');
+app.use('/', registerUser);
+
 app.listen(3000, (req, res)=> {
     console.log ('SERVER RUNNING IN HTTP://localhost:3000');
 });

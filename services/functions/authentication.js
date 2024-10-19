@@ -34,34 +34,30 @@ router.post('/auth', async (req, res) => {
 
     if (user && password) {
         try {
-            const [resultsUser] = await pool.query('SELECT * FROM prueba WHERE nit = ?', [user]);
+            const [resultsUser] = await pool.query('SELECT * FROM usuarios WHERE nit = ?', [user]);
             if (resultsUser.length === 0) {
-                return renderError(res, "Usuario y/o contraseña inválidos.");
+                return renderError(res, "Usuario no encontrado o contraseña incorrecta.");
             }
 
-            const dbPassword = resultsUser[0].pass;
-            bcrypt.compare(password, dbPassword, (err, isMatch) => {
-                if(err){
-                    return renderError(res, "Error de autenticación");
+            const dbPassword = resultsUser[0].clave;
+            const isMatch = await bcrypt.compare(password, dbPassword);
+            if(isMatch){
+                req.session.name = resultsUser[0].nit;
+                const resultsRol = resultsUser[0].razonsoc;
+                if(resultsRol === 'administrador'){
+                    return renderExit(res,'admin');
+                }else{
+                    return renderExit(res, 'index');
                 }
-                if(isMatch){
-                    return renderError(res, "Usuario y/o contraseña inválidos.");
-                }
-            });
-
-            req.session.name = resultsUser[0].nit;
-            const resultsRol  = resultsUser[0].rol;
-            if(resultsRol === ('administrador')){
-                return renderExit(res,'admin')
-            }
-            if (resultsRol === ('usuario')){
-                return renderExit(res,'index')
+            }else{
+                return renderError(res, 'Usuario y/o Contraseña Invalidos.');
             }
         } catch (error) {
+            console.log('error de bd', error);
             return renderError(res, "Error en la base de datos");
         }
     } else {
-        renderError(res, "Por favor, ingrese un NIT y una contraseña.");
+        return renderError(res, "Por favor, ingrese un NIT y una contraseña.");
     }
 });
 

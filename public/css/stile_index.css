@@ -63,7 +63,7 @@ td[colspan="6"] {
 }
 
 .pagination {
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: center;
 }
 
@@ -84,7 +84,6 @@ td[colspan="6"] {
 
 footer {
     text-align: center; 
-    padding: 10px 0; 
 }
 
 footer h5 {
@@ -104,7 +103,7 @@ footer h5 {
     border-radius: 8px;
     width: 150px;
     height: 40px;
-    margin-top: 30px;
+    margin-top: -30px;
     margin-right: 30px;
     background: linear-gradient(135deg, rgb(27, 145, 72), #f0f0f0, #a6a6a6);
     font-size: large;
@@ -112,4 +111,8 @@ footer h5 {
 
 .btn_salir:hover {
     background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+}
+
+form{
+    width: 150px;
 }

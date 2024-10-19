@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="resources/css/style_reg.css">
+</head>
+<body>
+    <main>
+        <section>
+            <div class="contenedor">
+                <header>
+                    <div class="imglogo">
+                        <img src="resources/images/Logo.cooperativa.png" alt="logo" class="logo">
+                    </div>
+                    <div class="titletext">
+                        <h1>Registro de Usuarios</h1>
+                    </div>
+                </header>
+                <form action="/register" method="post">
+                    <div class="options">
+                        <div class="stlnit">
+                            <label for="nit"><h4>Nit</h4></label>
+                            <input type="number" name="nit" id="nit">
+                        </div>
+                        <div class="stlrazsoc">
+                            <label for="razsoc"><h4>Razon Social</h4></label>
+                            <input type="text" name="razsoc" id="razsoc">
+                        </div>
+                        <div class="stldirecc">
+                            <label for="direc"><h4>Dirección</h4></label>
+                            <input type="text" name="direc" id="direc">
+                        </div>
+                        <div class="stlcorreo">
+                            <label for="correo"><h4>Correo Eletronico</h4></label>
+                            <input type="email" name="correo" id="correo">
+                        </div>
+                        <div class="stltel">
+                            <label for="tel"><h4>Telefono</h4></label>
+                            <input type="number" name="tel" id="tel">
+                        </div>
+                        <div class="stlcel">
+                            <label for="cel"><h4>Celular</h4></label>
+                            <input type="number" name="cel" id="cel">
+                        </div>
+                        <div class="stlpass">
+                            <label for="pass"><h4>Contraseña</h4></label>
+                            <input type="password" name="pass" id="pass">
+                        </div>
+                        <div class="stlpasscon">
+                            <label for="passcon"><h4>Confirmar Contraseña</h4></label>
+                            <input type="password" name="passcon" id="passcon">
+                        </div>
+                    </div>
+                    <div class="btn_butones">
+                        <a href="admin"><button type="button" class="btn_cancelar"><h4>Cancelar</h4></button></a>
+                        <button type="submit" class="btn_registrar"><h4>Registrar</h4></button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <h5>
+            <img src="resources/images/Drau.png" alt="imgautor" class="imgautors">
+            Todos los derechos reservados de coocafisa
+        </h5>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <% if (typeof alert != "undefined") { %>
+        <script>
+            Swal.fire({
+                title: '<%= alertTitle %>',
+                text: '<%= alertMessage %>',
+                icon: '<%= alertIcon %>',
+                timer: '<%= timer %>'
+            }).then(() => {
+                window.location = '<%= ruta %>';
+            });
+        </script>
+    <% } %>
+</body>
+</html>

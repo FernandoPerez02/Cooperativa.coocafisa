@@ -81,4 +81,8 @@ router.post('/logout', (req, res) => {
     });
 });
 
+router.get('/reguser', (req, res) => {
+    res.render('registro');
+});
+
 module.exports = router;

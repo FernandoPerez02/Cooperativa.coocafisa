@@ -9,8 +9,7 @@ body{
 
 .container{
     position:relative;
-    max-width: 35vw;
-    min-width: 28vw;
+    width: 400px;
     border: 2px solid;
     height: 450px;
     display: flex;
@@ -47,7 +46,7 @@ section{
         border-radius: 10px;
         height: 30px;
         background: linear-gradient(135deg, #bdc3c7, #ecf0f1);
-        width: 28vw;
+        width: 300px;
         font-size: 20px;
         padding: 5px;
     }
@@ -55,7 +54,7 @@ section{
     label{
         border-radius: 10px;
         height: 30px;
-        width: 28vw;
+        width: 300px;
         font-size: 20px;
     }
 }
@@ -70,7 +69,7 @@ section{
         border-radius: 10px;
         height: 30px;
         background: linear-gradient(135deg, #bdc3c7, #ecf0f1);
-        width: 28vw;
+        width: 300px;
         font-size: 20px;
         padding: 5px;
     }
@@ -78,7 +77,7 @@ section{
     label{
         border-radius: 10px;
         height: 30px;
-        width: 28vw;
+        width: 300px;
         font-size: 20px;
         margin-top: 10px;
     }
@@ -90,8 +89,8 @@ header {
     margin-bottom: 20px;
 
     .logo{
-        width: 10vw;
-        height: 12vh;
+        width: 100px;
+        height: 100px;
         margin-top: -30px;
     }
 
@@ -102,7 +101,6 @@ header {
 
     .textrest{
         margin-top: 20px;
-        width: 25vw;
     }
 }
 
@@ -132,7 +130,7 @@ footer h5 {
 
     .btn_enviar{
         border-radius: 8px;
-        width: 20vw;
+        width: 200px;
         height: 40px;
         margin-top: 20px;
         background: linear-gradient(135deg, rgb(27, 145, 72), #f0f0f0, #a6a6a6);
@@ -152,7 +150,7 @@ footer h5 {
 
 .btn_regresar{
     border-radius: 8px;
-    width: 10vw;
+    width: 130px;
     height: 40px;
     margin-top: 20px;
     background: linear-gradient(135deg, rgb(27, 145, 72), #f0f0f0, #a6a6a6);
@@ -161,4 +159,17 @@ footer h5 {
 
 .btn_regresar:hover {
     background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+}
+
+@media (min-width: 390px) and (max-width: 720px) {
+        .logo{
+            width: 600px;
+            height: 600px;
+            margin-top: -30px;
+        }
+
+        .container{
+            width: 350px;
+            height: 400px;
+        }
 }

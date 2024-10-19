@@ -9,7 +9,7 @@
 <body>
     <img src="resources/images/Logo.cooperativa.png" alt="logo" class="logo">
     <header>
-        <h1>Gestión de Datos Tesorería</h1>
+        <h1>Histórico de Facturas Saldadas</h1>
     </header>
     <main>
         <table>
@@ -42,11 +42,7 @@
                 <% } %>
             </tbody>
         </table>
-    </main>
-    <form action="/logout" method="POST">
-        <button type="submit" class="btn_salir">Salir</button>
-    </form>
-    
+    </main>    
     <div class="pagination">
         <% if (pagination.totalPages > 1) { %>
             <% if (pagination.hasPrevPage) { %>
@@ -55,7 +51,7 @@
     
             <% for (let i = 1; i <= pagination.totalPages; i++) { %>
                 <a href="/index?page=<%= i %>" 
-                   class="<%= i === pagination.currentPage ? 'active' : '' %>">
+                class="<%= i === pagination.currentPage ? 'active' : '' %>">
                     <%= i %>
                 </a>
             <% } %>
@@ -64,6 +60,10 @@
                 <a href="/index?page=<%= pagination.nextPage %>">Siguiente »</a>
             <% } %>
         <% } %>
+
+        <form action="/logout" method="POST">
+            <button type="submit" class="btn_salir">Salir</button>
+        </form>
     </div>
     
     <footer>
