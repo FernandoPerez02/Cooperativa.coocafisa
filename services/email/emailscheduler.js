@@ -1,14 +1,14 @@
 const nodemailer = require('nodemailer');
 const schedule = require('node-schedule');
-const { google } = require("googleapis");
-const OAuth2 = google.auth.OAuth2;
-const accountTransport = require("./account_transport.json");
+const { google } = require('googleapis');
+const { OAuth2 }  = google.auth;
 const ejs = require('ejs');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 const path = require('path');
-const { formatDate } = require('./globalfunctions.js');
-const pool = require('../connectionBD/db.js');
+const { formatDate } = require('../functions/globalfunctions'); 
+const pool = require('../../connectionBD/db');
+const accountTransport = require('./account_transport.json');
 
 const transporter = async () => {
     const oauth2Client = new OAuth2(
@@ -31,38 +31,35 @@ const transporter = async () => {
     }
 };
 
+module.exports = transporter;
+
 const obtainData = async () => {
     const query = `SELECT nit, empresa, descuento, retencion, pago, fecha_pago, email 
                    FROM usuario WHERE fecha_pago = CURDATE()`;
-    let connection;
     try {
-        connection = await pool.getConnection();
-        const [results] = await connection.query(query); 
+        const [results] = await pool.query(query);
         if (results.length > 0) {
             const formattedResults = results.map(result => ({
                 ...result,
-                fecha_pago: formatDate(result.fecha_pago)
+                fecha_pago: formatDate(result.fecha_pago),
             }));
 
             const groupedResults = formattedResults.reduce((acc, current) => {
-                if(!acc[current.nit]) {
-                    acc[current.nit] = [];
-                }
+                if (!acc[current.nit]) acc[current.nit] = [];
                 acc[current.nit].push(current);
                 return acc;
             }, {});
 
             const emailsSent = [];
             await Promise.all(
-                Object.keys(groupedResults).map(nit => {
+                Object.keys(groupedResults).map(async (nit) => {
                     const data = groupedResults[nit];
                     emailsSent.push(...data);
-                    return emailSend(data);
+                    await emailSend(data); // Cambiado: se asegura que emailSend se ejecute como una función async
                 })
             );
 
             const pdfPath = await generateRecipientPDF(emailsSent);
-
             await sendNotificationEmail(emailsSent.length, pdfPath);
 
             console.log('Todos los correos fueron enviados exitosamente.');
@@ -71,10 +68,8 @@ const obtainData = async () => {
         }
     } catch (error) {
         console.error('Error al obtener los datos:', error);
-    } finally {
-        if (connection) connection.release();
     }
-}
+};
 
 const reportsDir = path.join(__dirname, 'resources/public/reports');
 if (!fs.existsSync(reportsDir)) {
@@ -93,8 +88,8 @@ const getImageBase64 = (imagePath) => {
 
 const generatePDF = async (data, nit, empresa, fecha_pago) => {
     try {
-        const filePath = path.join(__dirname, '../public/views/reporte.ejs');
-        const logoPath = path.join(__dirname, '../public/images/Logo.cooperativa.png');
+        const filePath = path.join(__dirname, '../../public/views/reporte.ejs');
+        const logoPath = path.join(__dirname, '../../public/images/Logo.cooperativa.png');
         const logoBase64 = getImageBase64(logoPath);
 
         const htmlString = await ejs.renderFile(filePath, { data, logo: logoBase64 });
@@ -114,7 +109,7 @@ const generatePDF = async (data, nit, empresa, fecha_pago) => {
         await page.pdf({
             path: routeReport,
             format: 'A4',
-            printBackground: true
+            printBackground: true,
         });
         await browser.close();
 
@@ -130,7 +125,7 @@ const emailSend = async (data) => {
     try {
         const { nit, empresa, fecha_pago, email } = data[0];
         const pdfPath = await generatePDF(data, nit, empresa, formatDate(fecha_pago));
-        const transport = await transporter();
+        const transport = await transporter(); 
 
         const mailOptions = {
             from: 'soporte.coocafisa@gmail.com',
@@ -146,6 +141,7 @@ const emailSend = async (data) => {
         };
 
         await transport.sendMail(mailOptions);
+        console.log(`Correo enviado a: ${email}`);
     } catch (error) {
         console.error('Error al enviar el correo:', error);
     }
@@ -176,8 +172,8 @@ const sendNotificationEmail = async (count, pdfPath) => {
 
 const generateRecipientPDF = async (emails) => {
     try {
-        const filePath = path.join(__dirname, '../public/views/reporte.ejs');
-        const logoPath = path.join(__dirname, '../public/images/Logo.cooperativa.png');
+        const filePath = path.join(__dirname, '../../public/views/reporte.ejs');
+        const logoPath = path.join(__dirname, '../../public/images/Logo.cooperativa.png');
         const logoBase64 = getImageBase64(logoPath);
         const htmlString = await ejs.renderFile(filePath, { data: emails, logo: logoBase64 });
 
@@ -192,7 +188,7 @@ const generateRecipientPDF = async (emails) => {
         await page.pdf({
             path: pdfPath,
             format: 'A4',
-            printBackground: true
+            printBackground: true,
         });
         await browser.close();
 
@@ -203,4 +199,6 @@ const generateRecipientPDF = async (emails) => {
         throw err;
     }
 };
-schedule.scheduleJob('14 17 * * *', obtainData);
+
+// Asegúrate de que esta tarea programada esté bien configurada en el cron
+schedule.scheduleJob('10 11 * * *', obtainData);

@@ -4,31 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
-    <link rel="stylesheet" href="resources/css/style.css">
+    <link rel="stylesheet" href="resources/css/style_rest.css">
 </head>
 <body>
     <main>
         <section>
-            <div class="login">
+            <div class="container">
                 <header>
                     <div class="imglogo">
                         <img src="resources/images/Logo.cooperativa.png" alt="logo" class="logo">
                     </div>
                     <div class="titletext">
-                        <h1>Bienvenido a CoopFinanzas</h1>
+                        <h1 class="textrest"> Restablecimiento de Contraseña</h1>
                     </div>
                 </header>
-                <form action="/auth" method="post">               
+                <form action="/resetpass" method="post">
                     <div class="stlnit">
                         <label for="nit"><h4>Nit</h4></label>
                         <input type="number" name="nit" id="nit">
                     </div>
-                    <div class="stlpass">
-                        <label for="password"><h4>Contraseña</h4></label>
-                        <input type="password" name="password" id="password">
-                        <button type="submit" class="btn_ingresar"><h3>Ingresar</h3></button>
-                        <a href="resetpassword"><p>¿Retablecer Contraseña?</p></a>
+                    <div class="stlnit">
+                        <label for="newpass"><h4>Nueva Contraseña</h4></label>
+                        <input type="password" name="newpass" id="newpass">
+                    </div>              
+                    <div class="stlgmail">
+                        <label for="confpass"><h4>Confirmar Contraseña</h4></label>
+                        <input type="password" name="confpass" id="confpass">
                     </div> 
+                    <div class="btn">
+                        <button type="submit" class="btn_enviar">Restablecer</button>
+                    </div>                   
                 </form>
             </div>
         </section>
