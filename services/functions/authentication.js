@@ -44,7 +44,7 @@ router.post('/auth', async (req, res) => {
             if(isMatch){
                 req.session.name = resultsUser[0].nit;
                 const resultsRol = resultsUser[0].razonsoc;
-                if(resultsRol === 'administrador'){
+                if(resultsRol === 'Administrador'){
                     return renderExit(res,'admin');
                 }else{
                     return renderExit(res, 'index');

@@ -34,14 +34,14 @@ const transporter = async () => {
 module.exports = transporter;
 
 const obtainData = async () => {
-    const query = `SELECT nit, empresa, descuento, retencion, pago, fecha_pago, email 
-                   FROM usuario WHERE fecha_pago = CURDATE()`;
+    const query = `SELECT pagos.nit, razonsoc, descuento, retencion, total, fecpago, correo
+                FROM usuarios inner join pagos on usuarios.nit = pagos.nit WHERE fecpago = CURDATE()`;
     try {
         const [results] = await pool.query(query);
         if (results.length > 0) {
             const formattedResults = results.map(result => ({
                 ...result,
-                fecha_pago: formatDate(result.fecha_pago),
+                fecpago: formatDate(result.fecpago),
             }));
 
             const groupedResults = formattedResults.reduce((acc, current) => {
@@ -55,7 +55,7 @@ const obtainData = async () => {
                 Object.keys(groupedResults).map(async (nit) => {
                     const data = groupedResults[nit];
                     emailsSent.push(...data);
-                    await emailSend(data); // Cambiado: se asegura que emailSend se ejecute como una función async
+                    await emailSend(data); 
                 })
             );
 
@@ -71,7 +71,7 @@ const obtainData = async () => {
     }
 };
 
-const reportsDir = path.join(__dirname, 'resources/public/reports');
+const reportsDir = path.join(__dirname, '../../public/reports');
 if (!fs.existsSync(reportsDir)) {
     fs.mkdirSync(reportsDir, { recursive: true });
 }
@@ -86,7 +86,7 @@ const getImageBase64 = (imagePath) => {
     }
 };
 
-const generatePDF = async (data, nit, empresa, fecha_pago) => {
+const generatePDF = async (data, nit, razonsoc, fecpago) => {
     try {
         const filePath = path.join(__dirname, '../../public/views/reporte.ejs');
         const logoPath = path.join(__dirname, '../../public/images/Logo.cooperativa.png');
@@ -98,8 +98,8 @@ const generatePDF = async (data, nit, empresa, fecha_pago) => {
             throw new Error('El contenido HTML está vacío');
         }
 
-        const dateFormate = fecha_pago.replace(/\//g, '-');
-        const reportingName = `${nit}_${empresa}_${dateFormate}.pdf`;
+        const dateFormate = fecpago.replace(/\//g, '-');
+        const reportingName = `${nit}_${razonsoc}_${dateFormate}.pdf`;
         const routeReport = path.join(reportsDir, reportingName);
         fs.mkdirSync(path.dirname(routeReport), { recursive: true });
 
@@ -123,25 +123,25 @@ const generatePDF = async (data, nit, empresa, fecha_pago) => {
 
 const emailSend = async (data) => {
     try {
-        const { nit, empresa, fecha_pago, email } = data[0];
-        const pdfPath = await generatePDF(data, nit, empresa, formatDate(fecha_pago));
+        const { nit, razonsoc, fecpago, correo } = data[0];
+        const pdfPath = await generatePDF(data, nit, razonsoc, formatDate(fecpago));
         const transport = await transporter(); 
 
         const mailOptions = {
             from: 'soporte.coocafisa@gmail.com',
-            to: email,
+            to: correo,
             subject: 'Informe diario',
             text: 'El presente correo contiene un informe PDF de sus registros que tienen por fecha de pago el día de hoy.',
             attachments: [
                 {
-                    filename: `${nit}_${empresa}_${fecha_pago}.pdf`,
+                    filename: `${nit}_${razonsoc}_${fecpago}.pdf`,
                     path: pdfPath,
                 },
             ],
         };
 
         await transport.sendMail(mailOptions);
-        console.log(`Correo enviado a: ${email}`);
+        console.log(`Correo enviado a: ${correo}`);
     } catch (error) {
         console.error('Error al enviar el correo:', error);
     }
@@ -200,5 +200,4 @@ const generateRecipientPDF = async (emails) => {
     }
 };
 
-// Asegúrate de que esta tarea programada esté bien configurada en el cron
-schedule.scheduleJob('10 11 * * *', obtainData);
+schedule.scheduleJob('35 15 * * *', obtainData);

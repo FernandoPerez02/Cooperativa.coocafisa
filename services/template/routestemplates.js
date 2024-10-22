@@ -14,16 +14,16 @@ router.get('/', (req, res)=>{
     res.render('login');
 });
 
-router.get('/admin', isAuthenticated, async (req, res) => {
+router.get('/admin', async (req, res) => {
     const itemsPerPage = 6;
     const currentPage = parseInt(req.query.page) || 1;
     const offset = (currentPage - 1) * itemsPerPage;
 
-    const countQuery = `SELECT COUNT(*) AS total FROM usuario WHERE fecha_pago = CURDATE()`;
+    const countQuery = `SELECT COUNT(*) AS total FROM pagos WHERE fecpago = CURDATE()`;
     const dataQuery = `
-        SELECT *
-        FROM usuario 
-        WHERE fecha_pago = CURDATE() 
+        SELECT pagos.nit,razonsoc, correo, fecpago
+        FROM usuarios inner join pagos on usuarios.nit = pagos.nit
+        WHERE fecpago = CURDATE() 
         LIMIT ? OFFSET ?`;
 
     try{
@@ -45,10 +45,11 @@ router.get('/index',isAuthenticated, async (req, res) => {
     const offset = (page - 1) * itemsPerPage;
 
     try{
-        const query = 'SELECT * FROM usuario WHERE nit = ? LIMIT ?, ?';
+        const query = `SELECT pagos.nit, razonsoc, descuento, retencion, total, fecpago
+        FROM usuarios INNER JOIN pagos ON usuarios.nit = pagos.nit WHERE pagos.nit = ? LIMIT ?, ?`;
         const results = await queryDatabase( query, [nit, offset, itemsPerPage]);
 
-        const countQuery = 'SELECT COUNT(*) AS total FROM usuario WHERE nit = ?';
+        const countQuery = 'SELECT COUNT(*) AS total FROM usuarios WHERE nit = ?';
         const countResult = await queryDatabase(countQuery, [nit]);
         const totalItems = countResult[0].total;
         const pagination = paginator(totalItems, page, itemsPerPage);
@@ -85,4 +86,11 @@ router.get('/reguser', (req, res) => {
     res.render('registro');
 });
 
+router.get('/seeusers', (req, res) => {
+    res.render('seeusers');
+});
+
+router.get('/base', (req, res) => {
+    res.render('base');
+});
 module.exports = router;

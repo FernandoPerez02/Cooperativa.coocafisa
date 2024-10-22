@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>Buscador</title>
     <link rel="stylesheet" href="resources/css/stile_index.css">
 </head>
@@ -16,7 +16,7 @@
             <thead>
                 <tr>
                     <th>NIT</th>
-                    <th>Empresa</th>
+                    <th>Razon Social</th>
                     <th>Pago</th>
                     <th>Descuento</th>
                     <th>Retención</th>
@@ -28,11 +28,11 @@
                 <% data.forEach(row => { %>
                 <tr>
                     <td><%= row.nit %></td>
-                    <td><%= row.empresa %></td>
-                    <td><%= row.pago %></td>
+                    <td><%= row.razonsoc %></td>
+                    <td><%= row.total %></td>
                     <td><%= row.descuento %></td>
                     <td><%= row.retencion %></td>
-                    <td><%= formatDate(row.fecha_pago) %></td>
+                    <td><%= formatDate(row.fecpago) %></td>
                 </tr>
                 <% }) %>
                 <% } else { %> 

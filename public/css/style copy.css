@@ -1,0 +1,137 @@
+ *{
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+ }
+ body{
+    background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+ }
+
+.stlnit{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    input{
+        border-radius: 10px;
+        height: 30px;
+        background: linear-gradient(135deg, #bdc3c7, #ecf0f1);
+        width: 300px;
+        font-size: 20px;
+        padding: 5px;
+    }
+
+    label{
+        border-radius: 10px;
+        height: 30px;
+        margin-right: 250px;
+        font-size: 20px;
+    }
+}
+
+.stlpass{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    
+    input{
+        border-radius: 10px;
+        height: 30px;
+        background: linear-gradient(135deg, #bdc3c7, #ecf0f1);
+        width: 300px;
+        font-size: 20px;
+        padding: 5px;
+    }
+
+    label{
+        border-radius: 10px;
+        height: 30px;
+        margin-top: 10px;
+        margin-right: 180px;
+        font-size: 20px;
+    }
+
+    a{
+        margin-top: 20px;
+        text-decoration-line: none;
+        color: #116b33;
+    }
+    p:hover{
+        background: linear-gradient(135deg, rgb(27, 145, 72), #f0f0f0, #a6a6a6);
+    }
+}
+
+section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    min-height: 90vh;
+    background-position: center;
+    background-size: cover;
+}
+
+.login{
+    position: relative;
+    width: 400px;
+    border: 2px solid;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgb(27, 145, 72), #f0f0f0, #a6a6a6);
+}
+
+.btn_ingresar{
+    border-radius: 8px;
+    width: 150px;
+    height: 40px;
+    margin-top: 20px;
+    margin-right: 30px;
+    background: linear-gradient(135deg, rgb(27, 145, 72), #f0f0f0, #a6a6a6);
+    font-size: large;
+}
+
+.btn_ingresar:hover {
+    background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+}
+
+header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .imglogo {
+        flex: 0 0 auto;
+        margin-right: 10px;
+    }
+}
+
+.logo{
+    width: 100px;
+    height: 100px;
+    margin-top: -20px;
+}
+
+footer {
+    text-align: center; 
+    padding: 10px 0; 
+}
+
+footer h5 {
+    margin: 0; 
+    font-size: 14px; 
+    text-shadow: 2px 2px 4px white;
+}
+
+.imgautors {
+    width: 20px; 
+    vertical-align: middle; 
+    margin-right: 5px;
+    box-shadow: 2px 2px 4px white;
+}
+

@@ -45,7 +45,7 @@ router.post('/emailresetpass', async (req, res) => {
     }
 
     try {
-        const [users] = await pool.query('SELECT * FROM prueba WHERE email = ? and nit = ?', [gmail, user]);
+        const [users] = await pool.query('SELECT * FROM usuarios WHERE correo = ? and nit = ?', [gmail, user]);
         
         if (users.length > 0) {
             const emailSent = await resetMail(gmail);
@@ -85,7 +85,7 @@ router.post('/resetpass', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(newpass, 10);
-        const sql = 'UPDATE prueba SET pass = ? WHERE nit = ?';
+        const sql = 'UPDATE usuarios SET clave = ? WHERE nit = ?';
         const [result] = await pool.query(sql, [hashedPassword, nit]);
 
         if (result.affectedRows === 0) {
@@ -106,5 +106,3 @@ router.post('/resetpass', async (req, res) => {
 });
 
 module.exports = router;
-
-

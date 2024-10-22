@@ -3,20 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador</title>
-    <link rel="stylesheet" href="resources/css/stile_index.css">
+    <title>Administrador</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="resources/css/style_admin.css">
 </head>
 <body>
-    <img src="resources/images/Logo.cooperativa.png" alt="logo" class="logo">
     <header>
-        <h1>Gestión de Notificacón por Correo</h1>
+        <img src="resources/images/Logo.cooperativa.png" alt="logo" class="logo">
+        <h1>Gestión de Notificación por Correo</h1>
+        <button class="abrmenu" id="abrmenu"><i class="bi bi-list"></i></button>
+        <nav class="nav" id="nav">
+            <button class="crrmenu" id="crrmenu"><i class="bi bi-x-lg"></i></button>
+            <ul class="nav_list">
+                <li><a href="/">Usuarios</a></li>
+                <li><a href="/reguser">Crear Usuario</a></li>
+                <li><a href="/admin">Notificaciones</a></li>
+                <li><a href="#">Base de Datos</a></li>
+                <li><a href="#">Programar Correos</a></li>
+                <li>
+                    <form action="/logout" method="post">
+                        <button type="submit" class="btn_salir">Cerrar Sesión</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
     </header>
     <main>
         <table>
             <thead>
                 <tr>
                     <th>NIT</th>
-                    <th>Empresa</th>
+                    <th>Razon Social</th>
+                    <th>Correo</th>
                     <th>Fecha Pago</th>
                 </tr>
             </thead>    
@@ -25,8 +43,9 @@
                     <% data.forEach(row => { %>
                     <tr>
                         <td><%= row.nit %></td>
-                        <td><%= row.empresa %></td>
-                        <td><%= formatDate(row.fecha_pago) %></td>
+                        <td><%= row.razonsoc %></td>
+                        <td><%= row.correo %></td>
+                        <td><%= formatDate(row.fecpago) %></td>
                     </tr>
                     <% }) %>
                     <% } else { %> 
@@ -37,10 +56,6 @@
             </tbody>
         </table>
     </main>
-    <form action="/logout" method="POST">
-        <button type="submit" class="btn_salir">Salir</button>
-    </form>
-    
     <div class="pagination">
         <% if (pagination.totalPages > 1) { %>
             <% if (pagination.hasPrevPage) { %>
@@ -65,5 +80,6 @@
             Todos los derechos reservados de coocafisa
         </h5>
     </footer>
+    <script src="resources/css/js/main.js"></script>
 </body>
 </html>
