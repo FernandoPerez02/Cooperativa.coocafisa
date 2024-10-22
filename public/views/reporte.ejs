@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes Diarios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777;
+        }
+        .logo{
+            width: 100px;
+            height: 100px;
+            margin-left: 50px;
+        }
+        
+        footer {
+        text-align: center; 
+        padding: 10px 0; 
+        margin-top: 20px; 
+        }
+
+        footer h5 {
+        margin: 0; 
+        font-size: 14px; 
+        text-shadow: 2px 2px 4px white;
+        }
+
+        .imgautors {
+        width: 20px; 
+        vertical-align: middle; 
+        margin-right: 5px;
+        box-shadow: 2px 2px 4px white;
+        }       
+    </style>
+</head>
+<body>
+    <img src="<%= logo %>" alt="logo" class="logo">
+    <h1>Informe Diario de Pagos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>NIT</th>
+                <th>Empresa</th>
+                <th>Descuento</th>
+                <th>Retención</th>
+                <th>Pago</th>
+                <th>Fecha de Pago</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach(function(item) { %>
+                <tr>
+                    <td><%= item.nit %></td>
+                    <td><%= item.empresa %></td>
+                    <td><%= item.descuento %></td>
+                    <td><%= item.retencion %></td>
+                    <td><%= item.pago %></td>
+                    <td><%= item.fecha_pago %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    <footer>
+        <p>Este informe es generado automáticamente y es confidencial.</p>
+    </footer>
+</body>
+</html>
