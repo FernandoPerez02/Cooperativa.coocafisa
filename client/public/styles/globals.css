@@ -10,22 +10,53 @@
   font-family: sans-serif;
 }
 
-body {
-  background: var(--background);
+html, body {
+  height: 100%;
   margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.principal{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+  transition: all 0.3s ease;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 1000;
+}
+
+.principal.scrolled {
+  padding: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+main {
+  flex: 1;
   padding: 20px;
-  color: #333;
 }
 
 footer {
-  text-align: center;
-  padding: 10px 0;
+  text-align: center; 
+  padding: 10px 0; 
 }
+
 footer h5 {
   margin: 0;
   font-size: 14px;
   text-shadow: 2px 2px 4px white;
 }
+
 .imgautors {
   width: 20px;
   vertical-align: middle;
@@ -49,27 +80,18 @@ button:hover {
 }
 
 /* Estilos del menu de navegación */
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: transparent;
-  padding: 2rem;
-  margin-bottom: 20px;
-  color: #229544;
-  margin-top: -40px;
-}
-
 h1 {
     flex: 1;
     text-align: center;
-    color: #ffffff;
+    font-size: 30px;
     margin: 0;
+    gap: 10px;
 }
 
 .imglogoindex {
-    width: 100px;
+    width: 8vw;
     height: auto;
+    padding-left: 20px;
 }
 
 .nav_list {
@@ -90,10 +112,6 @@ h1 {
   padding: 10px;
 }
 
-.logo {
-  max-width: 5rem;
-}
-
 .abrmenu,
 .crrmenu {
   display: block;
@@ -106,7 +124,6 @@ h1 {
 }
 
 .nav {
-  opacity: 0.5;
   display: none;
   flex-direction: column;
   align-items: end;
@@ -119,6 +136,5 @@ h1 {
 }
 
 .nav.visible {
-  opacity: 0.5;
   display: flex;
 }

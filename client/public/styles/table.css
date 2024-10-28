@@ -1,35 +1,96 @@
+.container {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .cabezta {
+    text-align: center;
+    margin-bottom: 2rem;
+    margin-top: 110px;
+  }
 
-table {
-    width: 80%;
-    border-collapse: collapse; 
-    background-color: #ffffff; 
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-    border-radius: 8px; 
-    overflow: hidden;
-}
-
-th, td {
-    padding: 12px;
-    text-align: center; 
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: rgb(27, 145, 72);
-    color: #ffffff;
-    font-weight: bold;
-}
-
-tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-tr:hover {
-    background-color: rgba(27, 145, 72, 0.3);
+  .cabezta h1{
+    color: black;
+  }
+  
+  .cabezta-details {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+  }
+  
+  .responsive-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  thead th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.8rem;
+  }
+  
+  tbody tr {
     transition: background-color 0.3s;
-}
+  }
+  
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  td, th {
+    padding: 0.5rem;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  button {
+    padding: 0.5rem 1rem;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .expanded-row {
+    background-color: #e9e9e9;
+  }
+  
+  .expanded-row div {
+    margin: 0.5rem 0;
+  }
 
-td[colspan="6"] {
-    font-size: 1.2em;
-    color: #ff0000;
-}
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .pagination button {
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .pagination button.active {
+    background-color: #0056b3;
+  }
+  
+  .pagination button:hover {
+    background-color: #0056b3;
+  }
+  
+  

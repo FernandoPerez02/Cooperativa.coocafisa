@@ -2,7 +2,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-export default function Menu({ options }) {
+export default function Menu({ menuOptions }) {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const toggleMenu = () => {
@@ -23,7 +23,7 @@ export default function Menu({ options }) {
           <i className="bi bi-x-lg"></i>
         </button>
         <ul className="nav_list">
-          {options.map((option) => (
+          {menuOptions.map((option) => (
             <li key={option.id}>
               <a href={option.link}>{option.label}</a>
             </li>
@@ -41,11 +41,13 @@ export default function Menu({ options }) {
   );
 }
 
-Menu.propTypes= {
-    options: PropTypes.arrayOf(
-      PropTypes.shape({
-        label: PropTypes.string.isRequired,
-        link: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-  };
+Menu.propTypes = {
+  menuOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      label: PropTypes.string.isRequired,
+      link: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};
+

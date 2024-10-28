@@ -1,71 +1,78 @@
-import '@public/styles/register.css'
+import "@public/styles/formusers.css";
 export const metadata = {
   title: 'Register User',
-  description: 'Registration of users interacting with the system'
-}
+  description: 'Registration of users interacting with the system',
+};
+
 export default function Registerusers() {
+  const title = "Registro de Usuarios";
+  
   return (
+    <div className="content">
+      <header>
+        <img
+          src="/images/Logo.cooperativa.png"
+          alt="logo"
+          className="w-24 h-24 mb-4 object-contain logo"
+        />
+        <h1 className="text-2xl font-bold">{title}</h1>
+      </header>
+
       <form action="/register" method="post">
         <div className="options">
-          <div className="stlnit">
-            <label htmlFor="nit">
-              <h4>Nit</h4>
-            </label>
-            <input type="number" name="nit" id="nit" />
+          <div className="stlvar">
+            <label htmlFor="nit">Nit</label>
+            <input type="number" name="nit" id="nit" required />
           </div>
-          <div className="stlrazsoc">
-            <label htmlFor="razsoc">
-              <h4>Razon Social</h4>
-            </label>
-            <input type="text" name="razsoc" id="razsoc" />
+
+          <div className="stlvar">
+            <label htmlFor="razsoc">Razón Social</label>
+            <input type="text" name="razsoc" id="razsoc" required />
           </div>
-          <div className="stldirecc">
-            <label htmlFor="direc">
-              <h4>Dirección</h4>
-            </label>
-            <input type="text" name="direc" id="direc" />
+
+          <div className="stlvar">
+            <label htmlFor="direc">Dirección</label>
+            <input type="text" name="direc" id="direc" required />
           </div>
-          <div className="stlcorreo">
-            <label htmlFor="correo">
-              <h4>Correo Eletronico</h4>
-            </label>
-            <input type="email" name="correo" id="correo" />
+
+          <div className="stlvar">
+            <label htmlFor="correo">Correo Electrónico</label>
+            <input type="email" name="correo" id="correo" required />
           </div>
-          <div className="stltel">
-            <label htmlFor="tel">
-              <h4>Telefono</h4>
-            </label>
-            <input type="number" name="tel" id="tel" />
+
+          <div className="stlvar">
+            <label htmlFor="tel">Teléfono</label>
+            <input type="number" name="tel" id="tel" required />
           </div>
-          <div className="stlcel">
-            <label htmlFor="cel">
-              <h4>Celular</h4>
-            </label>
-            <input type="number" name="cel" id="cel" />
+
+          <div className="stlvar">
+            <label htmlFor="cel">Celular</label>
+            <input type="number" name="cel" id="cel" required />
           </div>
-          <div className="stlpass">
-            <label htmlFor="pass">
-              <h4>Contraseña</h4>
-            </label>
-            <input type="password" name="pass" id="pass" />
+
+          <div className="stlvar">
+            <label htmlFor="pass">Contraseña</label>
+            <input type="password" name="pass" id="pass" required />
           </div>
-          <div className="stlpasscon">
-            <label htmlFor="passcon">
-              <h4>Confirmar Contraseña</h4>
-            </label>
-            <input type="password" name="passcon" id="passcon" />
+
+          <div className="stlvar">
+            <label htmlFor="passcon">Confirmar Contraseña</label>
+            <input type="password" name="passcon" id="passcon" required />
           </div>
         </div>
+
         <div className="btn_butones">
           <a href="login">
             <button type="button" className="btn_cancelar">
-              <h4>Cancelar</h4>
+              Cancelar
             </button>
           </a>
+
           <button type="submit" className="btn_registrar">
-            <h4>Registrar</h4>
+            Registrar
           </button>
         </div>
       </form>
+    </div>
   );
 }

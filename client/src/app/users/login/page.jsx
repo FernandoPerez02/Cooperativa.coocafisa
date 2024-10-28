@@ -1,8 +1,16 @@
-import "@public/styles/login.css";
-
+import "@public/styles/formusers.css";
 export default function Login() {
   return (
-    <form action="/auth" method="post" className="space-y-4 mt-6">
+    <div className="content">
+      <header>
+        <img
+          src="/images/Logo.cooperativa.png"
+          alt="logo"
+          className="w-1 h-1 mb-4 object-contain logo"
+        />
+        <h1 className="text-2xl font-bold">Inicio de Sesión</h1>
+      </header>
+      <form action="/auth" method="post" className="space-y-4 mt-6">
       <div className="flex flex-col stlvar">
         <label htmlFor="nit" className="text-sm font-medium text-gray-700">
           Nit
@@ -45,5 +53,6 @@ export default function Login() {
         </div>
       </div>
     </form>
+    </div>
   );
 }
