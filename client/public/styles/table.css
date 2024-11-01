@@ -2,17 +2,17 @@
     font-family: 'Arial', sans-serif;
   }
   
-  .cabezta {
+  .header {
     text-align: center;
     margin-bottom: 2rem;
     margin-top: 110px;
   }
 
-  .cabezta h1{
+  .header h1{
     color: black;
   }
   
-  .cabezta-details {
+  .header-details {
     display: flex;
     justify-content: space-around;
     padding: 1rem;
