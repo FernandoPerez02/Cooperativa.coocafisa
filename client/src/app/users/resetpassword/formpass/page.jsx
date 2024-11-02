@@ -1,5 +1,5 @@
+import "@public/styles/formusers.css";
 export default function Formresetpass() {
-  const title = "Restablecer Contraseña"
   return (
     <div className="content">
       <header className="flex flex-col items-center">
@@ -8,7 +8,7 @@ export default function Formresetpass() {
             alt="logo"
             className="w-24 h-24 mb-4 object-contain logo item"
           />
-          <h1 className="text-2xl font-bold text-foreground item">{title}</h1>
+          <h1 className="text-2xl font-bold text-foreground item">Restablecer Contraseña</h1>
         </header>
         <div className="form-container">
       <form action="/resetpass" method="post">

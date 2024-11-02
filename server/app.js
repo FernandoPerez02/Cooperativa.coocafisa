@@ -37,6 +37,9 @@ app.use("/adduser", addusers);
 const queryinvoices = require("./services/user/invoices/queryIndex");
 app.use("/queryindex", queryinvoices);
 
+const resetpass = require("./services/email/emailpassword/resetpassword");
+app.use("/recoverypass", resetpass)
+
 app.use((err, req, res, next) => {
     console.error("Error inesperado:", err);
     res.status(500).json({ error: "Error inesperado en el servidor." });
