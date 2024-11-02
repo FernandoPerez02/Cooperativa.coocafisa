@@ -1,6 +1,15 @@
-import "@public/styles/formusers.css";
+"use client"
+import { useState } from "react";
+import { emailValidate } from "@/app/api/auth/passwordService";
+import "@public/styles/formusers.css"
 export default function Formvalidatemail() {
-    const title = "Restablecer Contraseña"
+    const [alert, setAlert] = useState(null);
+    console.log(alert)
+    const handleSubmit =  async (event) => {
+        event.preventDefault();
+        await emailValidate(event, setAlert)
+    }
+
     return (
         <div className="content">
             <header className="flex flex-col items-center">
@@ -9,9 +18,9 @@ export default function Formvalidatemail() {
             alt="logo"
             className="w-24 h-24 mb-4 object-contain logo item"
           />
-          <h1 className="text-2xl font-bold text-foreground item">{title}</h1>
+          <h1 className="text-2xl font-bold text-foreground item">Restablecer Contraseña</h1>
         </header>
-        <form action="/emailresetpass" method="post"> 
+        <form onSubmit={handleSubmit}> 
                     <div className="stlvar">
                         <label htmlFor="nit">Nit</label>
                         <input type="number" name="nit" id="nit"/>
@@ -22,6 +31,7 @@ export default function Formvalidatemail() {
                     </div>
 
                     <div className="btn_butones">
+                    {alert && <div className="alert">{alert}</div>}
                     <div className="btn">
                         <a href="login"><button type="button" className="btn_regresar">Regresar</button></a>
                     </div>

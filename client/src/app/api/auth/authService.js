@@ -7,7 +7,7 @@ export const api = axios.create({
     headers: {'Content-Type': 'application/json'}
 });
 
-export const auth = async (event, router, setAlert) => {
+export const auth = async (event,setAlert) => {
     event.preventDefault();
     const nit = event.target.nit.value.trim();
     const password = event.target.password.value.trim();

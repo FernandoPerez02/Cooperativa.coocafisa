@@ -56,7 +56,7 @@ export default function Login() {
 
                     <div className="text-center mt-4">
                         <a
-                            href="resetpassword"
+                            href="/users/resetpassword"
                             className="text-sm text-foreground hover:underline"
                         >
                             ¿Restablecer Contraseña?
