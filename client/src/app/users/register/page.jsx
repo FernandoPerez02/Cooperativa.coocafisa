@@ -73,7 +73,7 @@ export default function Registerusers() {
         </div>
 
         <div className="btn_butones">
-          <a href="login">
+          <a href="/">
             <button type="button" className="btn_cancelar">
               Regresar
             </button>

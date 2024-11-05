@@ -33,7 +33,7 @@ export default function Formvalidatemail() {
                     <div className="btn_butones">
                     {alert && <div className="alert">{alert}</div>}
                     <div className="btn">
-                        <a href="login"><button type="button" className="btn_regresar">Regresar</button></a>
+                        <a href="/"><button type="button" className="btn_regresar">Regresar</button></a>
                     </div>
                     <div className="btn">
                         <button type="submit" className="btn_enviar">Enviar Correo</button>

@@ -1,12 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const session = require('express-session');
+const schedule = require('node-schedule');
 const dotenv = require('dotenv');
-const {isAuthenticated } = require("./services/functions/helpers")
 
 const app = express();
 
 dotenv.config({ path: './env/.env' });
+app.use(express.static('public'));
 
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -39,6 +40,12 @@ app.use("/queryindex", queryinvoices);
 
 const resetpass = require("./services/email/emailpassword/resetpassword");
 app.use("/recoverypass", resetpass)
+
+const {obtainData} = require('./services/email/report/obtainData')
+schedule.scheduleJob('8 11 * * *', () => {
+    console.log("Ejecutando obtainData");
+    obtainData();
+});
 
 app.use((err, req, res, next) => {
     console.error("Error inesperado:", err);

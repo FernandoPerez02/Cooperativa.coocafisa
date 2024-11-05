@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../../../connectionBD/db');
-const transporter = require('../emailscheduler');
+const transporter = require('../emailService');
 const bcrypt = require('bcrypt');
 
 const resetMail = async (email) => {
