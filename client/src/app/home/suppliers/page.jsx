@@ -15,7 +15,7 @@ export default function Suppliers() {
       setLoading(true);
       setError(null);
       try {
-        const invoices = await queryInvoices();
+        const invoices = await queryInvoices(setError);
         if (invoices.length === 0) {
           setError("No se encontraron datos.");
         } else {
@@ -49,7 +49,7 @@ export default function Suppliers() {
   }, []);
 
   if (error) return <p style={{ color: "red" }}>{error}</p>;
-  if (loading) return <p>Cargando datos...</p>;
+  if (loading) return <p>No se encontraron registros disponibles...</p>;
 
   const expandedData = data.map((invoice) => [
     { label: "Fecha Pago", value: invoice.cont7 },
@@ -58,7 +58,7 @@ export default function Suppliers() {
     { label: "Neto", value: invoice.cont6 }
   ]);
 
-  const title = "Tus Datos";
+  const title = "Tus Facturas";
   const headers = [
     "Factura", "Fecha Factura", "Fecha Vencimiento",
     "Total", "Retencion"
@@ -68,8 +68,8 @@ export default function Suppliers() {
     <Table
       data={data}
       title={title}
-      nit={nit}         // Pasar NIT al componente Table
-      razonsoc={razonsoc} // Pasar razón social al componente Table
+      nit={nit}         
+      razonsoc={razonsoc} 
       headers={headers}
       expandedData={expandedData}
     />

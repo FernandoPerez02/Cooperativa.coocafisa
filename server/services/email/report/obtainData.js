@@ -32,7 +32,6 @@ const obtainData = async () => {
         })
       );
 
-      // Generación del PDF resumen
       const summaryPdfBuffer = await generarResumenPDF(emailsSent);
       await sendNotificationEmail(emailsSent.length, summaryPdfBuffer);
       console.log("Todos los correos fueron enviados exitosamente.");

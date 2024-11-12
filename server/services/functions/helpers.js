@@ -1,4 +1,8 @@
 function formatDate(dateString) {
+    if (!dateString || isNaN(new Date(dateString))) {
+        return "Sin fecha";
+    }
+
     const options = { day: '2-digit', month: 'numeric', year: 'numeric' };
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', options);
@@ -6,11 +10,19 @@ function formatDate(dateString) {
 
 
 const isAuthenticated = (req, res, next) => {
-    if (req.session.name) {
-        return next();
-    } else {
-        res.redirect('/users/login?error=notAuthenticated');
+    if (!req.session || !req.session.name) {
+        return res.status(404).json({ errors: "No estás autenticado.", redirect: "/" });
     }
-};
+        return next();
+    }
 
-module.exports = { formatDate, isAuthenticated };
+const roleMiddleware = (role) => {
+    return (req, res, next) => {
+        if (req, session.role !== role) {
+            return res.status(404).json({ errors: "No tienes permisos para acceder a esta ruta.", redirect: "/" });
+        }
+        return next();
+    }
+}
+
+module.exports = { formatDate, isAuthenticated, roleMiddleware };

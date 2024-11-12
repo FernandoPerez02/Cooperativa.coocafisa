@@ -75,66 +75,9 @@ button {
   transition: background 0.3s ease;
 }
 
-button:hover {
-  background: #2c3e50;
-}
-
-/* Estilos del menu de navegación */
-h1 {
-    flex: 1;
-    text-align: center;
-    font-size: 30px;
-    margin: 0;
-    gap: 10px;
-}
 
 .imglogoindex {
-    width: 8vw;
-    height: auto;
-    padding-left: 20px;
-}
-
-.nav_list {
-  flex-direction: column;
-  align-items: end;
-  list-style-type: none;
-  display: flex;
-  gap: 1rem;
-}
-
-.nav_list li a {
-  text-decoration: none;
-  color: #ffffff;
-  gap: 10px;
-}
-
-.nav_list li form {
-  padding: 10px;
-}
-
-.abrmenu,
-.crrmenu {
-  display: block;
-  border: 0;
-  font-size: 1.35rem;
-  background-color: transparent;
-  cursor: pointer;
-  color: #ffffff;
-  align-items: end;
-}
-
-.nav {
-  display: none;
-  flex-direction: column;
-  align-items: end;
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: #1c1c1c;
-  padding: 3rem;
-  gap: 15px;
-}
-
-.nav.visible {
-  display: flex;
+  width: 8vw;
+  height: auto;
+  padding-left: 20px;
 }

@@ -25,19 +25,23 @@ export default function Navigations() {
 }
 
 const routeToIndices = {
-    "/home": [0, 1, 2, 3, 7],
-    "/home/suppliers": [4, 5, 6]
+    "/home": [0, 1, 2, 3],
+    "/home/suppliers": [4, 5, 6],
+    "/home/suppliers/invoices": [4, 5, 6],
+    "/home/suppliers/invoices/payments": [4, 5, 6],
+    "/home/suppliers/invoices/pending": [4, 5, 6],
+    "/users": [0, 1, 2, 3, 7],
+    "/home/administrator/email": [0, 1, 2, 3]
 }
 
 const menuOptions = [
-  { id: 1, label: "Inicio", link: "/home" },
-  { id: 2, label: "Usuarios", link: "/users/registeredusers" },
-  { id: 3, label: "Registrar Usuario", link: "/users/register" },
-  { id: 4, label: "Programar Correos", link: "/emails" },
-  { id: 5, label: "Facturas", link: "/home/suppliers/invoices"},
-  { id: 6, label: "Facturas Pagas", link: "/home/suppliers/invoices/payments"},
-  { id: 7, label: "Facturas Pendientes", link: "/home/suppliers/invoices/pending"},
-  { id: 8, label: "Provedor", link: "/home/suppliers/"}
+  { id: 1, label: "Inicio", link: "/home", icon: "bi bi-house-door" },
+  { id: 2, label: "Usuarios", link: "/users", icon: "bi bi-person-fill" },
+  { id: 3, label: "Registrar Usuario", link: "/users/register", icon: "bi bi-person-plus-fill" },
+  { id: 4, label: "Gestion de Correos", link: "/home/administrator/email", icon: "bi bi-envelope-paper-fill" },
+  { id: 5, label: "Facturas", link: "/home/suppliers", icon: "bi bi-file-earmark-text-fill" },
+  { id: 6, label: "Facturas Pagas", link: "/home/suppliers/invoices/payments", icon: "bi bi-file-earmark-check-fill"},
+  { id: 7, label: "Facturas Pendientes", link: "/home/suppliers/invoices/pending", icon: "bi bi-file-earmark-medical-fill"},
 ];
 
 

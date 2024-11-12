@@ -1,4 +1,4 @@
-"use client"; // Asegúrate de que este sea el primer código en el archivo
+"use client";
 import React, { useState } from 'react';
 import "@public/styles/table.css";
 
@@ -9,7 +9,6 @@ const Table = ({ data, title, nit, razonsoc, headers, expandedData }) => {
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
   
-  // Manejo de la paginación
   const paginatedData = data.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -32,7 +31,7 @@ const Table = ({ data, title, nit, razonsoc, headers, expandedData }) => {
         </div>
       </div>
       {data.length === 0 ? (
-        <div className="loading-message">Buscando registros...</div>
+        <div className="loading-message">No se encontraron registros disponibles...</div>
       ) : (
         <table className="responsive-table">
           <thead>
@@ -60,7 +59,7 @@ const Table = ({ data, title, nit, razonsoc, headers, expandedData }) => {
                 </tr>
                 {expandedRows[index] && (
                   <tr className="expanded-row">
-                    <td colSpan={headers.length + 1}> {/* Asegúrate que colSpan cubra todas las columnas */}
+                    <td colSpan={headers.length + 1}> 
                       <div>
                         {expandedData[index]?.map((dataItem, idx) => (
                           <div key={idx}><strong>{dataItem.label}:</strong> {dataItem.value}</div>

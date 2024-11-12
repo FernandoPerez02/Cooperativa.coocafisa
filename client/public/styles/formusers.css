@@ -33,14 +33,30 @@ body {
     border-radius: 10px;
 }
 
-header {
-    text-align: center;
+.content_register {
+    max-width: 650px;
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(135deg, rgb(27, 145, 72), #f0f0f0, #a6a6a6);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+}
+
+.content_register header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logoReg {
+    width: 100px;
 }
 
 .options {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
 }
 
 .btn{
@@ -83,7 +99,7 @@ header {
     margin-left: 10px;
     border-radius: 10px;
     height: 22px;
-    font-size: 19px;
+    font-size: 17px;
 }
 
 .logo {
@@ -93,7 +109,7 @@ header {
 
 @media (min-width: 768px) {
     .options {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 }
 
@@ -111,8 +127,7 @@ label {
 
 .btn_butones {
     display: flex;
-    justify-content: space-around;
-    gap: 10px;
+    justify-content: space-evenly;
 }
 
 .btn_registrar, .btn_cancelar {
@@ -131,6 +146,12 @@ label {
     background-color: #2ecc71;
 }
 
+.btn_registrar:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+  }
+
 .btn_cancelar {
     background-color: #e74c3c;
     color: white;
@@ -139,5 +160,9 @@ label {
 .btn_cancelar:hover {
     background-color: #c0392b;
 }
+
+.error {
+    border: 2px solid red;
+  }
 
 

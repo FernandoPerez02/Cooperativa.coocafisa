@@ -23,15 +23,15 @@ export default function Formresetpass() {
       <form onSubmit={handleSubmit}>
         <div className="stlvar">
           <label htmlFor="nit">NIT</label>
-          <input type="number" name="nit" id="nit" required />
+          <input type="number" name="nit" id="nit"/>
         </div>
         <div className="stlvar">
           <label htmlFor="newpass">Nueva Contraseña</label>
-          <input type="password" name="newpass" id="newpass" required />
+          <input type="password" name="newpass" id="newpass"/>
         </div>
         <div className="stlvar">
           <label htmlFor="confpass">Confirmar Contraseña</label>
-          <input type="password" name="confpass" id="confpass" required />
+          <input type="password" name="confpass" id="confpass"/>
         </div>
         {alert && <div className="alert">{alert}</div>}
         <div className="btn">

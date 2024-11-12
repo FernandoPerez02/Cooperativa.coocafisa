@@ -68,25 +68,19 @@ router.post('/resetpass', async (req, res) => {
 
     try {
         if (!validatepass.test(newpass)) {
-            return res.status(400).json({
-                message: "La contraseña no es segura. Ten en cuenta las recomendaciones.",
-            });
+            return res.status(401).json({ errors: "La contraseña no es segura. Ten en cuenta las recomendaciones." });
         }
 
         if (newpass !== confpass) {
-            return res.status(400).json({
-                message: "Las contraseñas no coinciden. Inténtalo nuevamente.",
-            });
+            return res.status(401).json({ errors: "Las contraseñas no coinciden. Intentalo nuevamente." });
         }
 
         const hashedPassword = await bcrypt.hash(newpass, 10);
-        const sql = 'UPDATE usuarios SET clave = ? WHERE nit = ?';
+        const sql = 'UPDATE usuarios SET clave = ?,  intentos_fallidos = 0, debe_cambiar_password = FALSE, fecha_password = CURRENT_TIMESTAMP WHERE nit = ?';
         const [result] = await pool.query(sql, [hashedPassword, nit]);
 
         if (result.affectedRows === 0) {
-            return res.status(400).json({
-                message: "No se encontró el usuario con el NIT proporcionado.",
-            });
+            return res.status(401).json({ errors: "No se encontró el usuario con el NIT proporcionado." });
         }
 
         return res.status(201).json({

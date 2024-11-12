@@ -1,7 +1,8 @@
 import axios from "axios";
 
-export const adduser = async (event, router, setAlert) => {
-    const nit = event.target.nit.value;
+export const adduser = async (event, router, setAlert, setErrors) => {
+    event.preventDefault();
+    const nit = event.target.nit.value;  
     const razsoc = event.target.razsoc.value;
     const correo = event.target.correo.value;
     const direc = event.target.direc.value;
@@ -9,6 +10,8 @@ export const adduser = async (event, router, setAlert) => {
     const cel = event.target.cel.value;
     const pass = event.target.pass.value;
     const passcon = event.target.passcon.value;
+
+    setErrors({});
 
     try {
         const response = await axios.post('http://localhost:3001/adduser', {
@@ -21,6 +24,14 @@ export const adduser = async (event, router, setAlert) => {
         setAlert(data.message)
         router.push(data.redirect)
     } catch (error) {
-        setAlert(error.response?.data.message || "Ocurrió un error inesperado.");
+        const errorData = error.response.data.errors;
+        if(error.response && error.response.status === 400) {
+            setErrors(errorData);
+        } else if (error.response && error.response.status === 404) {
+            setAlert(errorData);
+            window.location.href = error.response.data.redirect;
+        } else {
+            setAlert("Error en la solicitud al servidor. Inténtalo de nuevo más tarde.");
+        }
     }
 }

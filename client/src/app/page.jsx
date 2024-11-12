@@ -1,16 +1,13 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import "@public/styles/formusers.css";
 import { auth } from "@/app/api/auth/authService";
 
 export default function Login() {
-    const router = useRouter();
     const [alert, setAlert] = useState(null);
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
-        await auth(event, router, setAlert)
+        await auth(event, setAlert)
     }
     return (
         <div className="content">
@@ -28,6 +25,7 @@ export default function Login() {
                         Nit
                     </label>
                     <input
+                    
                         type="number"
                         id="nit"
                         name="nit"
