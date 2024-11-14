@@ -12,9 +12,13 @@ export default function Menu({ menuOptions }) {
   };
 
   const handleSubmit = async (event) => {
-    await logout(event, setAlert)
-    window.location.href = "/";
-  }
+    try {
+      await logout(event, setAlert);
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      setAlert("Hubo un problema al cerrar sesión. Intenta nuevamente.");
+    }
+  };
 
   return (
     <div className="menu-container">

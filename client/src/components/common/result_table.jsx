@@ -19,7 +19,7 @@ const ResultTable = ({ data, title,headers, fields}) => {
         <h1>{title}</h1>
       </div>
       {data.length === 0 ? (
-        <div className="loading-message">Buscando registros...</div>
+        <div className="loading-message">No se encontaron registros...</div>
       ) : (
         <table className="responsive-table">
           <thead>

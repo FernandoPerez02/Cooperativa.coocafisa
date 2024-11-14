@@ -3,28 +3,17 @@ import { useState, useEffect } from "react";
 import ResultTable from "@/components/common/result_table";
 import { queryEmails } from "@/app/api/authenticated/adminService";
 import HoraForm from "@/components/layout/formhouremail";
+import { ProtectedRoute } from "../../../../components/middleware";
+
 export default function Emails() {
     const [email, setEmail] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const email = await queryEmails();
-                if (email.length === 0) {
-                    setError("No hay correos programados.");
-                } else {
-                    setEmail(email);
-                }
-            } catch (error) {
-                setError("Error al obtener los correos.");
-            } finally {
-                setLoading(false);
-            }
-        };
+            const email = await queryEmails(setError);
+            setEmail(email)
+        }
         fetchData();
     }, []);
 
@@ -44,8 +33,11 @@ export default function Emails() {
         "razonsoc",
         "correo"
     ];
+
+    if (error) return <p style={{ color: "red" }}>{error}</p>;
     return (
         <>
+        <ProtectedRoute/>
         <ResultTable data={email} title={title} headers={headers} fields={fields}/>
         <HoraForm />
         </>

@@ -36,9 +36,10 @@ app.use(
 
 app.get('/session', (req, res) => {
   if (req.session && req.session.name) {
+    console.log("Respuesta de la sesión:", req.session.name);
       return res.json({ isAuthenticated: true, user: req.session.name });
   } else {
-      return res.json({ isAuthenticated: false });
+      return res.json({ isAuthenticated: false, user: null });
   }
 });
 
@@ -61,14 +62,19 @@ app.use("/queryusers", queryUsers);
 const querysAdmin = require("./services/user/admin/querysAdmin");
 app.use("/programmatemails", querysAdmin);
 
-/* router.post('/logout', (req, res) => {
+app.post('/logout', (req, res) => {
   req.session.destroy(err => {
-      if (err) {
-          return res.status(500).send('Error al cerrar sesión');
-      }
-      res.redirect('/');
+    if (err) {
+      return res.status(500).json({ message: 'Error al cerrar sesión' });
+    }
+
+    const userName = req.session ? req.session.name : 'Desconocido';
+    console.log("Cerrando sesión de usuario:", userName);
+
+    res.clearCookie('session_cookie_name');
+    return res.status(200).json({ message: 'Sesión cerrada exitosamente'});
   });
-}); */
+})
 
 app.post("/schedulEmailings", (req, res) => {
   const { hour, minute } = req.body;

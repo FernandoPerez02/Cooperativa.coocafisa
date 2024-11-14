@@ -30,7 +30,7 @@ const routeToIndices = {
     "/home/suppliers/invoices": [4, 5, 6],
     "/home/suppliers/invoices/payments": [4, 5, 6],
     "/home/suppliers/invoices/pending": [4, 5, 6],
-    "/users": [0, 1, 2, 3, 7],
+    "/users": [0, 1, 2, 3],
     "/home/administrator/email": [0, 1, 2, 3]
 }
 

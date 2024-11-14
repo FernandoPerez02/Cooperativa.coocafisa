@@ -6,23 +6,29 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const checkSession = async () => {
             try {
                 const response = await api.get('/session');     
-                console.log(response);
-                const data = await response.json();
-                if (data.user) setUser(data.user);
+                const data = response.data;
+                if (data.isAuthenticated) {
+                    setUser(data.user);
+                } else {
+                    setUser(null);
+                }
             } catch {
                 setUser(null);
+            } finally {
+                setLoading(false);
             }
         };
         checkSession();
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={{ user, loading }}>
             {children}
         </AuthContext.Provider>
     );

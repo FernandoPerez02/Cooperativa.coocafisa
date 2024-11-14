@@ -3,6 +3,7 @@ import IndexLayout from "../home/layout";
 import { useState, useEffect } from "react";
 import ResultTable from "@/components/common/result_table";
 import { queryUsers } from "@/app/api/authenticated/queryService";
+import { ProtectedRoute } from "../../components/middleware";
 
 export default function Users() {
     const [users, setUsers] = useState([]);
@@ -55,6 +56,7 @@ export default function Users() {
 
     return (
         <IndexLayout>
+            <ProtectedRoute/>
             {loading ? (
                 <p>Cargando...</p>
             ) : error ? (

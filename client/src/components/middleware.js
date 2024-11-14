@@ -5,14 +5,18 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/api/auth/authContext';
 
 export function ProtectedRoute({ children }) {
-    const { user } = useAuth();
+    const auth = useAuth();
+    const { user, loading } = auth || {};
     const router = useRouter();
     useEffect(() => {
-        if (user === null) {
+        if (!loading && user === null) {
             router.push('/');
         }
-    }, [user, router]);
-    
+    }, [user, loading, router]);
+
+    if (loading) {
+        return null;
+    }   
 
     return user ? children : null;
 }

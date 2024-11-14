@@ -15,9 +15,6 @@ router.get("/emails", isAuthenticated, roleMiddleware('Administrador'), async (r
             ...result,
             fecpago: formatDate(result.fecpago),
         }));
-        if (formatedResults.length === 0) {
-            return res.status(400).json({ error: "No hay registros de envíos programados." });
-        }
         return res.json(formatedResults);
     } catch (error) {
         return res.status(500).json({ error: "Error en solicitud al servidor." });

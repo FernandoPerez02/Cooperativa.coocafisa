@@ -11,8 +11,6 @@ export const adduser = async (event, router, setAlert, setErrors) => {
     const pass = event.target.pass.value;
     const passcon = event.target.passcon.value;
 
-    setErrors({});
-
     try {
         const response = await axios.post('http://localhost:3001/adduser', {
             nit, razsoc, correo, tel,
@@ -24,14 +22,20 @@ export const adduser = async (event, router, setAlert, setErrors) => {
         setAlert(data.message)
         router.push(data.redirect)
     } catch (error) {
-        const errorData = error.response.data.errors;
-        if(error.response && error.response.status === 400) {
-            setErrors(errorData);
-        } else if (error.response && error.response.status === 404) {
-            setAlert(errorData);
-            window.location.href = error.response.data.redirect;
+        if (error.response) {
+            const errorData = error.response.data.errors;
+            if (error.response.status === 400) {
+                setErrors(errorData);
+            } else if (error.response.status === 404) {
+                setAlert(errorData);
+                window.location.href = error.response.data.redirect;
+            } else {
+                setAlert("Error en la solicitud al servidor. Inténtalo de nuevo más tarde.");
+            }
+        } else if (error.request) {
+            setAlert("No se recibió respuesta del servidor.");
         } else {
-            setAlert("Error en la solicitud al servidor. Inténtalo de nuevo más tarde.");
+            setAlert("Ocurrió un error al enviar la solicitud.");
         }
-    }
+    }    
 }

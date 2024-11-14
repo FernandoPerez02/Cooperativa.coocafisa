@@ -47,11 +47,6 @@ router.post("/",
         if(dateRegister.isBefore(dateLimit)){
           return res.status(403).json({ errors: "Tu contraseña expiro. Debes cambiar tu contraseña.", redirect: "/users/resetpassword/formpass" });
         }
-        const [updateResult] = await pool.query(
-          "UPDATE usuarios SET intentos_fallidos = intentos_fallidos + 1 WHERE nit = ?", 
-          [nit]
-        );
-
         const [updatedUser] = await pool.query(
           "SELECT intentos_fallidos FROM usuarios WHERE nit = ?", 
           [nit]
@@ -70,7 +65,9 @@ router.post("/",
       await pool.query("UPDATE usuarios SET intentos_fallidos = 0 WHERE nit = ?", [nit]);
 
       req.session.name = usuario.nit;
+      req.session.role = usuario.razonsoc;
       console.log('Sesión activa:', req.session);
+      console.log("Rol ", req.session.role);
 
       const redirectPath = usuario.razonsoc === "Administrador"
         ? `/home`

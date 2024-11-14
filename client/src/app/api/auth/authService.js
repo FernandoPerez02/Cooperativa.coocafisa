@@ -56,18 +56,16 @@ export const auth = async (event, setAlert) => {
 };
 
 export const logout = async (event, setAlert) => {
-  event.preventDefault();
   try {
     const response = await api.post('/logout');
     const data = response.data;
-    if (response.status === 200) {
-      setAlert(data.message);
-      window.location.href = "/";
-    } else {
-      setAlert(data.message);
+    if (response.ok) {
+      window.location.href = '/'; 
+    } else { 
+      console.error("Error al cerrar sesión:", data);
     }
   } catch (error) {
-    console.error('Error en la solicitud', error);
-    setAlert('Error en la solicitud al servidor.');
+    console.error("Error al cerrar sesión:", error);
   }
 }
+

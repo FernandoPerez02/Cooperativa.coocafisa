@@ -3,6 +3,7 @@ import { adduser } from "@/app/api/auth/registerService";
 import "@public/styles/formusers.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ProtectedRoute } from "@/components/middleware";
 
 export default function Registerusers() {
   const router = useRouter();
@@ -20,9 +21,12 @@ export default function Registerusers() {
   });
 
   const isValid = 
-    Object.values(formValues).every((value, key) => 
-      key === "direc" || key === "tel" || key === "cel" || value !== "") 
-    && Object.keys(errors).length === 0;
+  Object.entries(formValues).every(([key, value]) => {
+    if (key === "direc" || key === "tel" || key === "cel") {
+      return true; // Estos campos son opcionales, no es necesario que tengan valor
+    }
+    return value !== "" && !errors[key]; // Validación solo para campos obligatorios y sin errores
+  });
 
   // Validación que solo establece el borde rojo si hay un error
   const validateField = (name, value) => {
@@ -50,7 +54,6 @@ export default function Registerusers() {
   };
 
   const handleFocus = () => {
-    // Validar todos los campos obligatorios al tocar cualquier campo
     const newErrors = {};
     Object.keys(formValues).forEach((key) => {
       const value = formValues[key];
@@ -65,7 +68,9 @@ export default function Registerusers() {
   };
 
   return (
-    <div className="content_register">
+    <>
+    <ProtectedRoute/>
+          <div className="content_register">
       <header>
         <img
           src="/images/Logo.cooperativa.png"
@@ -184,11 +189,12 @@ export default function Registerusers() {
 
         {alert && <div className="alert">{alert}</div>}
         
-        {Object.keys(errors).length > 0 && (
-          <div className="general-error-message">
-            <p>Estos campos son obligatorios.</p>
-          </div>
-        )}
+        {Object.keys(errors).some((key) => errors[key]) && (
+  <div className="general-error-message">
+    <p>Estos campos son obligatorios.</p>
+  </div>
+)}
+
 
         <div className="btn_butones">
           <a href="/home">
@@ -203,5 +209,6 @@ export default function Registerusers() {
         </div>
       </form>
     </div>
+    </>
   );
 }
