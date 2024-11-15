@@ -26,15 +26,36 @@ export const queryEmails = async (seterror) => {
     }
 }
 
-export const programmatEmails = async (hora, minuto) => {
+export const programmatEmails = async (hora, minuto, setAlert) => {
     try {
         const response = await api.post("/schedulEmailings", {
             hour:hora,
             minute:minuto,
         });
-        return response.data;
+        const data = response.data;
+        setAlert(data.message);
+        setTimeout(() => {
+            setAlert('');
+        }, 2000);
     } catch (error) {
         console.error("Error al programar correos:", error);
         return [];  
+    }
+}
+
+export const timerEmails = async (setAlert) => {
+    try {
+        const response = await api.get("/emailsprogrammer/timer");
+        const data = response.data;
+        if(response.ok) {
+            return { hour: data.hour, minute: data.minute };
+        } else {
+            setAlert(data.message);
+            return { hour: 0, minute: 0 };
+        }
+    } catch (error) {
+        console.error("Error al obtener el tiempo restante:", error);
+        setAlert(error.response.data.message);
+        return { hour: 0, minute: 0 };
     }
 }

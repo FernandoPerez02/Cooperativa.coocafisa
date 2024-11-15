@@ -2,10 +2,8 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../connectionBD/db');
 const bcrypt = require('bcrypt');
-const { isAuthenticated } = require('../functions/helpers');
-const { roleMiddleware } = require('../functions/helpers');
 
-router.post('/', isAuthenticated, roleMiddleware('Administrador'), async (req, res) => {
+router.post('/', async (req, res) => {
     const { nit, razsoc, direc, correo, tel, cel, pass, passcon } = req.body;
 
     try {

@@ -23,12 +23,11 @@ export default function Registerusers() {
   const isValid = 
   Object.entries(formValues).every(([key, value]) => {
     if (key === "direc" || key === "tel" || key === "cel") {
-      return true; // Estos campos son opcionales, no es necesario que tengan valor
+      return true;
     }
-    return value !== "" && !errors[key]; // Validación solo para campos obligatorios y sin errores
+    return value !== "" && !errors[key];
   });
 
-  // Validación que solo establece el borde rojo si hay un error
   const validateField = (name, value) => {
     let error = "";
     if (value.trim() === "" && ["nit", "razsoc", "correo", "pass", "passcon"].includes(name)) {
@@ -45,7 +44,6 @@ export default function Registerusers() {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
 
-    // Validar solo si el campo no está vacío o es obligatorio
     if (value || ["nit", "razsoc", "correo", "pass", "passcon"].includes(name)) {
       setErrors({ ...errors, [name]: validateField(name, value) });
     } else {

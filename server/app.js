@@ -62,6 +62,9 @@ app.use("/queryusers", queryUsers);
 const querysAdmin = require("./services/user/admin/querysAdmin");
 app.use("/programmatemails", querysAdmin);
 
+const emailsProgrammer = require("./services/user/admin/emailsProgrammer");
+app.use("/emailsprogrammer", emailsProgrammer);
+
 app.post('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) {
@@ -81,14 +84,14 @@ app.post("/schedulEmailings", (req, res) => {
   if (!hour || !minute || isNaN(hour) || isNaN(minute)) {
     return res
       .status(400)
-      .json({ error: "La hora o los minutos no son válidos." });
+      .json({ message: "La hora o los minutos no son válidos." });
   }
 
   if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
     return res
       .status(400)
       .json({
-        error: "La hora o los minutos están fuera del rango permitido.",
+        message: "La hora o los minutos están fuera del rango permitido.",
       });
   }
 

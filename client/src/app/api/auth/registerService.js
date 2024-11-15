@@ -16,11 +16,19 @@ export const adduser = async (event, router, setAlert, setErrors) => {
             nit, razsoc, correo, tel,
             pass, passcon, direc, cel
         });
-
         const data = response.data;
-
-        setAlert(data.message)
-        router.push(data.redirect)
+        setAlert(data.message);
+        setTimeout(() => {
+            event.target.nit.value = '';
+            event.target.razsoc.value = '';
+            event.target.correo.value = '';
+            event.target.direc.value = '';
+            event.target.tel.value = '';
+            event.target.cel.value = '';
+            event.target.pass.value = '';
+            event.target.passcon.value = '';
+            window.location.href = data.redirect;
+        }, 2000);
     } catch (error) {
         if (error.response) {
             const errorData = error.response.data.errors;
@@ -28,7 +36,6 @@ export const adduser = async (event, router, setAlert, setErrors) => {
                 setErrors(errorData);
             } else if (error.response.status === 404) {
                 setAlert(errorData);
-                window.location.href = error.response.data.redirect;
             } else {
                 setAlert("Error en la solicitud al servidor. Inténtalo de nuevo más tarde.");
             }

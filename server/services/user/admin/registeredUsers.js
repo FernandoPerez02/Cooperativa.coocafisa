@@ -3,7 +3,7 @@ const router = express.Router();
 const queryDatabase = require("../../../connectionBD/queryDatabase");
 const { isAuthenticated } = require('../../functions/helpers');
 
-router.get("/users", async (req, res) => {
+router.get("/users", isAuthenticated, async (req, res) => {
     try {
         const query = "SELECT nit, razonsoc, direcc, correo, celular, telefono, fecha_reg FROM usuarios";
         const results = await queryDatabase(query);

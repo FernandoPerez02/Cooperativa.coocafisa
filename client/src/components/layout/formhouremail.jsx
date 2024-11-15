@@ -1,34 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import flatpickr from 'flatpickr';
-import "flatpickr/dist/flatpickr.min.css"; 
+import React, { useState, useEffect } from "react";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 import "@public/styles/programhour.css";
-import { programmatEmails } from '@/app/api/authenticated/adminService';
+import { programmatEmails, timerEmails } from "@/app/api/authenticated/adminService";
 
 const HoraForm = () => {
-  const [hora, setHora] = useState('');
-  const [minuto, setMinuto] = useState('');
-  const [periodo, setPeriodo] = useState('AM');
+  const [hora, setHora] = useState("");
+  const [minuto, setMinuto] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [alert, setAlert] = useState(null);
+  const [timer, setTimer] = useState({hours: "00", minutes: "00", seconds: "00"});
 
   useEffect(() => {
     flatpickr("#hora-input", {
       enableTime: true,
       noCalendar: true,
       dateFormat: "H:i K",
-      time_24hr: false,  
-      minuteIncrement: 5, 
+      time_24hr: false,
+      minuteIncrement: 5,
       onChange: (selectedDates) => {
-        const [hour, minute, period] = selectedDates[0].toLocaleTimeString('en-US').split(':');
+        const [hour, minute] = selectedDates[0]
+          .toLocaleTimeString("en-US")
+          .split(":");
         setHora(hour);
         setMinuto(minute);
-        setPeriodo(period.trim());
-      }
+      },
     });
   }, []);
 
+  useEffect(() => {
+      const fetchSelectedTime = async () => {
+        const response = await timerEmails(setAlert);
+        console.log("Hora devuelta ", response)
+        calculateCountdown(response)
+      };
+      fetchSelectedTime();
+  }, []);
+
+  const calculateCountdown = (selectedTime) => {
+    const now = new Date();
+    const targetTime = new Date();
+    targetTime.setHours(selectedTime.hour || 24, selectedTime.minute || 0, 0);
+    if (now > targetTime) targetTime.setDate(targetTime.getDate() + 1);
+    const countdown = targetTime - now;
+    const hours = String(Math.floor((countdown / (1000 * 60 * 60)) % 24)).padStart(2, "0");
+    const minutes = String(Math.floor((countdown / (1000 * 60)) % 60)).padStart(2, "0");
+    const seconds = String(Math.floor((countdown / 1000) % 60)).padStart(2, "0");
+    setTimer({ hours, minutes, seconds });
+  };
+
+  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await programmatEmails(hora, minuto)
+    await programmatEmails(hora, minuto, setAlert);
   };
 
   const toggleFormVisibility = () => {
@@ -37,24 +62,38 @@ const HoraForm = () => {
 
   return (
     <div>
-      <div className="icon-container">
-        <i className="bi bi-hourglass-top cursor-pointer" onClick={toggleFormVisibility}></i>
+      <div className="icon-container" onClick={toggleFormVisibility}>
+        <i className="bi bi-hourglass-top cursor-pointer"></i>
       </div>
-      <div className={`form-container ${isVisible ? 'show' : ''} p-6 rounded-lg shadow-lg bg-white`}>
-        <h2 className="text-2xl font-semibold mb-4">Programar Correos</h2>
+      <div className={`form-container ${isVisible ? "show" : ""}`}>
+        <h2>Programar Correos</h2>
+        <h3 className="next-send">Próximo envío en:</h3>
+        <div className="timer-container">
+          <div className="time-box">
+            <span id="hours">{timer.hours}</span>
+            <span className="label">Horas</span>
+          </div>
+          <div className="time-box">
+            <span id="minutes">{timer.minutes}</span>
+            <span className="label">Minutos</span>
+          </div>
+          <div className="time-box">
+            <span id="seconds">{timer.seconds}</span>
+            <span className="label">Segundos</span>
+          </div>
+        </div>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="hora" className="block text-sm font-medium text-gray-700">Hora</label>
+          <div className="form-group">
+            <label htmlFor="hora-input">Hora:</label>
             <input
               type="text"
               id="hora-input"
-              className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full"
+              className="time-input"
               placeholder="Selecciona la hora"
             />
           </div>
-          <button type="submit" className="btn-submit mt-4 py-2 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-            Guardar
-          </button>
+          {alert && <div className="alert">{alert}</div>}
+          <button type="submit" className="btn-submit">Guardar</button>
         </form>
       </div>
     </div>
