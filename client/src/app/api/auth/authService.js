@@ -21,7 +21,7 @@ export const auth = async (event, setAlert) => {
       event.target.password.value = "";
       setTimeout(() => {
         window.location.href = data.redirect;
-      }, 1000);
+      }, 2000);
     }
   } catch (error) {
     const errorData = error.response.data.errors;
@@ -34,12 +34,12 @@ export const auth = async (event, setAlert) => {
       setAlert(errorData);
       setTimeout(() => {
         window.location.href = "/users/resetpassword/formpass";
-      }, 1000);
+      }, 2000);
     } else if (error.response && error.response.status === 404) {
       setAlert(errorData);
       setTimeout(() => {
         window.location.href = error.response.data.redirect;
-      }, 1000);
+      }, 2000);
     } else if (error.response && error.response.status === 500){
       setAlert(errorData)
     }
@@ -51,21 +51,35 @@ export const auth = async (event, setAlert) => {
       setAlert("");
       event.target.nit.value = "";
       event.target.password.value = "";
-    }, 1000);
+    }, 2000);
   }
 };
 
-export const logout = async (event, setAlert) => {
+export const logout = async (event,setAlert) => {
+  event.preventDefault();
   try {
-    const response = await api.post('/logout');
+    const response = await api.get('/logout');
     const data = response.data;
-    if (response.ok) {
-      window.location.href = '/'; 
+    if (response.status === 200) {
+      setAlert(data.message);
+      setTimeout(() => {
+        setAlert("");
+        window.location.href = data.redirect;
+      }, 2000);
     } else { 
       console.error("Error al cerrar sesión:", data);
     }
   } catch (error) {
-    console.error("Error al cerrar sesión:", error);
+    errorData = error.response.data.error || error.response.data.errors;
+    if (error.response && error.response.status === 400) { 
+      setAlert(errorData);
+    } else {
+      setAlert("Error al cerrar sesión.");
+    }
+    setTimeout(() => {
+      setAlert("");
+    }, 2000);
+    console.log("Error al cerrar sesión:", error);
   }
 }
 

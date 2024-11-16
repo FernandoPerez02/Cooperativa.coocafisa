@@ -8,10 +8,11 @@ export default function InvoicePending() {
     const [data, setInvoices] = useState([]);
     const [nit, setNit] = useState("N/A");
     const [razonsoc, setRazonsoc] = useState("N/A"); 
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchInvoices = async () => {
-            const invoices = await queryinvoicepending();
+            const invoices = await queryinvoicepending(setError);
             const formattedData = invoices.map((invoice, index) => ({
                 id: invoice.id || index + 1,
                 nit: invoice.nit || "N/A",
@@ -60,6 +61,7 @@ export default function InvoicePending() {
             razonsoc={razonsoc} 
             headers={headers}
             expandedData={expandedData}
+            error={error}
         />
     );  
 }

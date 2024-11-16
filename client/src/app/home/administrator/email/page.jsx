@@ -16,6 +16,7 @@ export default function Emails() {
         }
         fetchData();
     }, []);
+    console.log("Datos de correos", error);
 
     const title = "Correos Programados";
     const headers = [
@@ -34,11 +35,10 @@ export default function Emails() {
         "correo"
     ];
 
-    if (error) return <p style={{ color: "red" }}>{error}</p>;
     return (
         <>
         <ProtectedRoute/>
-        <ResultTable data={email} title={title} headers={headers} fields={fields}/>
+        <ResultTable data={email} title={title} headers={headers} fields={fields} error={error} />
         <HoraForm />
         </>
     )

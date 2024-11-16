@@ -1,0 +1,19 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.preloader {
+    position: relative;
+    top: 50px;
+}
+
+.mug {
+    position: relative;
+    background-color: linear-gradient(135deg, #2c3e50, #37a84a);
+    width: 280px;
+    height: 300px;
+    border-bottom-left-radius: 40%;
+    border-bottom-right-radius: 40%;
+}

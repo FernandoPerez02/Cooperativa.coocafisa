@@ -7,26 +7,13 @@ import { ProtectedRoute } from "../../components/middleware";
 
 export default function Users() {
     const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const users = await queryUsers();
-                if (users.length === 0) {
-                    setError("No hay usuarios registrados.");
-                } else {
-                    setUsers(users); 
-                }
-            } catch (error) {
-                setError("Error al obtener los usuarios.");
-            } finally {
-                setLoading(false);
+            const usersData = await queryUsers(setError)
+            setUsers(usersData)
             }
-        };
         fetchData();
     }, []);
 
@@ -42,9 +29,8 @@ export default function Users() {
         "Fecha de Registro",
     ];
 
-    // Los campos deben coincidir con las claves de los objetos de los usuarios
     const fields = [
-        "num",      // Para el índice
+        "num",
         "nit",
         "razonsoc",
         "direcc",
@@ -53,22 +39,17 @@ export default function Users() {
         "telefono",
         "fecha_reg"
     ];
-
     return (
         <IndexLayout>
+            if (error) return <p style={{ color: "red" }}>{error}</p>;
             <ProtectedRoute/>
-            {loading ? (
-                <p>Cargando...</p>
-            ) : error ? (
-                <p style={{ color: "red" }}>{error}</p>
-            ) : (
                 <ResultTable
                     title={title}
                     headers={headers}
                     data={users}
                     fields={fields}
+                    error={error}
                 />
-            )}
         </IndexLayout>
     );
 }

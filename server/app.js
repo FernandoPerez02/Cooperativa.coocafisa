@@ -43,7 +43,6 @@ app.get('/session', (req, res) => {
   }
 });
 
-
 const authentication = require("./services/user/authentication");
 app.use("/auth", authentication);
 
@@ -65,17 +64,15 @@ app.use("/programmatemails", querysAdmin);
 const emailsProgrammer = require("./services/user/admin/emailsProgrammer");
 app.use("/emailsprogrammer", emailsProgrammer);
 
-app.post('/logout', (req, res) => {
+app.get('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) {
       return res.status(500).json({ message: 'Error al cerrar sesión' });
     }
-
     const userName = req.session ? req.session.name : 'Desconocido';
     console.log("Cerrando sesión de usuario:", userName);
-
     res.clearCookie('session_cookie_name');
-    return res.status(200).json({ message: 'Sesión cerrada exitosamente'});
+    return res.status(200).json({ message: 'Sesión cerrada exitosamente', redirect: "/"});
   });
 })
 

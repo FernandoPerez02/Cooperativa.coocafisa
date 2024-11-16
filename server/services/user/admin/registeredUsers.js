@@ -9,8 +9,7 @@ router.get("/users", isAuthenticated, async (req, res) => {
         const results = await queryDatabase(query);
         return res.json(results);
     } catch (error) {
-        console.error("Error al obtener los usuarios:", error);
-        return res.status(500).json({ error: "Error al obtener los usuarios." });
+        return res.status(500).json({ error: "Falla en el servidor. Intenta de nuevo mas tarde." });
     }
 });
 

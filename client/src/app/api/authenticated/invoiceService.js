@@ -13,8 +13,8 @@ export const queryInvoices = async (setError) => {
             setError(errorData);   
             window.location.href = error.response.data.redirect;
         } else {
-            setAlert("Error en la solicitud al servidor. Inténtalo de nuevo más tarde.");
-        }
+            setError("Error en la solicitud al servidor. Inténtalo de nuevo más tarde.");
+        } return[]
     }
 };
 
@@ -31,8 +31,8 @@ export const queryinvoicepayment = async (setError) => {
         } else if (error.response && error.response.status === 404) {
             window.location.href = error.response.data.redirect;
         } else {
-            setAlert("Error en la solicitud al servidor. Inténtalo de nuevo más tarde.");
-        }
+            setError("Error en la solicitud al servidor. Inténtalo de nuevo más tarde.");
+        } return[]
     }
 };
 
@@ -50,7 +50,7 @@ export const queryinvoicepending = async (setError) => {
             setError(errorData);   
             window.location.href = error.response.data.redirect;
         } else {
-            setAlert("Error en la solicitud al servidor. Inténtalo de nuevo más tarde.");
-        }
+            setError("Error en la solicitud al servidor. Inténtalo de nuevo más tarde.");
+        } return[]
     }
 };

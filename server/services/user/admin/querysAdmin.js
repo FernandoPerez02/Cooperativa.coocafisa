@@ -17,7 +17,7 @@ router.get("/emails", isAuthenticated, roleMiddleware('Administrador'), async (r
         }));
         return res.json(formatedResults);
     } catch (error) {
-        return res.status(500).json({ error: "Error en solicitud al servidor." });
+        return res.status(500).json({ error: "Error en la solicitud al servidor. Intenta de nuevo mas tarde." });
     }
 });
 

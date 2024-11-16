@@ -185,7 +185,7 @@ export default function Registerusers() {
           </div>
         </div>
 
-        {alert && <div className="alert">{alert}</div>}
+        {alert && <div className="error-message">{alert}</div>}
         
         {Object.keys(errors).some((key) => errors[key]) && (
   <div className="general-error-message">

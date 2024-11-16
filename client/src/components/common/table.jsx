@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import "@public/styles/table.css";
 
-const Table = ({ data, title, nit, razonsoc, headers, expandedData }) => {
+const Table = ({ data, title, nit, razonsoc, headers, expandedData, error }) => {
   const [expandedRows, setExpandedRows] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -30,9 +30,11 @@ const Table = ({ data, title, nit, razonsoc, headers, expandedData }) => {
           <span><strong>Razón Social:</strong> {razonsoc}</span>
         </div>
       </div>
-      {data.length === 0 ? (
-        <div className="loading-message">No se encontraron registros disponibles...</div>
-      ) : (
+      {error ? (
+            <div className="error-message">{error}</div>
+          ) : data.length === 0 ? (
+            <div className="loading-message">No se encontraron registros disponibles...</div>
+          ) : (
         <table className="responsive-table">
           <thead>
             <tr>
@@ -72,7 +74,7 @@ const Table = ({ data, title, nit, razonsoc, headers, expandedData }) => {
             ))}
           </tbody>
         </table>
-      )}
+          )}
       <div className="pagination">
         {Array.from({ length: totalPages }).map((_, index) => (
           <button 

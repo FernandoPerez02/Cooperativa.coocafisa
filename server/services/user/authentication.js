@@ -78,7 +78,6 @@ router.post("/",
         redirect: redirectPath,
       });
     } catch (error) {
-      console.error("Error en el servidor", error);
       return res.status(500).json({ errors: "Error en el servidor. Intenta nuevamente más tarde.", redirect: "/" });
     }
   }

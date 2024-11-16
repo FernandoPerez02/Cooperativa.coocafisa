@@ -6,18 +6,15 @@ import { logout } from "@/app/api/auth/authService";
 
 export default function Menu({ menuOptions }) {
   const [menuVisible, setMenuVisible] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   const toggleMenu = () => {
     setMenuVisible((prev) => !prev);
   };
 
   const handleSubmit = async (event) => {
-    try {
-      await logout(event, setAlert);
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-      setAlert("Hubo un problema al cerrar sesión. Intenta nuevamente.");
-    }
+    event.preventDefault();
+    await logout(event, setAlert);
   };
 
   return (
@@ -43,6 +40,7 @@ export default function Menu({ menuOptions }) {
               <form onSubmit={handleSubmit}>
                 <button type="submit" className="logout-button">Cerrar Sesión</button>
               </form>
+              {alert && <div className="alert">{alert}</div>}
             </li>
           </ul>
         </nav>

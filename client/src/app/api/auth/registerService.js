@@ -44,5 +44,8 @@ export const adduser = async (event, router, setAlert, setErrors) => {
         } else {
             setAlert("Ocurrió un error al enviar la solicitud.");
         }
+        setTimeout(() => {
+            setAlert("");
+          }, 2000);
     }    
 }

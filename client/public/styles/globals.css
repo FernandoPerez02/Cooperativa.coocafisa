@@ -81,3 +81,7 @@ button {
   height: auto;
   padding-left: 20px;
 }
+
+.error-message {
+  color: red;
+}
