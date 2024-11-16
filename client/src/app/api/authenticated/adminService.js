@@ -32,6 +32,7 @@ export const programmatEmails = async (hora, minuto, setAlert) => {
             hour:hora,
             minute:minuto,
         });
+        console.log("envio de hora", hora, minuto);
         const data = response.data;
         setAlert(data.message);
         setTimeout(() => {
@@ -47,8 +48,9 @@ export const timerEmails = async (setAlert) => {
     try {
         const response = await api.get("/emailsprogrammer/timer");
         const data = response.data;
-        if(response.ok) {
-            return { hour: data.hour, minute: data.minute };
+        console.log("Prueba de peticion ",data);
+        if(response.status === 200) {
+            return data;
         } else {
             setAlert(data.message);
             return { hour: 0, minute: 0 };

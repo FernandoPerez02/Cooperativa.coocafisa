@@ -9,51 +9,54 @@ const HoraForm = () => {
   const [minuto, setMinuto] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [alert, setAlert] = useState(null);
-  const [timer, setTimer] = useState({hours: "00", minutes: "00", seconds: "00"});
+  const [timer, setTimer] = useState({ hours: "00", minutes: "00", seconds: "00" });
 
   useEffect(() => {
     flatpickr("#hora-input", {
       enableTime: true,
       noCalendar: true,
       dateFormat: "H:i K",
-      time_24hr: false,
+      time_24hr: true,
       minuteIncrement: 5,
       onChange: (selectedDates) => {
-        const [hour, minute] = selectedDates[0]
-          .toLocaleTimeString("en-US")
-          .split(":");
-        setHora(hour);
-        setMinuto(minute);
+        const date = selectedDates[0];
+        setHora(String(date.getHours()).padStart(2, "0"));
+        setMinuto(String(date.getMinutes()).padStart(2, "0"));
       },
     });
   }, []);
 
-  useEffect(() => {
-      const fetchSelectedTime = async () => {
-        const response = await timerEmails(setAlert);
-        console.log("Hora devuelta ", response)
-        calculateCountdown(response)
-      };
-      fetchSelectedTime();
-  }, []);
 
-  const calculateCountdown = (selectedTime) => {
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (hora && minuto) {
+        calculateCountdown(hora, minuto); 
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [hora, minuto]);
+
+  const calculateCountdown = (hour, minute) => {
     const now = new Date();
     const targetTime = new Date();
-    targetTime.setHours(selectedTime.hour || 24, selectedTime.minute || 0, 0);
+
+    targetTime.setHours(hour || 0, minute || 0, 0, 0);
+
     if (now > targetTime) targetTime.setDate(targetTime.getDate() + 1);
     const countdown = targetTime - now;
+
     const hours = String(Math.floor((countdown / (1000 * 60 * 60)) % 24)).padStart(2, "0");
     const minutes = String(Math.floor((countdown / (1000 * 60)) % 60)).padStart(2, "0");
     const seconds = String(Math.floor((countdown / 1000) % 60)).padStart(2, "0");
+
     setTimer({ hours, minutes, seconds });
   };
-
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     await programmatEmails(hora, minuto, setAlert);
+    calculateCountdown(hora, minuto);
   };
 
   const toggleFormVisibility = () => {
