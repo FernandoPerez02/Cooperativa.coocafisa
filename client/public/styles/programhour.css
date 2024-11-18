@@ -18,6 +18,15 @@ body {
     color: #225e2b;
 }
 
+.icon-container-close{
+    position: relative;
+    top: -15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #000000;
+    transition: transform 0.3s ease;
+}
+
 .form-container {
     display: none;
     flex-direction: column;

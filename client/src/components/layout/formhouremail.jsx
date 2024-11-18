@@ -12,6 +12,15 @@ const HoraForm = () => {
   const [timer, setTimer] = useState({ hours: "00", minutes: "00", seconds: "00" });
 
   useEffect(() => {
+    const getTime = async () => {
+      const data = await timerEmails(setAlert);
+      setHora(data.hour);
+      setMinuto(data.minute);
+    };
+    getTime();
+  }, []);
+
+  useEffect(() => {
     flatpickr("#hora-input", {
       enableTime: true,
       noCalendar: true,
@@ -20,14 +29,15 @@ const HoraForm = () => {
       minuteIncrement: 5,
       onChange: (selectedDates) => {
         const date = selectedDates[0];
-        setHora(String(date.getHours()).padStart(2, "0"));
-        setMinuto(String(date.getMinutes()).padStart(2, "0"));
+        const newHour = String(date.getHours()).padStart(2, "0");
+        const newMinute = String(date.getMinutes()).padStart(2, "0");
+        setHora(newHour);
+        setMinuto(newMinute);
       },
     });
   }, []);
 
-
-  useEffect(() => {
+useEffect(() => {
     const intervalId = setInterval(() => {
       if (hora && minuto) {
         calculateCountdown(hora, minuto); 
@@ -69,6 +79,9 @@ const HoraForm = () => {
         <i className="bi bi-hourglass-top cursor-pointer"></i>
       </div>
       <div className={`form-container ${isVisible ? "show" : ""}`}>
+        <div className="icon-container-close">
+        <i className="bi bi-x-lg" onClick={toggleFormVisibility}></i> 
+        </div> 
         <h2>Programar Correos</h2>
         <h3 className="next-send">Próximo envío en:</h3>
         <div className="timer-container">
