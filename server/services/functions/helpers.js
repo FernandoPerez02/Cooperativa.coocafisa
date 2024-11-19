@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 function formatDate(dateString) {
     if (!dateString || isNaN(new Date(dateString))) {
         return "Sin fecha";
@@ -25,6 +27,10 @@ const roleMiddleware = (role) => (req, res, next) => {
     }
     next();
 };
+
+function generarToken () {
+    return crypto.randomBytes(20).toString('hex');
+}
     
 
-module.exports = { formatDate, isAuthenticated, roleMiddleware };
+module.exports = { formatDate, isAuthenticated, roleMiddleware, generarToken };

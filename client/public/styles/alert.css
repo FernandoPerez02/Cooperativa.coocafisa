@@ -1,0 +1,34 @@
+.alert-popup {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .alert-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .alert-message {
+    font-size: 16px;
+  }
+  
+  .close-button {
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #721c24;
+  }
+  

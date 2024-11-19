@@ -1,17 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../../../connectionBD/db');
-const transporter = require('../emailService');
+const {transporter} = require('../emailService');
 const bcrypt = require('bcrypt');
+const { generarToken } = require('../../functions/helpers');
 
-const resetMail = async (email) => {
+const resetMail = async (email, enlace) => {
+    const transport = await transporter();
     try {
-        const transport = await transporter();
         const mailOptions = {
             from: 'soporte.coocafisa@gmail.com',
             to: email,
             subject: 'Restablecimiento de Contraseña',
-            text: 'Ingresa al siguiente link para cambiar tu contraseña: [http://localhost:3000/users/resetpassword/formpass]',
+            html: `<p>Hola, <br /> para completar el restablecimiento de tu contraseña, haz click en el siguiente enlace: <a href="${enlace}">${enlace}</a></p>`,
         };
 
         await transport.sendMail(mailOptions);
@@ -24,23 +25,32 @@ const resetMail = async (email) => {
 };
 
 router.post('/emailresetpass', async (req, res) => {
-    const gmail = req.body.gmail;
     const user = req.body.nit;
-
-    if (!gmail || !user) {
+    const token = generarToken();
+    if (!user) {
         return res.status(400).json({
-            message: "'Por favor ingresar un correo para continuar.",
+            message: "Las credenciales ingresadas no son correctas.",
         });
     }
 
     try {
-        const [users] = await pool.query('SELECT * FROM usuarios WHERE correo = ? and nit = ?', [gmail, user]);
+        const [users] = await pool.query('SELECT nit, correo FROM usuarios WHERE nit = ?', [user]);
+        if (users.length === 0) {
+            return res.status(404).json({
+                message: "Usuario no encontrado.",
+            });
+        }
         
         if (users.length > 0) {
-            const emailSent = await resetMail(gmail);
+            const gmail = users[0].correo;
+            const expiracionToken = new Date(Date.now() + 3600000);
+            await pool.query('UPDATE usuarios SET token = ?, token_expiracion = ? WHERE nit = ?', [token, expiracionToken, user]);
+            const enlace = `http://localhost:3000/users/resetpassword/formpass?token=${token}`
+            const emailSent = await resetMail(gmail, enlace);
             if (emailSent) {
-                return res.status(201).json({
+                return res.status(200).json({
                     message: "Correo enviado exitosamente. Revisa tu bandeja de entrada.",
+                    redirect: "/"
                 });
             } else {
                 return res.status(400).json({
@@ -60,27 +70,40 @@ router.post('/emailresetpass', async (req, res) => {
     }
 });
 
-
-// Formulario de restablecimiento de contraseña.
 router.post('/resetpass', async (req, res) => {
     const validatepass = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d{2})(?!.*\s)[\w!@#$%^&*(),.?":{}|<>]{8,16}$/;
-    const { newpass, confpass, nit } = req.body;
+    const { newpass, confpass, token } = req.body;
+    console.log("Token de validación", token);
 
     try {
         if (!validatepass.test(newpass)) {
-            return res.status(401).json({ errors: "La contraseña no es segura. Ten en cuenta las recomendaciones." });
+            return res.status(400).json({ errors: "La contraseña no es segura. Debe contener al menos una mayúscula, dos números, y no puede tener espacios." });
         }
 
         if (newpass !== confpass) {
-            return res.status(401).json({ errors: "Las contraseñas no coinciden. Intentalo nuevamente." });
+            return res.status(400).json({ errors: "Las contraseñas no coinciden. Por favor, intenta nuevamente." });
+        }
+
+        const tokenQuery = 'SELECT token FROM usuarios WHERE token = ?';
+        const [tokenResult] = await pool.query(tokenQuery, [token]);
+
+        if (!tokenResult || tokenResult.length === 0) {
+            return res.status(400).json({ errors: "Token no válido o no encontrado." });
+        }
+
+        const now = new Date();
+        const tokenExpiration = new Date(tokenResult[0].token_expiracion);
+        if (now > tokenExpiration) {
+            return res.status(400).json({ errors: "El token ha expirado. Solicita uno nuevo para restablecer la contraseña." });
         }
 
         const hashedPassword = await bcrypt.hash(newpass, 10);
-        const sql = 'UPDATE usuarios SET clave = ?,  intentos_fallidos = 0, debe_cambiar_password = FALSE, fecha_password = CURRENT_TIMESTAMP WHERE nit = ?';
-        const [result] = await pool.query(sql, [hashedPassword, nit]);
+
+        const updateQuery = 'UPDATE usuarios SET clave = ?, intentos_fallidos = 0, debe_cambiar_password = FALSE, fecha_password = CURRENT_TIMESTAMP, token = NULL, token_expiracion = NULL WHERE token = ?';
+        const [result] = await pool.query(updateQuery, [hashedPassword, token]);
 
         if (result.affectedRows === 0) {
-            return res.status(401).json({ errors: "No se encontró el usuario con el NIT proporcionado." });
+            return res.status(400).json({ errors: "No se encontró un usuario asociado con el token proporcionado." });
         }
 
         return res.status(201).json({
@@ -88,8 +111,45 @@ router.post('/resetpass', async (req, res) => {
         });
     } catch (error) {
         console.error('Error al restablecer la contraseña:', error);
+        return res.status(500).json({
+            message: "Hubo un problema al restablecer tu contraseña. Intenta más tarde.",
+        });
+    }
+});
+
+router.get('/getToken', async (req, res) => {
+    const reqToken  = req.query.token;
+    console.log("Este es el token de la petición: ", reqToken);
+    if (!reqToken) {
         return res.status(400).json({
-            message: "Hubo un problema al restablecer tu contraseña. Inténtalo más tarde.",
+            message: "Token no proporcionado."});
+    }
+    try {
+        const validateTokenQuery = (`SELECT token, token_expiracion,
+            TIMESTAMPDIFF(MINUTE, token_expiracion, CURRENT_TIMESTAMP)
+            AS minutos_transcurridos FROM usuarios WHERE token = ?`);
+        const [result] = await pool.query(validateTokenQuery, [reqToken])
+
+        if (result.length === 0) {
+            return res.status(400).json({message: "El token no existe o ha expirado."});
+        }
+
+        console.log("Resultado: ",result[0].token)
+
+        if (result[0].token) {
+            const { minutos_transcurridos } = result[0];
+            if (minutos_transcurridos >= 60) {
+                return res.status(400).json({message: "El token ha expirado. Por favor, solicite uno nuevo."});
+            } else {
+                return res.status(200).json({
+                    message: "Validación correcta.", 
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error en la consulta de la base de datos:', error);
+        return res.status(500).json({
+            message: "Ocurrió un error en la solicitud. Inténtalo de nuevo más tarde.",
         });
     }
 });

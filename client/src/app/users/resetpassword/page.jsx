@@ -2,16 +2,29 @@
 import { useState } from "react";
 import { emailValidate } from "@/app/api/auth/passwordService";
 import "@public/styles/formusers.css"
+import AlertPopup from "@/components/common/alert";
 export default function Formvalidatemail() {
     const [alert, setAlert] = useState(null);
-    console.log(alert)
+    const [showAlert, setShowAlert] = useState(false);
+
     const handleSubmit =  async (event) => {
         event.preventDefault();
         await emailValidate(event, setAlert)
+        handleAlert();
     }
+
+
+    const handleAlert = () => {
+        setShowAlert(true);
+    };
+
+    const closeAlert = () => {
+        setShowAlert(false);
+    };
 
     return (
         <div className="content">
+            <AlertPopup message={alert} showAlert={showAlert} onClose={closeAlert} />
             <header className="flex flex-col items-center">
           <img
             src="/images/Logo.cooperativa.png"
@@ -25,13 +38,7 @@ export default function Formvalidatemail() {
                         <label htmlFor="nit">Nit</label>
                         <input type="number" name="nit" id="nit"/>
                     </div>              
-                    <div className="stlvar">
-                        <label htmlFor="gmail">Gmail</label>
-                        <input type="email" name="gmail" id="gmail"/>
-                    </div>
-
                     <div className="btn_butones">
-                    {alert && <div className="alert">{alert}</div>}
                     <div className="btn">
                         <a href="/"><button type="button" className="btn_regresar">Regresar</button></a>
                     </div>

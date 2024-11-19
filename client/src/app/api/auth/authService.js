@@ -3,7 +3,9 @@ import axios from "axios";
 export const api = axios.create({
   baseURL: "http://localhost:3001",
   withCredentials: true,
-  headers: { "Content-Type": "application/json" },
+  headers: { 
+    "Content-Type": "application/json",
+   },
 });
 
 export const auth = async (event, setAlert) => {
@@ -33,7 +35,7 @@ export const auth = async (event, setAlert) => {
     } else if (error.response && error.response.status === 403) {
       setAlert(errorData);
       setTimeout(() => {
-        window.location.href = "/users/resetpassword/formpass";
+        window.location.href = error.response.data.redirect;
       }, 2000);
     } else if (error.response && error.response.status === 404) {
       setAlert(errorData);
