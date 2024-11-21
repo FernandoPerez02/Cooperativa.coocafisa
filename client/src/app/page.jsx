@@ -1,13 +1,17 @@
 "use client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import "@public/styles/formusers.css";
 import { auth } from "@/app/api/auth/authService";
+import {Loader} from "@/components/common/preloader";
 
 export default function Login() {
+    const [type, setType] = useState(false);
     const [alert, setAlert] = useState(null);
-
+    const [loading, setLoading] = useState(false);
     const handleSubmit = async (event) => {
-        await auth(event, setAlert)
+        setLoading(true);
+        event.preventDefault();
+        await auth(event, setAlert, setLoading, setType);
     }
     return (
         <div className="content">
@@ -47,7 +51,6 @@ export default function Login() {
                     />
                 </div>
                 <div className="btn">
-                {alert && <div className="alert">{alert}</div>}
                     <button type="submit" className="btn_ingresar w-full">
                         Ingresar
                     </button>
@@ -62,6 +65,7 @@ export default function Login() {
                     </div>
                 </div>
                </form>
+               {loading && <Loader alert={alert} type={type}/>}
         </div>
     );
 }

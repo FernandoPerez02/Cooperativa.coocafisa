@@ -1,13 +1,15 @@
-// Preloader.js
-import React from 'react';
-import "@public/styles/preloader.css";
+import React, { useEffect } from 'react';
+import '@public/styles/preloader.css';
+import AlertPopup from './alert';
 
-function Preloader() {
-    return (
-      <div className="preloader">
-        <div className="mug"></div>
-      </div>
-    );
-  }
-  
-  export default Preloader;
+export const Loader = ({alert, type}) => {
+  return (
+    <div className="loader-container">
+      <AlertPopup message={alert} type={type} />
+      <div className="circle"></div>
+      <div className="circle"></div>
+      <div className="circle"></div>
+      <div className="circle"></div>
+    </div>
+  );
+};

@@ -1,14 +1,17 @@
 "use client"
 import { adduser } from "@/app/api/auth/registerService";
 import "@public/styles/formusers.css";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProtectedRoute } from "@/components/middleware";
+import { Loader } from "@/components/common/preloader";
+import AlertPopup from "@/components/common/alert";
 
 export default function Registerusers() {
-  const router = useRouter();
+  const [showAlert, setShowAlert] = useState(true);
+  const [type, setType] = useState("");
   const [alert, setAlert] = useState(null);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
     nit: "",
     razsoc: "",
@@ -62,12 +65,25 @@ export default function Registerusers() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await adduser(event, router, setAlert, setErrors);
+    setLoading(true);
+    await adduser(event, setAlert, setType, setLoading);
   };
+
+  useEffect(() => {
+    if (showAlert) {
+      const timer = setTimeout(() => {
+        setShowAlert(false);
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [showAlert]);
 
   return (
     <>
     <ProtectedRoute/>
+    {showAlert && <AlertPopup message={`La contraseña debe ser mínimo de 8 caracteres
+     y máximo de 16. Debe contener al menos una mayúscula, un número y un carácter especial.`}
+      type={"alertMessage"} />}
           <div className="content_register">
       <header>
         <img
@@ -81,7 +97,7 @@ export default function Registerusers() {
       <form onSubmit={handleSubmit}>
         <div className="options">
           <div className="stlvar">
-            <label htmlFor="nit">Nit</label>
+            <label htmlFor="nit">Nit*</label>
             <input 
               type="number" 
               name="nit" 
@@ -89,12 +105,12 @@ export default function Registerusers() {
               value={formValues.nit}
               onChange={handleChange}
               onFocus={handleFocus}
-              className={errors.nit ? 'error' : ''}
+              className={errors.nit}
             />
           </div>
 
           <div className="stlvar">
-            <label htmlFor="razsoc">Razón Social</label>
+            <label htmlFor="razsoc">Razón Social*</label>
             <input 
               type="text" 
               name="razsoc" 
@@ -102,7 +118,7 @@ export default function Registerusers() {
               value={formValues.razsoc} 
               onChange={handleChange}
               onFocus={handleFocus}
-              className={errors.razsoc ? 'error' : ''}
+              className={errors.razsoc}
             />
           </div>
 
@@ -115,12 +131,12 @@ export default function Registerusers() {
               value={formValues.direc} 
               onChange={handleChange}
               onFocus={handleFocus}
-              className={errors.direc ? 'error' : ''}
+              className={errors.direc}
             />
           </div>
 
           <div className="stlvar">
-            <label htmlFor="correo">Correo Electrónico</label>
+            <label htmlFor="correo">Correo Electrónico*</label>
             <input 
               type="email" 
               name="correo" 
@@ -128,7 +144,7 @@ export default function Registerusers() {
               value={formValues.correo} 
               onChange={handleChange}
               onFocus={handleFocus}
-              className={errors.correo ? 'error' : ''}
+              className={errors.correo}
             />
           </div>
 
@@ -141,7 +157,7 @@ export default function Registerusers() {
               value={formValues.tel} 
               onChange={handleChange}
               onFocus={handleFocus}
-              className={errors.tel ? 'error' : ''}
+              className={errors.tel}
             />
           </div>
 
@@ -154,12 +170,12 @@ export default function Registerusers() {
               value={formValues.cel} 
               onChange={handleChange}
               onFocus={handleFocus}
-              className={errors.cel ? 'error' : ''}
+              className={errors.cel}
             />
           </div>
 
           <div className="stlvar">
-            <label htmlFor="pass">Contraseña</label>
+            <label htmlFor="pass">Contraseña*</label>
             <input 
               type="password" 
               name="pass" 
@@ -167,12 +183,12 @@ export default function Registerusers() {
               value={formValues.pass} 
               onChange={handleChange}
               onFocus={handleFocus}
-              className={errors.pass ? 'error' : ''}
+              className={errors.pass}
             />
           </div>
 
           <div className="stlvar">
-            <label htmlFor="passcon">Confirmar Contraseña</label>
+            <label htmlFor="passcon">Confirmar Contraseña*</label>
             <input 
               type="password" 
               name="passcon" 
@@ -180,16 +196,14 @@ export default function Registerusers() {
               value={formValues.passcon} 
               onChange={handleChange}
               onFocus={handleFocus}
-              className={errors.passcon ? 'error' : ''}
+              className={errors.passcon}
             />
           </div>
         </div>
-
-        {alert && <div className="error-message">{alert}</div>}
-        
+        {loading && <Loader alert={alert} type={type} />}
         {Object.keys(errors).some((key) => errors[key]) && (
   <div className="general-error-message">
-    <p>Estos campos son obligatorios.</p>
+    <p>Los campos con * son obligatorios.</p>
   </div>
 )}
 

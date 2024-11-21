@@ -17,7 +17,7 @@ export default function Homepage() {
       };
     return (
         <>
-        
+        <ProtectedRoute/>
         <div>
       <AlertPopup 
         message="Este es un mensaje de alerta." 

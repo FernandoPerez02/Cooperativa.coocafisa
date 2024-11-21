@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).json({
-            message: "No se pudo registrar el usuario. Inténtalo de nuevo.",
+            message: "Error en el servidor. Inténtalo de nuevo más tarde.",
             redirect: '/users/register',
         });
     }

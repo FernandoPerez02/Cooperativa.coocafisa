@@ -8,7 +8,7 @@ export const api = axios.create({
    },
 });
 
-export const auth = async (event, setAlert) => {
+export const auth = async (event, setAlert, setLoading, setType) => {
   event.preventDefault();
   const nit = event.target.nit.value.trim();
   const password = event.target.password.value.trim();
@@ -18,12 +18,14 @@ export const auth = async (event, setAlert) => {
     const data = res.data;
 
     if (res.status === 200) {
+      setType("success");
       setAlert(data.message);
       event.target.nit.value = "";
       event.target.password.value = "";
       setTimeout(() => {
         window.location.href = data.redirect;
-      }, 2000);
+        setLoading(false);
+      }, 4000);
     }
   } catch (error) {
     const errorData = error.response.data.errors;
@@ -36,11 +38,13 @@ export const auth = async (event, setAlert) => {
       setAlert(errorData);
       setTimeout(() => {
         window.location.href = error.response.data.redirect;
-      }, 2000);
+        setLoading(false);
+      }, 5000);
     } else if (error.response && error.response.status === 404) {
       setAlert(errorData);
       setTimeout(() => {
         window.location.href = error.response.data.redirect;
+        setLoading(false);
       }, 2000);
     } else if (error.response && error.response.status === 500){
       setAlert(errorData)
@@ -49,23 +53,27 @@ export const auth = async (event, setAlert) => {
       console.error("Error en la solicitud", error);
       setAlert("Error en la solicitud al servidor.");
     }
+    setType("error")
     setTimeout(() => {
       setAlert("");
       event.target.nit.value = "";
       event.target.password.value = "";
-    }, 2000);
+      setLoading(false);
+    }, 4000);
   }
 };
 
-export const logout = async (event,setAlert) => {
+export const logout = async (event,setAlert, setType, setLoading) => {
   event.preventDefault();
   try {
     const response = await api.get('/logout');
     const data = response.data;
     if (response.status === 200) {
+      setType("success");
       setAlert(data.message);
       setTimeout(() => {
         setAlert("");
+        setLoading(false);
         window.location.href = data.redirect;
       }, 2000);
     } else { 
@@ -79,7 +87,9 @@ export const logout = async (event,setAlert) => {
       setAlert("Error al cerrar sesión.");
     }
     setTimeout(() => {
+      setType("error");
       setAlert("");
+      setLoading(false);
     }, 2000);
     console.log("Error al cerrar sesión:", error);
   }

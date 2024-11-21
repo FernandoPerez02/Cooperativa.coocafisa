@@ -9,17 +9,16 @@ export default function Formresetpass() {
   const [alert, setAlert] = useState(null);
   const [tokenValid, setTokenValid] = useState(false);
   const [error, setError] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState(true);
   const [token, setToken] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Verifica si el token es válido antes de enviar el formulario
     if (!token) {
       setAlert("El token de validación no es válido.");
       return;
     }
-    // Pasa el token junto con el formulario
+  
     await resetpass(event, setAlert, token);
     console.log("Token enviado al backend: ", token);
   };
@@ -27,25 +26,27 @@ export default function Formresetpass() {
   useEffect(() => {
     const validateToken = async () => {
       const isValid = await getToken(setToken, setError);
-      console.log("Estado de token de validación: ", isValid);
       setTokenValid(isValid);
     };
     validateToken();
-    handleAlert();
   }, []);
 
-  const handleAlert = () => {
-    setShowAlert(true);
-  };
-
-  const closeAlert = () => {
-    setShowAlert(false);
-  };
+  useEffect(() => {
+    if (showAlert) {
+      const timer = setTimeout(() => {
+        setShowAlert(false);
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [showAlert]);
 
   return (
     <>
       {tokenValid ? (
         <div className="content">
+          {showAlert && <AlertPopup message={`La contraseña debe ser mínimo de 8 caracteres
+          y máximo de 16. Debe contener al menos una mayúscula, un número y un carácter especial.`}
+          type={"alertMessage"} />}
           <header className="flex flex-col items-center">
             <img
               src="/images/Logo.cooperativa.png"
@@ -72,7 +73,7 @@ export default function Formresetpass() {
           </div>
         </div>
       ) : (
-        <AlertPopup message={error} showAlert={showAlert} onClose={closeAlert} />
+        <AlertPopup message={error} type={"alertMessage"} />
       )}
     </>
   );

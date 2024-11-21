@@ -3,10 +3,13 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import "@public/styles/menu.css";
 import { logout } from "@/app/api/auth/authService";
+import {Loader} from "@/components/common/preloader";
 
 export default function Menu({ menuOptions }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [type, setType] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const toggleMenu = () => {
     setMenuVisible((prev) => !prev);
@@ -14,7 +17,8 @@ export default function Menu({ menuOptions }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await logout(event, setAlert);
+    setLoading(true);
+    await logout(event, setAlert, setType, setLoading);
   };
 
   return (
@@ -40,7 +44,7 @@ export default function Menu({ menuOptions }) {
               <form onSubmit={handleSubmit}>
                 <button type="submit" className="logout-button">Cerrar Sesión</button>
               </form>
-              {alert && <div className="alert">{alert}</div>}
+              {loading && <Loader alert={alert} type={type} />}
             </li>
           </ul>
         </nav>

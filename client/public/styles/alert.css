@@ -1,34 +1,78 @@
+/* Estilo base */
 .alert-popup {
-    position: fixed;
-    top: 20%;
-    left: 50%;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border-radius: 8px;
+  z-index: 1000;
+  width: 350px;
+  max-width: 90%;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  font-family: "Arial", sans-serif;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Tipos de alerta */
+.alert-popup.success {
+  background-color: #d4edda; /* Verde claro */
+  color: #155724; /* Verde oscuro */
+  border: 1px solid #c3e6cb;
+}
+
+.alert-popup.error {
+  background-color: #f8d7da; /* Rojo claro */
+  color: #721c24; /* Rojo oscuro */
+  border: 1px solid #f5c6cb;
+}
+
+/* Contenido */
+.alert-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alert-message {
+  font-size: 16px;
+  flex: 1;
+  margin-right: 10px;
+  font-weight: 500;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
     transform: translate(-50%, -50%);
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: 20px;
-    border-radius: 5px;
-    z-index: 1000;
-    width: 300px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
-  
-  .alert-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+}
+
+/* Tipo alertMessage (neutro/informativo) */
+.alert-popup.alertMessage {
+  background-color: #e2e3e5; /* Gris claro */
+  color: #383d41; /* Gris oscuro */
+  border: 1px solid #d6d8db; /* Gris suave */
+}
+
+/* Ejemplo de diseño animado para este tipo */
+.alert-popup.alertMessage {
+  animation: slideIn 0.5s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
   }
-  
-  .alert-message {
-    font-size: 16px;
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
-  
-  .close-button {
-    background-color: transparent;
-    border: none;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #721c24;
-  }
-  
+}
+

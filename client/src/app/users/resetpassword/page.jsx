@@ -1,30 +1,30 @@
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { emailValidate } from "@/app/api/auth/passwordService";
 import "@public/styles/formusers.css"
 import AlertPopup from "@/components/common/alert";
 export default function Formvalidatemail() {
     const [alert, setAlert] = useState(null);
-    const [showAlert, setShowAlert] = useState(false);
+    const [showAlert, setShowAlert] = useState(true);
 
     const handleSubmit =  async (event) => {
         event.preventDefault();
         await emailValidate(event, setAlert)
         handleAlert();
-    }
-
-
-    const handleAlert = () => {
-        setShowAlert(true);
     };
 
-    const closeAlert = () => {
-        setShowAlert(false);
-    };
+    useEffect(() => {
+        if (showAlert) {
+            const timer = setTimeout(() => {
+                setShowAlert(false);
+            }, 6000);
+            return () => clearTimeout(timer);
+        }
+    }, [showAlert]);
 
     return (
         <div className="content">
-            <AlertPopup message={alert} showAlert={showAlert} onClose={closeAlert} />
+            
             <header className="flex flex-col items-center">
           <img
             src="/images/Logo.cooperativa.png"
