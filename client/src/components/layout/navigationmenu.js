@@ -22,6 +22,8 @@ export default function Menu({ menuOptions }) {
   };
 
   return (
+    <>
+    {loading && <Loader alert={alert} type={type} />}
     <div className="menu-container">
       <button className="menu-toggle" onClick={toggleMenu} aria-expanded={menuVisible}>
         <i className="bi bi-list"></i>
@@ -44,12 +46,12 @@ export default function Menu({ menuOptions }) {
               <form onSubmit={handleSubmit}>
                 <button type="submit" className="logout-button">Cerrar Sesión</button>
               </form>
-              {loading && <Loader alert={alert} type={type} />}
             </li>
           </ul>
         </nav>
       )}
     </div>
+    </>
   );
 }
 

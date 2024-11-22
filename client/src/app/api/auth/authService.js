@@ -19,7 +19,7 @@ export const auth = async (event, setAlert, setLoading, setType) => {
 
     if (res.status === 200) {
       setType("success");
-      setAlert(data.message);
+      setAlert("");
       event.target.nit.value = "";
       event.target.password.value = "";
       setTimeout(() => {

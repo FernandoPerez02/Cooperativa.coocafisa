@@ -76,8 +76,6 @@ router.post("/",
 
       req.session.name = usuario.nit;
       req.session.role = usuario.razonsoc;
-      console.log('Sesión activa:', req.session);
-      console.log("Rol ", req.session.role);
 
       const redirectPath = usuario.razonsoc === "Administrador"
         ? `/home`

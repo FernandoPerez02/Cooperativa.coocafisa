@@ -3,6 +3,7 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import "@public/styles/programhour.css";
 import { programmatEmails, timerEmails } from "@/app/api/authenticated/adminService";
+import { Loader } from "../common/preloader";
 
 const HoraForm = () => {
   const [hora, setHora] = useState("");
@@ -10,6 +11,8 @@ const HoraForm = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [alert, setAlert] = useState(null);
   const [timer, setTimer] = useState({ hours: "00", minutes: "00", seconds: "00" });
+  const [loading, setLoading] = useState(false);
+  const [type, setType] = useState(false);
 
   useEffect(() => {
     const getTime = async () => {
@@ -65,7 +68,8 @@ useEffect(() => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await programmatEmails(hora, minuto, setAlert);
+    setLoading(true);
+    await programmatEmails(hora, minuto, setAlert, setType, setLoading);
     calculateCountdown(hora, minuto);
   };
 
@@ -108,7 +112,7 @@ useEffect(() => {
               placeholder="Selecciona la hora"
             />
           </div>
-          {alert && <div className="alert">{alert}</div>}
+          {loading && <Loader alert={alert} type={type}/>}
           <button type="submit" className="btn-submit">Guardar</button>
         </form>
       </div>

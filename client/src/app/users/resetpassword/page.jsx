@@ -3,14 +3,17 @@ import { useEffect, useState } from "react";
 import { emailValidate } from "@/app/api/auth/passwordService";
 import "@public/styles/formusers.css"
 import AlertPopup from "@/components/common/alert";
+import { Loader } from "@/components/common/preloader";
 export default function Formvalidatemail() {
     const [alert, setAlert] = useState(null);
     const [showAlert, setShowAlert] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [type, setType] = useState(null);
 
     const handleSubmit =  async (event) => {
         event.preventDefault();
-        await emailValidate(event, setAlert)
-        handleAlert();
+        setLoading(true);
+        await emailValidate(event, setAlert, setType, setLoading);
     };
 
     useEffect(() => {
@@ -35,7 +38,7 @@ export default function Formvalidatemail() {
         </header>
         <form onSubmit={handleSubmit}> 
                     <div className="stlvar">
-                        <label htmlFor="nit">Nit</label>
+                        <label htmlFor="nit">Nit*</label>
                         <input type="number" name="nit" id="nit"/>
                     </div>              
                     <div className="btn_butones">
@@ -47,6 +50,8 @@ export default function Formvalidatemail() {
                     </div>
                     </div>                  
                 </form>
+                {loading && <Loader alert={alert} type={type}/>}
+                {showAlert && <AlertPopup message={`Ingresa el nit correspondiente a tu cuenta.`} type="alertMessage"/>}
         </div>
     );
 }

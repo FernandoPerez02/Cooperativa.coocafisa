@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "@/components/common/table";
 import { queryInvoices } from "@/app/api/authenticated/invoiceService";
+import { ProtectedRoute } from "../../../components/middleware";
 
 export default function Suppliers() {
   const [data, setInvoices] = useState([]);
@@ -51,6 +52,8 @@ export default function Suppliers() {
   ];
 
   return (
+    <>
+    <ProtectedRoute allowedRoles={[""]}/>
     <Table
       data={data}
       title={title}
@@ -60,5 +63,6 @@ export default function Suppliers() {
       expandedData={expandedData}
       error={error}
     />
+    </>
   );
 }

@@ -27,20 +27,24 @@ export const queryEmails = async (setError) => {
     }
 }
 
-export const programmatEmails = async (hora, minuto, setAlert) => {
+export const programmatEmails = async (hora, minuto, setAlert, setType, setLoading) => {
     try {
+        setType('success');
         const response = await api.post("/schedulEmailings", {
             hour:hora,
             minute:minuto,
         });
-        console.log("envio de hora", hora, minuto);
         const data = response.data;
         setAlert(data.message);
         setTimeout(() => {
-            setAlert('');
+            setLoading(false);
         }, 2000);
     } catch (error) {
-        console.error("Error al programar correos:", error);
+        setType('error');
+        setAlert(error.response.data.message);
+        setTimeout(() => {
+            setLoading(false);
+        }, 3000);
         return [];  
     }
 }

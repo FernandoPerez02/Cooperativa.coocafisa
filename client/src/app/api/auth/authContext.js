@@ -7,19 +7,27 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [role, setRole] = useState(null);
+
+    const resetAuth = () => {
+        setUser(null);
+        setRole(null);
+    };
 
     useEffect(() => {
         const checkSession = async () => {
             try {
                 const response = await api.get('/session');     
-                const data = response.data;
-                if (data.isAuthenticated) {
-                    setUser(data.user);
+                const { isAuthenticated, user, role } = response.data;
+
+                if (isAuthenticated) {
+                    setUser(user);
+                    setRole(role);
                 } else {
-                    setUser(null);
+                    resetAuth();
                 }
             } catch {
-                setUser(null);
+                resetAuth();
             } finally {
                 setLoading(false);
             }
@@ -28,7 +36,7 @@ export function AuthProvider({ children }) {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, loading }}>
+        <AuthContext.Provider value={{ user, role, loading }}>
             {children}
         </AuthContext.Provider>
     );

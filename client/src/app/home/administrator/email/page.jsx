@@ -37,7 +37,7 @@ export default function Emails() {
 
     return (
         <>
-        <ProtectedRoute/>
+        <ProtectedRoute allowedRoles={["Administrador"]}/>
         <ResultTable data={email} title={title} headers={headers} fields={fields} error={error} />
         <HoraForm />
         </>

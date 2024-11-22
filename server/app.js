@@ -36,8 +36,7 @@ app.use(
 
 app.get('/session', (req, res) => {
   if (req.session && req.session.name) {
-    console.log("Respuesta de la sesión:", req.session.name);
-      return res.json({ isAuthenticated: true, user: req.session.name });
+      return res.json({ isAuthenticated: true, user: req.session.name, role: req.session.role });
   } else {
       return res.json({ isAuthenticated: false, user: null });
   }

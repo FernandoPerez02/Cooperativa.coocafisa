@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { resetpass } from "@/app/api/auth/passwordService";
 import { getToken } from "@/app/api/auth/passwordService";
 import AlertPopup from "@/components/common/alert";
+import { Loader } from "@/components/common/preloader";
 
 export default function Formresetpass() {
   const [alert, setAlert] = useState(null);
@@ -11,6 +12,8 @@ export default function Formresetpass() {
   const [error, setError] = useState(null);
   const [showAlert, setShowAlert] = useState(true);
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [type, setType] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,14 +21,14 @@ export default function Formresetpass() {
       setAlert("El token de validación no es válido.");
       return;
     }
-  
+    setLoading(true);
     await resetpass(event, setAlert, token);
-    console.log("Token enviado al backend: ", token);
   };
 
   useEffect(() => {
     const validateToken = async () => {
-      const isValid = await getToken(setToken, setError);
+      setLoading(true);
+      const isValid = await getToken(setToken, setError, setType, setLoading);
       setTokenValid(isValid);
     };
     validateToken();
@@ -65,15 +68,17 @@ export default function Formresetpass() {
                 <label htmlFor="confpass">Confirmar Contraseña</label>
                 <input type="password" name="confpass" id="confpass" />
               </div>
-              {alert && <div className="alert">{alert}</div>}
               <div className="btn">
                 <button type="submit">Restablecer</button>
               </div>
             </form>
+            {loading && <Loader alert={alert} type={type}/>}
           </div>
         </div>
       ) : (
-        <AlertPopup message={error} type={"alertMessage"} />
+        <>
+        {loading && <Loader alert={error} type={type}/>}
+        </>
       )}
     </>
   );
