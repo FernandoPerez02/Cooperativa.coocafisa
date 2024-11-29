@@ -64,7 +64,6 @@ export const auth = async (event, setAlert, setLoading, setType) => {
 };
 
 export const logout = async (event,setAlert, setType, setLoading) => {
-  event.preventDefault();
   try {
     const response = await api.get('/logout');
     const data = response.data;

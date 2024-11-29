@@ -59,6 +59,10 @@ body {
     gap: 12px;
 }
 
+.text-ini {
+    display: flex;
+    justify-content: center;
+}
 .btn{
     display: grid;
     justify-items: center;
@@ -94,11 +98,11 @@ body {
     width: 300px;
     font-size: 20px;
     padding: 5px;
+    margin: auto;
 }
 .stlvar label{
     margin-left: 10px;
     border-radius: 10px;
-    height: 22px;
     font-size: 17px;
 }
 

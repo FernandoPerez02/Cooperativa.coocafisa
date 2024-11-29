@@ -3,7 +3,6 @@ const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const pool = require("../../connectionBD/db");
 const moment = require('moment');
-const { generarToken } = require('../functions/helpers');
 const router = express.Router();
 
 const validateUser = async (nit) => {
@@ -26,11 +25,6 @@ router.post("/",
     }
 
     const { nit, password } = req.body;
-    const token = generarToken();
-    const expiracionToken = new Date(Date.now() + 3600000);
-            await pool.query('UPDATE usuarios SET token = ?, token_expiracion = ? WHERE nit = ?',
-              [token, expiracionToken, nit]);
-
 
     try {
       const usuario = await validateUser(nit);
@@ -41,7 +35,7 @@ router.post("/",
       if (usuario.debe_cambiar_password) {
         return res.status(403).json({
           errors: "Debe cambiar su contraseña antes de iniciar sesión.",
-          redirect: `/users/resetpassword/formpass?token=${token}`,
+          redirect: `/users/resetpassword`,
         });
       }
 
@@ -52,7 +46,7 @@ router.post("/",
         const dateLimit = moment().subtract(30, "days");
         if(dateRegister.isBefore(dateLimit)){
           return res.status(403).json({ errors: "Tu contraseña expiro. Debes cambiar tu contraseña.",
-             redirect: `/users/resetpassword/formpass?token=${token}` });
+             redirect: `/users/resetpassword` });
         }
 
         const updatedIntentos = usuario.intentos_fallidos + 1;
@@ -66,7 +60,7 @@ router.post("/",
           await pool.query("UPDATE usuarios SET debe_cambiar_password = TRUE WHERE nit = ?", [nit]);
           return res.status(403).json({
             errors: "Ha alcanzado el límite de intentos fallidos. Debe cambiar su contraseña.",
-            redirect: `/users/resetpassword/formpass?token=${token}`,
+            redirect: `/users/resetpassword`,
           });
         }
         return res.status(401).json({ errors: "Credenciales incorrectas.", redirect: "/" });
@@ -76,6 +70,7 @@ router.post("/",
 
       req.session.name = usuario.nit;
       req.session.role = usuario.razonsoc;
+      req.session.lastActivity = Date.now();
 
       const redirectPath = usuario.razonsoc === "Administrador"
         ? `/home`

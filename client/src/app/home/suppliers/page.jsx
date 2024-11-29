@@ -53,7 +53,6 @@ export default function Suppliers() {
 
   return (
     <>
-    <ProtectedRoute allowedRoles={[""]}/>
     <Table
       data={data}
       title={title}

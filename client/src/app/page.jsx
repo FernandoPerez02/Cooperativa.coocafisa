@@ -21,7 +21,7 @@ export default function Login() {
                     alt="logo"
                     className="w-1 h-1 mb-4 object-contain logo"
                 />
-                <h1 className="text-2xl font-bold">Inicio de Sesión</h1>
+                <h1 className="text-2xl font-bold text-ini">Inicio de Sesión</h1>
             </header>
             <form onSubmit={handleSubmit} className="space-y-4 mt-6">
                 <div className="flex flex-col stlvar">

@@ -4,7 +4,6 @@ const session = require("express-session");
 const dotenv = require("dotenv");
 const schedule = require("node-schedule");
 const fs = require("fs");
-
 const app = express();
 
 dotenv.config({ path: "./env/.env" });
@@ -25,14 +24,27 @@ app.use(
   session({
     key: "session_cookie_name",
     secret: process.env.SESSION_SECRET || "esto es secreto",
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60,
+      /* secure: true, */
+      maxAge: 1000 * 60 * 2,
+      sameSite: "lax",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
     },
   })
 );
+
+app.use((req, res, next) => {
+  if (req.session && req.session.name) {
+    req.session.lastActivity = Date.now();
+  }
+  next();
+});
+
+const getSession = require("./services/functions/sessions");
+app.use('/managerSession', getSession);
 
 app.get('/session', (req, res) => {
   if (req.session && req.session.name) {
@@ -64,11 +76,11 @@ const emailsProgrammer = require("./services/user/admin/emailsProgrammer");
 app.use("/emailsprogrammer", emailsProgrammer);
 
 app.get('/logout', (req, res) => {
+  const userName = req.session ? req.session.name : 'Desconocido';
   req.session.destroy(err => {
     if (err) {
       return res.status(500).json({ message: 'Error al cerrar sesión' });
     }
-    const userName = req.session ? req.session.name : 'Desconocido';
     console.log("Cerrando sesión de usuario:", userName);
     res.clearCookie('session_cookie_name');
     return res.status(200).json({ message: 'Sesión cerrada exitosamente', redirect: "/"});

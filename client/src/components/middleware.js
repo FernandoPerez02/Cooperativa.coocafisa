@@ -16,7 +16,7 @@ export function ProtectedRoute({ children, allowedRoles = []}) {
             }
         }
     }, [user, loading, role, router, allowedRoles]);
-
+  
     if (loading) {
         return null;
     }   
