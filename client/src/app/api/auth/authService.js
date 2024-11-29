@@ -14,7 +14,7 @@ export const auth = async (event, setAlert, setLoading, setType) => {
   const password = event.target.password.value.trim();
 
   try {
-    const res = await api.post("/auth", { nit, password });
+    const res = await api.post("/auth/login", { nit, password });
     const data = res.data;
 
     if (res.status === 200) {
@@ -25,7 +25,7 @@ export const auth = async (event, setAlert, setLoading, setType) => {
       setTimeout(() => {
         window.location.href = data.redirect;
         setLoading(false);
-      }, 4000);
+      }, 2000);
     }
   } catch (error) {
     const errorData = error.response.data.errors;
@@ -64,6 +64,7 @@ export const auth = async (event, setAlert, setLoading, setType) => {
 };
 
 export const logout = async (event,setAlert, setType, setLoading) => {
+  event.preventDefault();
   try {
     const response = await api.get('/logout');
     const data = response.data;

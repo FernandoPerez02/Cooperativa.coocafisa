@@ -34,7 +34,7 @@ body {
 }
 
 .content_register {
-    max-width: 650px;
+    max-width: 450px;
     width: 100%;
     padding: 20px;
     background: linear-gradient(135deg, rgb(27, 145, 72), #f0f0f0, #a6a6a6);
@@ -47,6 +47,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 20px;
 }
 
 .logoReg {
@@ -91,6 +92,16 @@ body {
     align-items: flex-start;
     margin: auto;
 }
+
+.stlvar select, .stlvar option {
+    border-radius: 7px;
+    height: 35px;
+    background: linear-gradient(135deg, #bdc3c7, #ecf0f1);
+    width: 200px;
+    font-size: 20px;
+    padding: 5px;
+    margin: auto;
+}
 .stlvar input {
     border-radius: 10px;
     height: 35px;
@@ -113,8 +124,29 @@ body {
 
 @media (min-width: 768px) {
     .options {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
     }
+}
+
+@media (min-width: 375px) {
+    .logo {
+        margin-right: 0px;
+    }
+
+    .font-bold {
+        text-align: center;
+    }
+
+    /* button {
+        background: linear-gradient(135deg, rgb(27, 145, 72), #f0f0f0, #a6a6a6);
+        border-radius: 8px;
+        width: 120px;
+        height: 35px;
+        color: rgb(137, 134, 134);
+        font-size: large;
+        margin-top: 15px;
+        transition: background 0.3s ease;
+    } */
 }
 
 .stlvar input {

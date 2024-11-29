@@ -34,7 +34,7 @@ router.post('/emailresetpass', async (req, res) => {
     }
 
     try {
-        const [users] = await pool.query('SELECT nit, correo FROM usuarios WHERE nit = ?', [user]);
+        const [users] = await pool.query('SELECT nit, correo, proveedor_id FROM proveedor WHERE nit = ?', [user]);
         if (users.length === 0) {
             return res.status(404).json({
                 message: "Usuario no encontrado.",
@@ -44,7 +44,8 @@ router.post('/emailresetpass', async (req, res) => {
         if (users.length > 0) {
             const gmail = users[0].correo;
             const expiracionToken = new Date(Date.now() + 3600000);
-            await pool.query('UPDATE usuarios SET token = ?, token_expiracion = ? WHERE nit = ?', [token, expiracionToken, user]);
+            const userId = users[0].proveedor_id;
+            await pool.query('UPDATE usuario SET token_pass = ?, token_expiracion_pass = ? WHERE proveedor_id = ?', [token, expiracionToken, userId]);
             const enlace = `http://localhost:3000/users/resetpassword/formpass?token=${token}`
             const emailSent = await resetMail(gmail, enlace);
             if (emailSent) {
@@ -73,7 +74,6 @@ router.post('/emailresetpass', async (req, res) => {
 router.post('/resetpass', async (req, res) => {
     const validatepass = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d{2})(?!.*\s)[\w!@#$%^&*(),.?":{}|<>]{8,16}$/;
     const { newpass, confpass, token } = req.body;
-    console.log("Token de validación", token);
 
     try {
         if (!validatepass.test(newpass)) {
@@ -84,7 +84,7 @@ router.post('/resetpass', async (req, res) => {
             return res.status(400).json({ errors: "Las contraseñas no coinciden. Por favor, intenta nuevamente." });
         }
 
-        const tokenQuery = 'SELECT token FROM usuarios WHERE token = ?';
+        const tokenQuery = 'SELECT token_pass FROM usuario WHERE token_pass = ?';
         const [tokenResult] = await pool.query(tokenQuery, [token]);
 
         if (!tokenResult || tokenResult.length === 0) {
@@ -99,7 +99,9 @@ router.post('/resetpass', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(newpass, 10);
 
-        const updateQuery = 'UPDATE usuarios SET clave = ?, intentos_fallidos = 0, debe_cambiar_password = FALSE, fecha_password = CURRENT_TIMESTAMP, token = NULL, token_expiracion = NULL WHERE token = ?';
+        const updateQuery = `UPDATE usuario SET clave = ?, intentos_fallidos = 0,
+        cambiar_password = FALSE, fecha_password = CURRENT_TIMESTAMP,
+        token_pass = NULL, token_expiracion_pass = NULL WHERE token_pass = ?`;
         const [result] = await pool.query(updateQuery, [hashedPassword, token]);
 
         if (result.affectedRows === 0) {
@@ -125,16 +127,14 @@ router.get('/getToken', async (req, res) => {
             message: "Token no proporcionado."});
     }
     try {
-        const validateTokenQuery = (`SELECT token, token_expiracion,
+        const validateTokenQuery = (`SELECT token_pass, token_expiracion_pass,
             TIMESTAMPDIFF(MINUTE, token_expiracion, CURRENT_TIMESTAMP)
-            AS minutos_transcurridos FROM usuarios WHERE token = ?`);
+            AS minutos_transcurridos FROM usuario WHERE token_pass = ?`);
         const [result] = await pool.query(validateTokenQuery, [reqToken])
 
         if (result.length === 0) {
             return res.status(400).json({message: "El token no existe o ha expirado."});
         }
-
-        console.log("Resultado: ",result[0].token)
 
         if (result[0].token) {
             const { minutos_transcurridos } = result[0];

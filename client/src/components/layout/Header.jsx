@@ -26,7 +26,8 @@ export default function Header({ menuOptions }) {
           className="imglogoindex"
         />
       </a>
-      <h1>Bienvenido a CoopFinanzas</h1>
+      
+      <h1 className="text-header">Bienvenido a CoopFinanzas</h1>
       <Menu menuOptions={menuOptions} /> 
       </header>
   );

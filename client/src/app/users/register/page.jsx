@@ -14,31 +14,28 @@ export default function Registerusers() {
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
     nit: "",
-    razsoc: "",
-    direc: "",
-    correo: "",
-    tel: "",
-    cel: "",
+    rol: "",
     pass: "",
     passcon: ""
   });
 
   const isValid = 
   Object.entries(formValues).every(([key, value]) => {
-    if (key === "direc" || key === "tel" || key === "cel") {
-      return true;
+    if (key === "rol") {
+      return value !== "" && value !== "Select" && !errors[key];
     }
     return value !== "" && !errors[key];
   });
 
+
   const validateField = (name, value) => {
     let error = "";
-    if (value.trim() === "" && ["nit", "razsoc", "correo", "pass", "passcon"].includes(name)) {
+    if (value.trim() === "" && ["nit", "rol", "pass", "passcon"].includes(name)) {
       error = "Este campo es obligatorio";
-    } else if (name === "correo" && value && !/\S+@\S+\.\S+/.test(value)) {
-      error = "El correo no es válido";
-    } else if ((name === "tel" || name === "cel") && value && !/^\d+$/.test(value)) {
-      error = "Debe ser un número válido";
+    } else if (name === "pass" && value.length < 8) {
+      error = "La contraseña debe ser mínimo de 8 caracteres";
+    } else if (name === "pass" && value.length > 16) {
+      error = "La contraseña debe ser máximo de 16 caracteres";
     }
     return error;
   };
@@ -47,7 +44,7 @@ export default function Registerusers() {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
 
-    if (value || ["nit", "razsoc", "correo", "pass", "passcon"].includes(name)) {
+    if (value || ["nit", "rol", "pass", "passcon"].includes(name)) {
       setErrors({ ...errors, [name]: validateField(name, value) });
     } else {
       setErrors({ ...errors, [name]: "" });
@@ -73,7 +70,7 @@ export default function Registerusers() {
     if (showAlert) {
       const timer = setTimeout(() => {
         setShowAlert(false);
-      }, 6000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [showAlert]);
@@ -96,6 +93,23 @@ export default function Registerusers() {
 
       <form onSubmit={handleSubmit}>
         <div className="options">
+
+        <div className="stlvar">
+            <label htmlFor="rol">Rol*</label>
+            <select 
+              name="rol" 
+              id="rol"
+              value={formValues.rol} 
+              onChange={handleChange}
+              onFocus={handleFocus}
+              className={errors.rol}
+            >
+              <option value="Select">Seleccionar</option>
+              <option value="Proveedor">Proveedor</option>
+              <option value="Administrador">Administrador</option>
+            </select>
+          </div>
+          
           <div className="stlvar">
             <label htmlFor="nit">Nit*</label>
             <input 
@@ -106,71 +120,6 @@ export default function Registerusers() {
               onChange={handleChange}
               onFocus={handleFocus}
               className={errors.nit}
-            />
-          </div>
-
-          <div className="stlvar">
-            <label htmlFor="razsoc">Razón Social*</label>
-            <input 
-              type="text" 
-              name="razsoc" 
-              id="razsoc"
-              value={formValues.razsoc} 
-              onChange={handleChange}
-              onFocus={handleFocus}
-              className={errors.razsoc}
-            />
-          </div>
-
-          <div className="stlvar">
-            <label htmlFor="direc">Dirección</label>
-            <input 
-              type="text" 
-              name="direc" 
-              id="direc"
-              value={formValues.direc} 
-              onChange={handleChange}
-              onFocus={handleFocus}
-              className={errors.direc}
-            />
-          </div>
-
-          <div className="stlvar">
-            <label htmlFor="correo">Correo Electrónico*</label>
-            <input 
-              type="email" 
-              name="correo" 
-              id="correo"
-              value={formValues.correo} 
-              onChange={handleChange}
-              onFocus={handleFocus}
-              className={errors.correo}
-            />
-          </div>
-
-          <div className="stlvar">
-            <label htmlFor="tel">Teléfono</label>
-            <input 
-              type="number" 
-              name="tel" 
-              id="tel"
-              value={formValues.tel} 
-              onChange={handleChange}
-              onFocus={handleFocus}
-              className={errors.tel}
-            />
-          </div>
-
-          <div className="stlvar">
-            <label htmlFor="cel">Celular</label>
-            <input 
-              type="number" 
-              name="cel" 
-              id="cel"
-              value={formValues.cel} 
-              onChange={handleChange}
-              onFocus={handleFocus}
-              className={errors.cel}
             />
           </div>
 

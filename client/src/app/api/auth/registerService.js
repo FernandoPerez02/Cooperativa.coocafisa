@@ -2,17 +2,13 @@ import axios from "axios";
 export const adduser = async (event, setAlert, setType, setLoading) => {
     event.preventDefault();
     const nit = event.target.nit.value;  
-    const razsoc = event.target.razsoc.value;
-    const correo = event.target.correo.value;
-    const direc = event.target.direc.value;
-    const tel = event.target.tel.value;
-    const cel = event.target.cel.value;
+    const rol = event.target.rol.value;
     const pass = event.target.pass.value;
     const passcon = event.target.passcon.value;
     try {
-        const response = await axios.post('http://localhost:3001/adduser', {
-            nit, razsoc, correo, tel,
-            pass, passcon, direc, cel
+        const response = await axios.post('http://localhost:3001/adduser/newUser', {
+            nit, rol,
+            pass, passcon
         });
         const data = response.data;
         setType("success");
@@ -20,11 +16,7 @@ export const adduser = async (event, setAlert, setType, setLoading) => {
         setTimeout(() => {
             setLoading(false);
             event.target.nit.value = '';
-            event.target.razsoc.value = '';
-            event.target.correo.value = '';
-            event.target.direc.value = '';
-            event.target.tel.value = '';
-            event.target.cel.value = '';
+            event.target.rol.value = '';
             event.target.pass.value = '';
             event.target.passcon.value = '';
             window.location.href = data.redirect;
@@ -50,11 +42,7 @@ export const adduser = async (event, setAlert, setType, setLoading) => {
         setTimeout(() => {
             setAlert("");
             event.target.nit.value = '';
-            event.target.razsoc.value = '';
-            event.target.correo.value = '';
-            event.target.direc.value = '';
-            event.target.tel.value = '';
-            event.target.cel.value = '';
+            event.target.rol.value = '';
             event.target.pass.value = '';
             event.target.passcon.value = '';
             setLoading(false);

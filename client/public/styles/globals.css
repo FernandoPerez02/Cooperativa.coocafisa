@@ -65,14 +65,13 @@ footer h5 {
 }
 
 button {
-  background: var(--foreground);
-  border-radius: 8px;
-  width: 150px;
-  height: 40px;
-  color: white;
-  font-size: large;
-  margin-top: 20px;
-  transition: background 0.3s ease;
+    border-radius: 8px;
+    width: 150px;
+    height: 40px;
+    color: rgb(137, 134, 134);
+    font-size: large;
+    margin-top: 20px;
+    transition: background 0.3s ease;
 }
 
 
@@ -84,4 +83,23 @@ button {
 
 .error-message {
   color: red;
+}
+
+@media (min-width: 375px) {
+   .imglogoindex {
+     width: 100px;
+   }
+
+   .text-header {
+     font-size: 1.5rem;
+     text-align: center;
+   }
+}
+
+@media (min-width: 768px) {
+  .text-header {
+    font-size: 2rem;
+  }
+
+  
 }
