@@ -50,7 +50,6 @@ export const auth = async (event, setAlert, setLoading, setType) => {
       setAlert(errorData)
     }
     else {
-      console.error("Error en la solicitud", error);
       setAlert("Error en la solicitud al servidor.");
     }
     setType("error")
@@ -76,9 +75,7 @@ export const logout = async (event,setAlert, setType, setLoading) => {
         setLoading(false);
         window.location.href = data.redirect;
       }, 2000);
-    } else { 
-      console.error("Error al cerrar sesión:", data);
-    }
+    } 
   } catch (error) {
     errorData = error.response.data.error || error.response.data.errors;
     if (error.response && error.response.status === 400) { 
@@ -91,7 +88,6 @@ export const logout = async (event,setAlert, setType, setLoading) => {
       setAlert("");
       setLoading(false);
     }, 2000);
-    console.log("Error al cerrar sesión:", error);
   }
 }
 

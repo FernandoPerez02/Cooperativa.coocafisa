@@ -2,10 +2,11 @@ const { formatDate } = require("../../functions/helpers");
 const { emailSend, sendNotificationEmail } = require("../emailService");
 const { generarReportePDF, generarResumenPDF } = require("./generatepdf");
 const pool = require("../../../connectionBD/db");
+const { json } = require("express");
 
 const obtainData = async () => {
-  const query = `SELECT pagos.nit, razonsoc, descuento, retencion, total, fecpago, correo
-    FROM usuarios INNER JOIN pagos ON usuarios.nit = pagos.nit WHERE fecpago = CURDATE()`;
+  const query = `SELECT pagopro.nit, razonsoc, retencion, total, str_to_Date(fecpago, '%e-%b-%y') AS fecpago, correo
+    FROM proveedor INNER JOIN pagopro ON proveedor.nit = pagopro.nit WHERE str_to_Date(fecpago, '%e-%b-%y') = CURDATE()`;
 
   try {
     const [results] = await pool.query(query);
@@ -34,13 +35,11 @@ const obtainData = async () => {
 
       const summaryPdfBuffer = await generarResumenPDF(emailsSent);
       await sendNotificationEmail(emailsSent.length, summaryPdfBuffer);
-      console.log("Todos los correos fueron enviados exitosamente.");
     } else {
-      console.log("No hay registros para la fecha actual.");
+      return json({ message: "No hay datos para el reporte." });
     }
   } catch (error) {
-    console.error("Error al obtener los datos:", error);
-    console.error("Error al obtener los datos:", error.message || error);
+    return json({ message: "Error al obtener los datos." });
   }
 };
 

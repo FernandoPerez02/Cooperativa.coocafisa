@@ -15,7 +15,6 @@ export const emailValidate = async (event, setAlert, setType, setLoading) => {
     try {
         const response = await api.post('/recoverypass/emailresetpass', {nit});
         const {data} = response;
-        console.log("Datos de la respuesta: ", data.message);
         if (response.status === 200) {
             setType('success');
             setAlert(data.message);

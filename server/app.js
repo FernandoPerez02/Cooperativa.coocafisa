@@ -81,7 +81,6 @@ app.get('/logout', (req, res) => {
     if (err) {
       return res.status(500).json({ message: 'Error al cerrar sesión' });
     }
-    console.log("Cerrando sesión de usuario:", userName);
     res.clearCookie('session_cookie_name');
     return res.status(200).json({ message: 'Sesión cerrada exitosamente', redirect: "/"});
   });
@@ -132,13 +131,10 @@ function scheduleJob() {
 
     const { obtainData } = require("./services/email/report/obtainData");
     job = schedule.scheduleJob(`${minute} ${hour} * * *`, () => {
-      console.log("Ejecutando obtainData");
       obtainData();
     });
 
-    console.log("Job programado para la hora:", hour, minute);
   } catch (error) {
-    console.error("Error al programar la hora de envío:", error);
     return "Error al programar la hora de envío";
   }
 }
@@ -146,7 +142,6 @@ function scheduleJob() {
 scheduleJob();
 
 app.use((err, req, res, next) => {
-  console.error("Error inesperado:", err);
   res.status(500).json({ error: "Error inesperado en el servidor." });
 });
 

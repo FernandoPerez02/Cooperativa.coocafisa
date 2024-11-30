@@ -16,7 +16,6 @@ export default function Emails() {
         }
         fetchData();
     }, []);
-    console.log("Datos de correos", error);
 
     const title = "Correos Programados";
     const headers = [

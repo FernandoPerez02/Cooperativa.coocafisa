@@ -27,7 +27,6 @@ export default function InactivityHandler() {
         setTimer({ minutes: "00", seconds: "00" });
       }
     } catch (error) {
-      console.error("Error al obtener la sesión:", error);
       setTimer({ minutes: "00", seconds: "00" });
     }
   };
@@ -55,7 +54,6 @@ export default function InactivityHandler() {
       }
     }, 1000);
 
-    console.log("timer", timer);
     return () => clearInterval(intervalId);
   }, [timer]);
 

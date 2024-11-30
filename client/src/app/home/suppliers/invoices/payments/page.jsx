@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "@/components/common/table";
 import { queryinvoicepayment } from "@/app/api/authenticated/invoiceService";
-
+import { ProtectedRoute } from "@/components/middleware";
 export default function Invoicepayments() {
   const [data, setInvoices] = useState([]);;
   const [nit, setNit] = useState("N/A");
@@ -31,7 +31,6 @@ export default function Invoicepayments() {
         setNit(formattedData[0].nit);
         setRazonsoc(formattedData[0].razonsoc);
       } else {
-        // Valores predeterminados si no hay datos
         setNit("N/A");
         setRazonsoc("N/A");
       }
@@ -56,6 +55,8 @@ export default function Invoicepayments() {
   ];
 
   return (
+    <>
+    <ProtectedRoute allowedRoles={["Proveedor"]}/>
     <Table
       data={data}
       title={title}
@@ -64,6 +65,8 @@ export default function Invoicepayments() {
       headers={headers}
       expandedData={expandedData}
       error={error}
+      keysToSearch={['cont1', 'cont2', 'cont3', 'cont7']}
     />
+    </>
   );
 }

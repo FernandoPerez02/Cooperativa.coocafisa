@@ -76,7 +76,6 @@ router.post('/login',
 
       return res.status(200).json({ redirect: redirectPath });
     } catch (error) {
-      console.error(error);
       return res.status(500).json({ errors: "Error en el servidor. Inténtalo de nuevo más tarde.", redirect: "/" });
     }
   });

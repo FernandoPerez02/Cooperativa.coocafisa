@@ -18,7 +18,6 @@ const transporter = async () => {
     accountTransport.auth.accessToken = token;
     return nodemailer.createTransport(accountTransport);
   } catch (error) {
-    console.error("Error al obtener el token de acceso", error);
     throw error;
   }
 };
@@ -43,9 +42,8 @@ const emailSend = async (data, pdfBuffer) => {
     };
 
     await transport.sendMail(mailOptions);
-    console.log(`Correo enviado a: ${correo}`);
   } catch (error) {
-    console.error("Error al enviar el correo:", error);
+    return error;
   }
 };
 
@@ -67,10 +65,9 @@ const sendNotificationEmail = async (count, pdfBuffer) => {
     };
 
     await transport.sendMail(notificationOptions);
-    console.log("Correo de notificación enviado exitosamente.");
 
   } catch (error) {
-    console.error("Error al enviar la notificación:", error);
+    return error;
   }
 };
 

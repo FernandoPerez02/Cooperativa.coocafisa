@@ -13,7 +13,6 @@ function formatDate(dateString) {
 
 const isAuthenticated = (req, res, next) => {
     if (!req.session || !req.session.name) {
-        console.log("Resultado del registro", req.session || req.session.name);
         return res.status(404).json({ errors: "No estás autenticado.", redirect: "/" });
     }
         return next();

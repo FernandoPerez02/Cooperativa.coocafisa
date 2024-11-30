@@ -7,9 +7,9 @@ const { roleMiddleware } = require('../../functions/helpers');
 
 router.get("/emails", isAuthenticated, roleMiddleware('Administrador'), async (req, res) => {
     try {
-        const query = `SELECT pagos.nit, factura, fecpago, usuarios.razonsoc, usuarios.correo
-        FROM usuarios INNER JOIN pagos ON usuarios.nit = pagos.nit
-        WHERE pagos.fecpago = CURDATE()`;
+        const query = `SELECT pagopro.nit, factura, str_to_Date(fecpago, '%e-%b-%y') AS fecpago, razonsoc, correo
+        FROM proveedor INNER JOIN pagopro ON proveedor.nit = pagopro.nit
+        WHERE str_to_Date(fecpago, '%e-%b-%y') = CURDATE()`;
         const results = await queryDatabase(query);
         const formatedResults = results.map(result => ({ 
             ...result,
@@ -21,7 +21,7 @@ router.get("/emails", isAuthenticated, roleMiddleware('Administrador'), async (r
     }
 });
 
-router.get('/suppliers', isAuthenticated, roleMiddleware('Administrador'), async (req, res) => {
+router.get('/suppliers', async (req, res) => {
     try {
         const query = 'SELECT nit, razonsoc, direcc, correo, telefono, celular, fecha_registro FROM proveedor';
         const results = await queryDatabase(query);

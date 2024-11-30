@@ -40,14 +40,14 @@ export default function Invoices() {
     ];
     return (
         <>
-            if (error) return <p style={{ color: "red" }}>{alert}</p>;
-            <ProtectedRoute/>
+            <ProtectedRoute allowedRoles={["Administrador"]}/>
                 <ResultTable
                     title={title}
                     headers={headers}
                     data={suppliers}
                     fields={fields}
                     error={alert}
+                    keysToSearch={['nit', 'razonsoc', 'correo', 'fecha_registro']}
                 />
         </>
     );

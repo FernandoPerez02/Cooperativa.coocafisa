@@ -16,10 +16,8 @@ const resetMail = async (email, enlace) => {
         };
 
         await transport.sendMail(mailOptions);
-        console.log('Correo de restablecimiento enviado.');
         return true;
     } catch (error) {
-        console.error('Error al enviar el restablecimiento de contraseña:', error);
         return false;
     }
 };
@@ -64,7 +62,6 @@ router.post('/emailresetpass', async (req, res) => {
             });
         }
     } catch (error) {
-        console.error('Error en la consulta de la base de datos:', error);
         return res.status(400).json({
             message: "Ocurrió un error interno. Inténtalo más tarde.",
         });
@@ -86,7 +83,6 @@ router.post('/resetpass', async (req, res) => {
 
         const tokenQuery = 'SELECT token_pass FROM usuario WHERE token_pass = ?';
         const [tokenResult] = await pool.query(tokenQuery, [token]);
-        console.log("authToken: ", tokenResult);
 
         if (!tokenResult || tokenResult.length === 0) {
             return res.status(400).json({ errors: "Token no válido o no encontrado." });
@@ -113,7 +109,6 @@ router.post('/resetpass', async (req, res) => {
             message: "Tu contraseña ha sido restablecida exitosamente. Inicia sesión con tus nuevas credenciales.",
         });
     } catch (error) {
-        console.error('Error al restablecer la contraseña:', error);
         return res.status(500).json({
             message: "Hubo un problema al restablecer tu contraseña. Intenta más tarde.",
         });
@@ -122,7 +117,6 @@ router.post('/resetpass', async (req, res) => {
 
 router.get('/getToken', async (req, res) => {
     const reqToken  = req.query.token;
-    console.log("Token recibido: ", reqToken);
 
     if (!reqToken) {
         return res.status(400).json({
@@ -133,19 +127,16 @@ router.get('/getToken', async (req, res) => {
             TIMESTAMPDIFF(MINUTE, token_expiracion_pass, CURRENT_TIMESTAMP)
             AS minutos_transcurridos FROM usuario WHERE token_pass = ?`);
         const [result] = await pool.query(validateTokenQuery, [reqToken])
-        console.log("Resultado de la consulta: ", result);
 
         if (result.length === 0) {
             return res.status(400).json({message: "El token no existe o ha expirado."});
         }
 
         if (result[0].token_pass) {
-            console.log("Token encontrado");
             const { minutos_transcurridos } = result[0];
             if (minutos_transcurridos >= 60) {
                 return res.status(400).json({message: "El token ha expirado. Por favor, solicite uno nuevo."});
             } else {
-                console.log("Token válido");
                 return res.status(200).json({
                     message: "Validación correcta.", 
                 });

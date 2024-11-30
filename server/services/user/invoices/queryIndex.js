@@ -25,7 +25,6 @@ router.get('/invoices',isAuthenticated, async (req, res) => {
          }));
         return res.json(formatedResults);
     } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error);
         return res.status(500).json({ error: "Error al obtener los datos." });
     }
 });
@@ -51,7 +50,6 @@ router.get('/invoicepayment', isAuthenticated, async (req, res) => {
          }));
         return res.json(formatedResults);
     } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error);
         return res.status(500).json({ error: "Error al obtener los datos." });
     }
 });
@@ -77,7 +75,6 @@ router.get('/invoicepending', isAuthenticated, async (req, res) => {
          }));
         return res.json(formatedResults);
     } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error);
         return res.status(500).json({ error: "Error al obtener los datos." });
     }
 });

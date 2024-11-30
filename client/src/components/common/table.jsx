@@ -1,18 +1,31 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "@public/styles/table.css";
+import Search from './search';
 
-const Table = ({ data, title, nit, razonsoc, headers, expandedData, error }) => {
+const Table = ({ data, keysToSearch, title, nit, razonsoc, headers, expandedData, error }) => {
+  const [filteredData, setFilteredData] = useState(data);
+  const [originalData, setOriginalData] = useState(data);
   const [expandedRows, setExpandedRows] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   
-  const paginatedData = data.slice(
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  useEffect(() => {
+    setOriginalData(data);
+    setFilteredData(data);
+  }, [data]); 
+
+  const handleFilter = (filtered) => {
+    setFilteredData(filtered);
+    setCurrentPage(1); 
+  };
 
   const toggleRow = (index) => {
     setExpandedRows((prev) => ({
@@ -24,15 +37,18 @@ const Table = ({ data, title, nit, razonsoc, headers, expandedData, error }) => 
   return (
     <div className="container">
       <div className="header">
+        <div className='title-search'>
         <h1>{title}</h1>
+        <Search data={originalData} keysToSearch={keysToSearch} onFilteredData={handleFilter} />
         <div className="header-details">
+        </div>
           <span><strong>NIT:</strong> {nit}</span>
           <span><strong>Razón Social:</strong> {razonsoc}</span>
         </div>
       </div>
       {error ? (
             <div className="error-message">{error}</div>
-          ) : data.length === 0 ? (
+          ) : filteredData.length === 0 ? (
             <div className="loading-message">No se encontraron registros disponibles...</div>
           ) : (
         <table className="responsive-table">
