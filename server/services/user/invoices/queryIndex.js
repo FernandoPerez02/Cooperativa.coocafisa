@@ -12,10 +12,10 @@ router.get('/invoices',isAuthenticated, async (req, res) => {
     }
     try {
         const query = `
-            SELECT pagos.nit, razonsoc, factura, fecfac, fecvcto, retencion, total, fecpago, pagfac
-            FROM usuarios 
-            INNER JOIN pagos ON usuarios.nit = pagos.nit 
-            WHERE pagos.nit = ?;`;
+            SELECT pagopro.nit, razonsoc, factura, fecfac, fecvcto, retencion, total, fecpago, pagfac
+            FROM proveedor
+            INNER JOIN pagopro ON proveedor.nit = pagopro.nit 
+            WHERE pagopro.nit = ?;`;
         
         const results = await queryDatabase(query, [nit]);
         const formatedResults = results.map(result => ({ ...result,
@@ -38,10 +38,10 @@ router.get('/invoicepayment', isAuthenticated, async (req, res) => {
     }
     try {
         const query = `
-            SELECT pagos.nit, razonsoc, factura, fecfac, fecvcto, retencion, total, fecpago, pagfac
-            FROM usuarios 
-            INNER JOIN pagos ON usuarios.nit = pagos.nit 
-            WHERE pagos.nit = ? and pagos.fecpago is not null;`;
+            SELECT pagopro.nit, razonsoc, factura, fecfac, fecvcto, retencion, total, fecpago, pagfac
+            FROM proveedor
+            INNER JOIN pagopro ON proveedor.nit = pagopro.nit 
+            WHERE pagopro.nit = ? and fecpago is not null;`;
         
         const results = await queryDatabase(query, [nit]);
         const formatedResults = results.map(result => ({ ...result,
@@ -64,10 +64,10 @@ router.get('/invoicepending', isAuthenticated, async (req, res) => {
     }
     try {
         const query = `
-            SELECT pagos.nit, razonsoc, factura, fecfac, fecvcto, retencion, total, fecpago, pagfac
-            FROM usuarios 
-            INNER JOIN pagos ON usuarios.nit = pagos.nit 
-            WHERE pagos.nit = ? and pagos.fecpago is null;`;
+            SELECT pagopro.nit, razonsoc, factura, fecfac, fecvcto, retencion, total, fecpago, pagfac
+            FROM proveedor
+            INNER JOIN pagopro ON proveedor.nit = pagopro.nit
+            WHERE pagopro.nit = ? and fecpago is null;`;
         
         const results = await queryDatabase(query, [nit]);
         const formatedResults = results.map(result => ({ ...result,

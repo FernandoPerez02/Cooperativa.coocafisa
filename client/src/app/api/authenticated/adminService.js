@@ -53,7 +53,6 @@ export const timerEmails = async (setAlert) => {
     try {
         const response = await api.get("/emailsprogrammer/timer");
         const data = response.data;
-        console.log("Prueba de peticion ",data);
         if(response.status === 200) {
             return data;
         } else {
@@ -64,5 +63,20 @@ export const timerEmails = async (setAlert) => {
         console.error("Error al obtener el tiempo restante:", error);
         setAlert(error.response.data.message);
         return { hour: 0, minute: 0 };
+    }
+}
+
+export const getSuppliers = async (setAlert) => {
+    try {
+        const response = await api.get("/programmatemails/suppliers");
+        const data = response.data;
+        if (response.status === 200) {
+            return data;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        setAlert(error.response.data.error);
+        return [];
     }
 }

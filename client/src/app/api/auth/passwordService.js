@@ -1,4 +1,3 @@
-import { resolve } from "styled-jsx/css";
 import { api } from "./authService";
 
 export const emailValidate = async (event, setAlert, setType, setLoading) => {

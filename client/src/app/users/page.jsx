@@ -21,22 +21,18 @@ export default function Users() {
     const headers = [
         "#",
         "NIT",
+        "Rol",
         "Razón Social",
-        "Dirección",
-        "Correo Electrónico",
-        "Celular",
-        "Teléfono",
+        "Correo",
         "Fecha de Registro",
     ];
 
     const fields = [
         "num",
         "nit",
+        "rol",
         "razonsoc",
-        "direcc",
         "correo",
-        "celular",
-        "telefono",
         "fecha_reg"
     ];
     return (

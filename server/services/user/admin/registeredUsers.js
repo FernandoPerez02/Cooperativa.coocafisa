@@ -5,7 +5,8 @@ const { isAuthenticated } = require('../../functions/helpers');
 
 router.get("/users", isAuthenticated, async (req, res) => {
     try {
-        const query = "SELECT nit, razonsoc, direcc, correo, celular, telefono, fecha_reg FROM usuarios";
+        const query = `SELECT nit, rol, razonsoc, fecha_reg, correo FROM usuario
+         inner join proveedor on proveedor.proveedor_id = usuario.proveedor_id`;
         const results = await queryDatabase(query);
         return res.json(results);
     } catch (error) {

@@ -21,4 +21,17 @@ router.get("/emails", isAuthenticated, roleMiddleware('Administrador'), async (r
     }
 });
 
+router.get('/suppliers', isAuthenticated, roleMiddleware('Administrador'), async (req, res) => {
+    try {
+        const query = 'SELECT nit, razonsoc, direcc, correo, telefono, celular, fecha_registro FROM proveedor';
+        const results = await queryDatabase(query);
+        const formatedResults = results.map(result => ({ ...result,
+            fecha_registro: formatDate(result.fecha_registro),
+        }));
+        return res.json(formatedResults);
+    } catch (error) {
+        return res.status(500).json({ error: "Error en la solicitud al servidor. Intenta de nuevo mas tarde." });
+    }
+});
+
 module.exports = router;

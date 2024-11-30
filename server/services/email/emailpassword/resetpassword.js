@@ -86,6 +86,7 @@ router.post('/resetpass', async (req, res) => {
 
         const tokenQuery = 'SELECT token_pass FROM usuario WHERE token_pass = ?';
         const [tokenResult] = await pool.query(tokenQuery, [token]);
+        console.log("authToken: ", tokenResult);
 
         if (!tokenResult || tokenResult.length === 0) {
             return res.status(400).json({ errors: "Token no válido o no encontrado." });
@@ -100,8 +101,8 @@ router.post('/resetpass', async (req, res) => {
         const hashedPassword = await bcrypt.hash(newpass, 10);
 
         const updateQuery = `UPDATE usuario SET clave = ?, intentos_fallidos = 0,
-        cambiar_password = FALSE, fecha_password = CURRENT_TIMESTAMP,
-        token_pass = NULL, token_expiracion_pass = NULL WHERE token_pass = ?`;
+        cambiar_password = FALSE, fecha_pass = CURRENT_TIMESTAMP,
+        token_pass = 0, token_expiracion_pass = 0 WHERE token_pass = ?`;
         const [result] = await pool.query(updateQuery, [hashedPassword, token]);
 
         if (result.affectedRows === 0) {
@@ -121,33 +122,36 @@ router.post('/resetpass', async (req, res) => {
 
 router.get('/getToken', async (req, res) => {
     const reqToken  = req.query.token;
-    console.log("Este es el token de la petición: ", reqToken);
+    console.log("Token recibido: ", reqToken);
+
     if (!reqToken) {
         return res.status(400).json({
             message: "Token no proporcionado."});
     }
     try {
         const validateTokenQuery = (`SELECT token_pass, token_expiracion_pass,
-            TIMESTAMPDIFF(MINUTE, token_expiracion, CURRENT_TIMESTAMP)
+            TIMESTAMPDIFF(MINUTE, token_expiracion_pass, CURRENT_TIMESTAMP)
             AS minutos_transcurridos FROM usuario WHERE token_pass = ?`);
         const [result] = await pool.query(validateTokenQuery, [reqToken])
+        console.log("Resultado de la consulta: ", result);
 
         if (result.length === 0) {
             return res.status(400).json({message: "El token no existe o ha expirado."});
         }
 
-        if (result[0].token) {
+        if (result[0].token_pass) {
+            console.log("Token encontrado");
             const { minutos_transcurridos } = result[0];
             if (minutos_transcurridos >= 60) {
                 return res.status(400).json({message: "El token ha expirado. Por favor, solicite uno nuevo."});
             } else {
+                console.log("Token válido");
                 return res.status(200).json({
                     message: "Validación correcta.", 
                 });
             }
         }
     } catch (error) {
-        console.error('Error en la consulta de la base de datos:', error);
         return res.status(500).json({
             message: "Ocurrió un error en la solicitud. Inténtalo de nuevo más tarde.",
         });

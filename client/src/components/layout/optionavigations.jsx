@@ -42,7 +42,7 @@ const menuOptions = [
   { id: 5, label: "Facturas", link: "/home/suppliers/invoices", icon: "bi bi-receipt" },
   { id: 6, label: "Facturas Pagas", link: "/home/suppliers/invoices/payments", icon: "bi bi-cash-stack"},
   { id: 7, label: "Facturas Pendientes", link: "/home/suppliers/invoices/pending", icon: "bi bi-wallet2"},
-  { id: 8, label: "Proveedores", link: "/home/suppliers/invoices", icon: "bi bi-building"},
+  { id: 8, label: "Proveedores", link: "/home/suppliers", icon: "bi bi-building"},
 ];
 
 
