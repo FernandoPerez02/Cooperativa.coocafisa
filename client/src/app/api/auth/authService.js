@@ -28,37 +28,44 @@ export const auth = async (event, setAlert, setLoading, setType) => {
       }, 2000);
     }
   } catch (error) {
-    const errorData = error.response.data.errors;
-    if (error.response && error.response.status === 400) { 
-      const errorMessages = errorData.map((err) => err.msg).join(", "); 
-      setAlert(errorMessages || "Credenciales incorrectas.");
-    } else if (error.response && error.response.status === 401) {
-      setAlert(errorData);
-    } else if (error.response && error.response.status === 403) {
-      setAlert(errorData);
+    setType("error");
+    if (error.response) {
+        const errorData = error.response.data.errors;
+        const errorRedirect = error.response.data.redirect;
+        if (error.response && error.response.status === 400) { 
+          const errorMessages = errorData.map((err) => err.msg).join(", "); 
+          setAlert(errorMessages || "Credenciales incorrectas.");
+        } else if ([401, 403, 404, 500].includes(error.response.status)) {
+          setAlert(errorData);
+          setTimeout(() => {
+            if (errorRedirect) {
+              window.location.href = errorRedirect;
+              setLoading(false);
+            } 
+            setLoading(false);
+          }, 3000);
+        } else {
+          setAlert("Error en la solicitud al servidor.");
+        }
+        setTimeout(() => {
+          setAlert("");
+          event.target.nit.value = "";
+          event.target.password.value = "";
+          setLoading(false);
+        }, 3000);
+      } else if (error.request) {
+        setAlert(`Nuestro servidor está temporalmente fuera de servicio.
+          Estamos haciendo todo lo posible para restablecer el servicio.
+          Por favor, intenta más tarde.`);
+      } else {
+        setAlert("Ocurrió un error al enviar la solicitud.");
+      }
       setTimeout(() => {
-        window.location.href = error.response.data.redirect;
+        event.target.nit.value = "";
+        event.target.password.value = "";
         setLoading(false);
+        setAlert("");
       }, 5000);
-    } else if (error.response && error.response.status === 404) {
-      setAlert(errorData);
-      setTimeout(() => {
-        window.location.href = error.response.data.redirect;
-        setLoading(false);
-      }, 2000);
-    } else if (error.response && error.response.status === 500){
-      setAlert(errorData)
-    }
-    else {
-      setAlert("Error en la solicitud al servidor.");
-    }
-    setType("error")
-    setTimeout(() => {
-      setAlert("");
-      event.target.nit.value = "";
-      event.target.password.value = "";
-      setLoading(false);
-    }, 4000);
   }
 };
 

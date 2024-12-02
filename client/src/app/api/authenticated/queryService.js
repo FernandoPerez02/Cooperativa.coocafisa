@@ -9,7 +9,7 @@ export const queryUsers = async (setError) => {
             const errorData = error.response.data.errors || error.response.data.error;
             setError(errorData)
         } else if (error.request) {
-            setError("Revisa tu conexion para continuar con la consulta.")
+            setError("Error en la solicitud al servidor.")
         } else {
             setError("Error en el servidor.")
         }

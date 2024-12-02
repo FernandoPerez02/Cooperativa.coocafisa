@@ -7,23 +7,25 @@ export const queryEmails = async (setError) => {
         const data = response.data;
         return data;
     } catch (error) {
-        const errorData = error.response.data.error || error.response.data.errors;
-        setError(errorData);
-        if (error.response.status === 400 && error.response.data.redirect) {
-            setError(errorData);
-            window.location.href = error.response.data.redirect;
-        } else if (error.response && error.response.status === 404) {
-            setError(errorData);
-            window.location.href = error.response.data.redirect
-        } else if (error.response && error.response.status === 403) {
-            setError(errorData);
-            window.location.href = error.response.data.redirect
-        } else if (error.response && error.response.status === 500) {
-            setError(errorData);
+        if (error.response) {
+            const errorData = error.response.data.error || error.response.data.errors;
+            const errorRedirect = error.response?.data?.redirect;
+            if ([400, 404, 403, 500].includes(error.response.status)) {
+                setError(errorData);
+                if (errorRedirect) window.location.href = errorRedirect;
+            } else {
+                setError("Error en la solicitud al servidor.");
+            }
+        } else if (error.request) {
+            setError(`Nuestro servidor está temporalmente fuera de servicio.
+                Estamos haciendo todo lo posible para restablecer el servicio.
+                Por favor, intenta más tarde.`);
+        } else {
+            setError("Error en la solicitud al servidor.");
         }
-        return [];  
+        return [];
     }
-}
+} 
 
 export const programmatEmails = async (hora, minuto, setAlert, setType, setLoading) => {
     try {
@@ -38,12 +40,24 @@ export const programmatEmails = async (hora, minuto, setAlert, setType, setLoadi
             setLoading(false);
         }, 2000);
     } catch (error) {
-        setType('error');
-        setAlert(error.response.data.message);
-        setTimeout(() => {
+        if (error.response) {
+            setType('error');
+            setAlert(error.response.data.message);
+            setTimeout(() => {
+                setLoading(false);
+            }, 3000);
+            return [];  
+        } else if (error.request) {
+            setAlert(`Nuestro servidor está temporalmente fuera de servicio.
+              Estamos haciendo todo lo posible para restablecer el servicio.
+              Por favor, intenta más tarde.`);
+          } else {
+            setAlert("Ocurrió un error al enviar la solicitud.");
+          }
+          setTimeout(() => {
             setLoading(false);
-        }, 3000);
-        return [];  
+            setAlert("");
+          }, 5000);
     }
 }
 
@@ -58,8 +72,18 @@ export const timerEmails = async (setAlert) => {
             return { hour: 0, minute: 0 };
         }
     } catch (error) {
-        setAlert(error.response.data.message);
-        return { hour: 0, minute: 0 };
+        if (error.response) {
+            setAlert(error.response.data.message);
+            return { hour: 0, minute: 0 };
+        } else if (error.request) {
+            setAlert(`Nuestro servidor está temporalmente fuera de servicio.
+              Estamos haciendo todo lo posible para restablecer el servicio.
+              Por favor, intenta más tarde.`);
+              return { hour: 0, minute: 0 };
+          } else {
+            setAlert("Ocurrió un error al enviar la solicitud.");
+            return { hour: 0, minute: 0 };
+          }
     }
 }
 
@@ -73,7 +97,17 @@ export const getSuppliers = async (setAlert) => {
             return [];
         }
     } catch (error) {
-        setAlert(error.response.data.error);
-        return [];
+        if (error.response) {
+            setAlert(error.response.data.error);
+            return [];
+        } else if (error.request) {
+            setAlert(`Nuestro servidor está temporalmente fuera de servicio.
+              Estamos haciendo todo lo posible para restablecer el servicio.
+              Por favor, intenta más tarde.`);
+              return [];
+          } else {
+            setAlert("Ocurrió un error al enviar la solicitud.");
+            return [];
+          }
     }
 }

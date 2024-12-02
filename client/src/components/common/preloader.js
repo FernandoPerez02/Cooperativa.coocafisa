@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
 import '@public/styles/preloader.css';
-import AlertPopup from './alert';
 
 export const Loader = ({alert, type}) => {
   return (
     <div className="loader-container">
-      <AlertPopup message={alert} type={type} />
+      <div className={`alert-loader ${type}`}>  
+        {alert}
+      </div> 
+      <div className="circle-container">
       <div className="circle"></div>
       <div className="circle"></div>
       <div className="circle"></div>
       <div className="circle"></div>
+      </div>
     </div>
   );
 };

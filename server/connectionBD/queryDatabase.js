@@ -8,7 +8,7 @@ const queryDatabase = async (query, params) => {
         const [results] = await connection.query(query, params || []);
         
         if (!results || results.length === 0) {
-            return json({ message: "No hay registros para la consulta." });
+            return [];
         }
         
         return results;

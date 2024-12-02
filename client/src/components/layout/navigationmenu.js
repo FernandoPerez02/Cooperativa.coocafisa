@@ -1,9 +1,9 @@
 "use client";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "@public/styles/menu.css";
 import { logout } from "@/app/api/auth/authService";
-import {Loader} from "@/components/common/preloader";
+import { Loader } from "@/components/common/preloader";
 
 export default function Menu({ menuOptions }) {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -23,7 +23,7 @@ export default function Menu({ menuOptions }) {
 
   return (
     <>
-    {loading && <Loader alert={alert} type={type} />}
+    {loading && <Loader alert={alert} type={type}/>}
     <div className="menu-container">
       <button className="menu-toggle" onClick={toggleMenu} aria-expanded={menuVisible}>
         <i className="bi bi-list"></i>

@@ -25,10 +25,13 @@ export const adduser = async (event, setAlert, setType, setLoading) => {
         setType("error");
         if (error.response) {
             const errorData = error.response.data.message;
+            const errorRedirect = error.response.data.redirect;
             if ([401, 400, 404, 500].includes(error.response.status)) {
                 setAlert(errorData);
                 setTimeout(() => {
-                    window.location.href = error.response.data.redirect;
+                    if (errorRedirect) {
+                        window.location.href = errorRedirect;
+                    }
                 }, 3000);
             } else {
                 setAlert("Ocurrió un error al enviar la solicitud.");

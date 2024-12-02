@@ -35,7 +35,7 @@ const generarReportePDF = (data) => {
 
             doc.text(item.nit, 55, rowTop, { width: 80, align: 'center' });
             doc.text(item.razonsoc, 135, rowTop, { width: 80, align: 'center' });
-            doc.text(item.descuento, 215, rowTop, { width: 80, align: 'center' });
+            doc.text(item.descuento, 215, rowTop, { width: 80, align: 'center' });  
             doc.text(item.retencion, 295, rowTop, { width: 80, align: 'center' });
             doc.text(item.total, 375, rowTop, { width: 80, align: 'center' });
             doc.text(item.fecpago, 455, rowTop, { width: 80, align: 'center' });
