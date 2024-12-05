@@ -112,10 +112,10 @@ useEffect(() => {
               placeholder="Selecciona la hora"
             />
           </div>
-          {loading && <Loader alert={alert} type={type}/>}
           <button type="submit" className="btn-submit">Guardar</button>
         </form>
       </div>
+      {loading && <Loader alert={alert} type={type}/>}
     </div>
   );
 };

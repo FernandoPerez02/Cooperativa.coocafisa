@@ -8,11 +8,49 @@ export default function Login() {
     const [type, setType] = useState(false);
     const [alert, setAlert] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [errores, setErrores] = useState({
+        nit: false,
+        password: false,
+    });
+    const [formData, setFormData] = useState({
+        nit: "",
+        password: "",
+    });
+
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setFormData((prevData) => ({...prevData, [name]: value}));
+    };
+
     const handleSubmit = async (event) => {
         setLoading(true);
         event.preventDefault();
-        await auth(event, setAlert, setLoading, setType);
+        let formularioValido = true;
+    let newErrors = { nit: false, password: false };
+
+    if (formData.nit.trim() === "") {
+        formularioValido = false;
+        newErrors.nit = true;
     }
+
+    if (formData.password.trim() === "") {
+        formularioValido = false;
+        newErrors.password = true;
+    }
+
+    setErrores(newErrors);
+
+    if (!formularioValido) {
+        const error = Object.keys(newErrors).find((camp) => newErrors[camp]);
+        document.getElementById(error).focus();
+    }
+
+    if (formularioValido) {
+        await auth(event, setAlert, setLoading, setType);
+    } else {
+        setLoading(false);
+    }
+};
     return (
         <div className="content">
             <header>
@@ -23,7 +61,7 @@ export default function Login() {
                 />
                 <h1 className="text-2xl font-bold text-ini">Inicio de Sesión</h1>
             </header>
-            <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+            <form onSubmit={handleSubmit} className="space-y-4 mt-6" noValidate>
                 <div className="flex flex-col stlvar">
                     <label htmlFor="nit" className="text-sm font-medium text-gray-700">
                         Nit
@@ -33,8 +71,11 @@ export default function Login() {
                         type="number"
                         id="nit"
                         name="nit"
+                        value={formData.nit}
+                        onChange={handleChange}
                         required
                         className="mt-1 p-2 border rounded-md focus:ring-foreground focus:border-foreground"
+                        style={{borderColor: errores.nit ? 'red' : ''}}
                     />
                 </div>
 
@@ -46,8 +87,11 @@ export default function Login() {
                         type="password"
                         id="password"
                         name="password"
+                        value={formData.password}
+                        onChange={handleChange}
                         required
                         className="mt-1 p-2 border rounded-md focus:ring-foreground focus:border-foreground"
+                        style={{borderColor: errores.password ? 'red' : ''}}
                     />
                 </div>
                 <div className="btn">

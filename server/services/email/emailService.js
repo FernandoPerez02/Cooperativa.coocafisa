@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
-const accountTransport = require("./account_transport.json");
+const accountTransport = require("../../env/account_transport.json");
 
 const transporter = async () => {
   const oauth2Client = new google.auth.OAuth2(
@@ -28,7 +28,7 @@ const emailSend = async (data, pdfBuffer) => {
     const { nit, razonsoc, fecpago, correo } = data[0];
 
     const mailOptions = {
-      from: "soporte.coocafisa@gmail.com",
+      from: "contacto@coocafisa.com",
       to: correo,
       subject: "Informe diario",
       text: "El presente correo contiene un informe PDF de sus registros que tienen por fecha de pago el día de hoy.",
@@ -51,8 +51,8 @@ const sendNotificationEmail = async (count, pdfBuffer) => {
   try {
     const transport = await transporter();
     const notificationOptions = {
-      from: "soporte.coocafisa@gmail.com",
-      to: "soporte.coocafisa@gmail.com",
+      from: "contacto@coocafisa.com",
+      to: "contacto@coocafisa.com",
       subject: "Notificación: Correos Enviados",
       text: `Se han enviado un total de ${count} correos con informes exitosamente. Adjuntamos la lista completa de destinatarios.`,
       attachments: [

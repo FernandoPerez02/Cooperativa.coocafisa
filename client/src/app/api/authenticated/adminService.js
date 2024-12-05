@@ -30,7 +30,7 @@ export const queryEmails = async (setError) => {
 export const programmatEmails = async (hora, minuto, setAlert, setType, setLoading) => {
     try {
         setType('success');
-        const response = await api.post("/schedulEmailings", {
+        const response = await api.post("/shedulEmails/schedulEmailings", {
             hour:hora,
             minute:minuto,
         });

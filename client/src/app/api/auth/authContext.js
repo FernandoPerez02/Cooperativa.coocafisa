@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await api.get('/session');     
+                const response = await api.get('/managerSession/session');     
                 const { isAuthenticated, user, role } = response.data;
 
                 if (isAuthenticated) {

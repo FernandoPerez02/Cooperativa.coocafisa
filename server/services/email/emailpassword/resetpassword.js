@@ -9,7 +9,7 @@ const resetMail = async (email, enlace) => {
     const transport = await transporter();
     try {
         const mailOptions = {
-            from: 'soporte.coocafisa@gmail.com',
+            from: 'contacto@coocafisa.com',
             to: email,
             subject: 'Restablecimiento de Contraseña',
             html: `<p>Hola, <br /> para completar el restablecimiento de tu contraseña, haz click en el siguiente enlace: <a href="${enlace}">${enlace}</a></p>`,

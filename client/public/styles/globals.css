@@ -66,14 +66,12 @@ footer h5 {
 
 button {
     border-radius: 8px;
-    width: 150px;
+    width: 120px;
     height: 40px;
-    color: rgb(137, 134, 134);
     font-size: large;
     margin-top: 20px;
     transition: background 0.3s ease;
 }
-
 
 .imglogoindex {
   width: 8vw;
@@ -84,6 +82,13 @@ button {
 .error-message {
   color: red;
 }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 
 @media (min-width: 375px) {
    .imglogoindex {

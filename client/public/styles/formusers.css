@@ -137,8 +137,7 @@ body {
         text-align: center;
     }
 
-    /* button {
-        background: linear-gradient(135deg, rgb(27, 145, 72), #f0f0f0, #a6a6a6);
+    .button {
         border-radius: 8px;
         width: 120px;
         height: 35px;
@@ -146,7 +145,7 @@ body {
         font-size: large;
         margin-top: 15px;
         transition: background 0.3s ease;
-    } */
+    } 
 }
 
 .stlvar input {
@@ -173,12 +172,16 @@ label {
     transition: background 0.3s ease;
 }
 
-.btn_registrar {
+.btn_registrar, .btn_enviar {
     background-color: #27ae60;
     color: white;
 }
 
 .btn_registrar:hover {
+    background-color: #2ecc71;
+}
+
+.btn_enviar:hover {
     background-color: #2ecc71;
 }
 
@@ -188,12 +191,16 @@ label {
     cursor: not-allowed;
   }
 
-.btn_cancelar {
+.btn_cancelar, .btn_regresar {
     background-color: #e74c3c;
     color: white;
 }
 
 .btn_cancelar:hover {
+    background-color: #c0392b;
+}
+
+.btn_regresar:hover {
     background-color: #c0392b;
 }
 
