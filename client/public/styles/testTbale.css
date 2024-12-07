@@ -1,3 +1,37 @@
+/* Estilo del formulario de búsqueda */
+.flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.input-search {
+  width: 100%;
+  max-width: 350px;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-search::placeholder {
+  color: #888;
+  font-style: italic;
+}
+
+.input-search:focus {
+  border-color: #0073e6;
+  box-shadow: 0 0 8px rgba(0, 115, 230, 0.2);
+  background-color: #ffffff;
+} 
+
 .container {
   font-family: 'Arial', sans-serif;
   padding: 20px;
@@ -60,34 +94,27 @@
 .pagination {
   display: flex;
   justify-content: center;
-  align-items: center;
   margin-top: 1rem;
-  gap: 0.5rem;
 }
 
 .pagination button {
+  margin: 0 0.5rem;
   padding: 0.5rem 1rem;
   border: none;
   background-color: #4CAF50;
   color: white;
   cursor: pointer;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.pagination button:hover {
-  background-color: #2e7d32;
+  transition: background-color 0.3s;
 }
 
 .pagination button.active {
   background-color: #2e7d32;
 }
 
-.pagination button:disabled {
-  background-color: #9e9e9e;
-  cursor: not-allowed;
+.pagination button:hover {
+  background-color: #2e7d32;
 }
-
 
 /* Responsividad */
 @media (max-width: 768px) {
@@ -121,38 +148,3 @@
     display: block;
   }
 }
-
-
-/* Estilo del formulario de búsqueda */
-.flex {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
-}
-
-.input-search {
-  width: 100%;
-  max-width: 350px;
-  padding: 0.8rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f8f8f8;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.input-search::placeholder {
-  color: #888;
-  font-style: italic;
-}
-
-.input-search:focus {
-  border-color: #0073e6;
-  box-shadow: 0 0 8px rgba(0, 115, 230, 0.2);
-  background-color: #ffffff;
-} 

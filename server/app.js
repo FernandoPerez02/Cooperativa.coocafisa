@@ -73,6 +73,23 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Error inesperado en el servidor." });
 });
 
+const {generarReportePDF} = require("./services/email/report/generatepdf");
+
+app.get('/preview', async (req, res) => {
+  const sampleData = [
+      { nit: '1234561234', factura: '2345678901', fecha_factura: '1-Jun-24', fecha_vencimiento: '1-Jul-24', total: '$1000', retencion: '14.136',  neto: '658.750', fecpago: '2024-12-06', pago_factura: '658.000', valorPago: '1.786.000' },
+      { nit: '789012', factura: '3451645876', fecha_factura: '1-Jun-24', fecha_vencimiento: '1-Jul-24', total: '$2000', retencion: '14.136',  neto: '658.750', fecpago: '2024-12-05', pago_factura: '658.000', valorPago: '1.786.000' }
+  ];
+
+  try {
+      const pdfBuffer = await generarReportePDF(sampleData);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.send(pdfBuffer);
+  } catch (error) {
+      res.status(500).send('Error al generar el PDF');
+  }
+});
+
 app.listen(3001, () => {
   console.log(`Servidor en ejecución en http://localhost:3001`);
 });

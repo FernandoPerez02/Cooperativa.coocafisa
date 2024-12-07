@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const fs = require("fs");
 const schedule = require("node-schedule");
+const pool = require("../../../connectionBD/db");
+const { resendEmails } = require("../../email/emailsPending");
 
 router.post("/schedulEmailings", (req, res) => {
     const { hour, minute } = req.body;
@@ -46,13 +48,37 @@ router.post("/schedulEmailings", (req, res) => {
       }
   
       const { obtainData } = require("../../email/report/obtainData");
-      job = schedule.scheduleJob(`${minute} ${hour} * * *`, () => {
-        obtainData();
+
+
+      job = schedule.scheduleJob(`${minute} ${hour} * * *`, async() => {
+        try {
+          const query = `SELECT pagopro.nit, factura, fecfac, fecvcto, total, retencion, tot,
+	        fecpago, pagfac, pagtot, str_to_Date(fecpago, '%e-%b-%y') AS fecpago, correo 
+          FROM proveedor INNER JOIN pagopro ON proveedor.nit = pagopro.nit 
+          WHERE str_to_Date(fecpago, '%e-%b-%y') = CURDATE()`;
+          const results = await pool.query(query);
+          if (results.length > 0) {
+            await obtainData(results);
+          } else {
+            return "No hay registros para el reporte.";
+          }
+        } catch (error) {
+          console.log(error);
+        }
       });
   
     } catch (error) {
       return "Error con el envio del correo.";
     }
   }
+
+  router.post('/resendEmails', async (req, res) => {
+    try {
+      const results = await resendEmails();
+      return res.status(200).json({ message: results });
+    } catch (error) {
+      return res.status(500).json({ message: "Error al enviar correos." });
+    }
+  });
 
 module.exports = { router, scheduleJob };

@@ -30,7 +30,6 @@ router.get('/session', (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
-  const userName = req.session ? req.session.name : 'Desconocido';
   req.session.destroy(err => {
     if (err) {
       return res.status(500).json({ message: 'Error al cerrar sesión' });

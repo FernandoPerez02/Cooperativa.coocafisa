@@ -30,6 +30,16 @@ const roleMiddleware = (role) => (req, res, next) => {
 function generarToken () {
     return crypto.randomBytes(20).toString('hex');
 }
-    
 
-module.exports = { formatDate, isAuthenticated, roleMiddleware, generarToken };
+function formatPesos (number) {
+    return new Intl.NumberFormat('es-Co', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+        currencyDisplay: 'symbol',
+        useGrouping: true
+    }).format(number);
+}
+
+module.exports = { formatDate, isAuthenticated, roleMiddleware, generarToken, formatPesos };

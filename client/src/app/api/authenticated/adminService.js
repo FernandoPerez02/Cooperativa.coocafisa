@@ -111,3 +111,54 @@ export const getSuppliers = async (setAlert) => {
           }
     }
 }
+
+export const getPaymentsSuppliers = async (setAlert) => {
+    try {
+        const response = await api.get("/programmatemails/paymentsSuppliers");
+        const data = response.data;
+        if (response.status === 200) {
+            return data;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        if (error.response) {
+            setAlert(error.response.data.error);
+            return [];
+        } else if (error.request) {
+            setAlert(`Nuestro servidor está temporalmente fuera de servicio.
+              Estamos haciendo todo lo posible para restablecer el servicio.
+              Por favor, intenta más tarde.`);
+              return [];
+          } else {
+            setAlert("Ocurrió un error al enviar la solicitud.");
+            return [];
+          }
+    }
+}
+
+export const getEmailsPending = async (setAlert) => {
+    try {
+        const response = await api.get("/programmatemails/pendingEmails");
+        const data = response.data;
+        if (response.status === 200) {
+            return data;
+        } else {
+            setAlert(data.message);
+            return [];
+        }
+    } catch (error) {
+        if (error.response) {
+            setAlert(error.response.data.message);
+            return [];
+        } else if (error.request) {
+            setAlert(`Nuestro servidor está temporalmente fuera de servicio.
+              Estamos haciendo todo lo posible para restablecer el servicio.
+              Por favor, intenta más tarde.`);
+              return [];
+          } else { 
+            setAlert("Ocurrió un error al enviar la solicitud.");
+            return [];
+          }
+    }
+}

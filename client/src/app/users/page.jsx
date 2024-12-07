@@ -43,6 +43,7 @@ export default function Users() {
                     title={title}
                     headers={headers}
                     data={users}
+                    keysToSearch={['nit', 'rol', 'razonsoc', 'correo', 'fecha_reg']}
                     fields={fields}
                     error={error}
                 />

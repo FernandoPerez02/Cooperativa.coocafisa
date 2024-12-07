@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import "@public/styles/table.css";
+import "@public/styles/testTbale.css";
 import Search from "./search";
 
 const ResultTable = ({ data, keysToSearch, title, headers, fields, error }) => {
@@ -10,18 +10,11 @@ const ResultTable = ({ data, keysToSearch, title, headers, fields, error }) => {
   const itemsPerPage = 10;
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const maxVisiblePages = 4;
 
   const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
-  const getPageRange = () => {
-    const start = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    const end = Math.min(totalPages, start + maxVisiblePages - 1);
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  };
 
   useEffect(() => {
     setOriginalData(data);
@@ -31,16 +24,6 @@ const ResultTable = ({ data, keysToSearch, title, headers, fields, error }) => {
   const handleFilter = (filtered) => {
     setFilteredData(filtered);
     setCurrentPage(1);
-  };
-
-  const handlePrevGroup = () => {
-    const newPage = Math.max(1, currentPage - maxVisiblePages);
-    setCurrentPage(newPage);
-  };
-
-  const handleNextGroup = () => {
-    const newPage = Math.min(totalPages, currentPage + maxVisiblePages);
-    setCurrentPage(newPage);
   };
 
   return (
@@ -82,27 +65,15 @@ const ResultTable = ({ data, keysToSearch, title, headers, fields, error }) => {
         </table>
       )}
       <div className="pagination">
-        <button
-          disabled={currentPage === 1}
-          onClick={handlePrevGroup}
-        >
-          &laquo;
-        </button>
-        {getPageRange().map((page) => (
+        {Array.from({ length: totalPages }).map((_, index) => (
           <button
-            key={page}
-            className={page === currentPage ? "active" : ""}
-            onClick={() => setCurrentPage(page)}
+            key={index}
+            className={index + 1 === currentPage ? "active" : ""}
+            onClick={() => setCurrentPage(index + 1)}
           >
-            {page}
+            {index + 1}
           </button>
         ))}
-        <button
-          disabled={currentPage === totalPages}
-          onClick={handleNextGroup}
-        >
-          &raquo;
-        </button>
       </div>
     </div>
   );
