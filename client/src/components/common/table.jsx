@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import "@public/styles/table.css";
 import Search from './search';
 
-const Table = ({ data, keysToSearch, title, nit, razonsoc, headers, expandedData, error }) => {
+const Table = ({ data, keysToSearch, fields, title, headers, expandedData, error }) => {
   const [filteredData, setFilteredData] = useState(data);
   const [originalData, setOriginalData] = useState(data);
   const [expandedRows, setExpandedRows] = useState({});
@@ -11,6 +11,7 @@ const Table = ({ data, keysToSearch, title, nit, razonsoc, headers, expandedData
   const itemsPerPage = 10;
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const maxVisiblePages = 4;
   
   const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
@@ -21,6 +22,14 @@ const Table = ({ data, keysToSearch, title, nit, razonsoc, headers, expandedData
     setOriginalData(data);
     setFilteredData(data);
   }, [data]); 
+
+  console.log(filteredData)
+
+  const getPageRange = () => {
+    const start = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    const end = Math.min(totalPages, start + maxVisiblePages - 1);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
 
   const handleFilter = (filtered) => {
     setFilteredData(filtered);
@@ -34,6 +43,16 @@ const Table = ({ data, keysToSearch, title, nit, razonsoc, headers, expandedData
     }));
   };
 
+  const handlePrevGroup = () => {
+    const newPage = Math.max(1, currentPage - maxVisiblePages);
+    setCurrentPage(newPage);
+  };
+
+  const handleNextGroup = () => {
+    const newPage = Math.min(totalPages, currentPage + maxVisiblePages);
+    setCurrentPage(newPage);
+  };
+
   return (
     <div className="container">
       <div className="header">
@@ -42,8 +61,8 @@ const Table = ({ data, keysToSearch, title, nit, razonsoc, headers, expandedData
         <Search data={originalData} keysToSearch={keysToSearch} onFilteredData={handleFilter} />
         <div className="header-details">
         </div>
-          <span><strong>NIT:</strong> {nit}</span>
-          <span><strong>Razón Social:</strong> {razonsoc}</span>
+          <span><strong>NIT:</strong> {data[0]?.nit}</span>
+          <span><strong>Razón Social:</strong> {data[0]?.razonsoc}</span>
         </div>
       </div>
       {error ? (
@@ -51,56 +70,70 @@ const Table = ({ data, keysToSearch, title, nit, razonsoc, headers, expandedData
           ) : filteredData.length === 0 ? (
             <div className="loading-message">No se encontraron registros disponibles...</div>
           ) : (
-        <table className="responsive-table">
-          <thead>
-            <tr>
-              {headers.map((header, index) => (
-                <th key={index}>{header}</th>
-              ))}
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedData.map((item, index) => (
-              <React.Fragment key={index}>
-                <tr>
-                  <td>{item.cont1}</td>
-                  <td>{item.cont2}</td>
-                  <td>{item.cont3}</td>
-                  <td>{item.cont4}</td>
-                  <td>{item.cont5}</td>
-                  <td>
-                    <button onClick={() => toggleRow(index)}>
-                      {expandedRows[index] ? 'Ocultar' : 'Ver más'}
-                    </button>
-                  </td>
-                </tr>
-                {expandedRows[index] && (
-                  <tr className="expanded-row">
-                    <td colSpan={headers.length + 1}> 
-                      <div>
-                        {expandedData[index]?.map((dataItem, idx) => (
-                          <div key={idx}><strong>{dataItem.label}:</strong> {dataItem.value}</div>
-                        ))}
-                      </div>
+            <table className="responsive-table">
+            <thead>
+              <tr>
+                {headers.map((header, index) => (
+                  <th key={index}>{header}</th>
+                ))}
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedData.map((item, rowIndex) => (
+                <React.Fragment key={rowIndex}>
+                  <tr>
+                    {fields.map((field, colIndex) => (
+                      <td key={colIndex} data-label={headers[colIndex]}>
+                        {field === "num" ? rowIndex + 1 : item[field] || "N/A"}
+                      </td>
+                    ))}
+                    <td>
+                      <button onClick={() => toggleRow(rowIndex)}>
+                        {expandedRows[rowIndex] ? 'Ocultar' : 'Ver más'}
+                      </button>
                     </td>
                   </tr>
-                )}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+                  {expandedRows[rowIndex] && (
+                    <tr className="expanded-row">
+                      <td colSpan={headers.length + 1}>
+                        <div>
+                          {expandedData.map((dataItem, idx) => (
+                            <div key={idx}>
+                              <strong className='text-oculto'>{dataItem.label}:</strong> {dataItem.value}
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
           )}
-      <div className="pagination">
-        {Array.from({ length: totalPages }).map((_, index) => (
-          <button 
-            key={index} 
-            className={index + 1 === currentPage ? 'active' : ''}
-            onClick={() => setCurrentPage(index + 1)}
+          <div className="pagination">
+        <button
+          disabled={currentPage === 1}
+          onClick={handlePrevGroup}
+        >
+          &laquo;
+        </button>
+        {getPageRange().map((page) => (
+          <button
+            key={page}
+            className={page === currentPage ? "active" : ""}
+            onClick={() => setCurrentPage(page)}
           >
-            {index + 1}
+            {page}
           </button>
         ))}
+        <button
+          disabled={currentPage === totalPages}
+          onClick={handleNextGroup}
+        >
+          &raquo;
+        </button>
       </div>
     </div>
   );

@@ -25,13 +25,13 @@ export default function Navigations() {
 }
 
 const routeToIndices = {
-    "/home": [0, 1, 2, 3, 7],
-    "/home/suppliers": [0, 1, 2, 3, 7],
+    "/home": [0, 1, 2, 3],
+    "/home/suppliers": [0, 1, 2, 3],
     "/home/suppliers/invoices": [4, 5, 6],
     "/home/suppliers/invoices/payments": [4, 5, 6],
     "/home/suppliers/invoices/pending": [4, 5, 6],
     "/users": [0, 1, 2, 3, 7],
-    "/home/administrator/email": [0, 1, 2, 3, 7]
+    "/home/administrator/email": [0, 1, 2, 3, 7, 8]
 }
 
 const menuOptions = [
@@ -43,6 +43,7 @@ const menuOptions = [
   { id: 6, label: "Facturas Pagas", link: "/home/suppliers/invoices/payments", icon: "bi bi-cash-stack"},
   { id: 7, label: "Facturas Pendientes", link: "/home/suppliers/invoices/pending", icon: "bi bi-wallet2"},
   { id: 8, label: "Proveedores", link: "/home/suppliers", icon: "bi bi-building"},
+  { id: 9, label: "Correos Pendientes", link: "/home/administrator/emailPending", icon: "bi bi-envelope-paper-fill"},
 ];
 
 

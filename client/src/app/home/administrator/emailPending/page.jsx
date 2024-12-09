@@ -1,7 +1,9 @@
 "use client";
 import ResultTable from "@/components/common/result_table";
 import { useState, useEffect } from "react";
-import { getEmailsPending } from "../../../../api/authenticated/adminService";
+import { getEmailsPending } from "@/app/api/authenticated/adminService";
+import HoraForm from "@/components/layout/formhouremail";
+import { ProtectedRoute } from "../../../../components/middleware";
 
 export default function PendingEmails() {
     const [pendingEmails, setPendingEmails] = useState([]);
@@ -33,6 +35,7 @@ export default function PendingEmails() {
 
     return (
         <>
+        <HoraForm/>
         <ResultTable data={pendingEmails} title={title} headers={headers} fields={fields} error={alert} />
         </>
     );

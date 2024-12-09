@@ -7,10 +7,13 @@ export const queryInvoices = async (setError) => {
   } catch (error) {
     if (error.response) {
       const errorData =
-        error.response.data.errors || error.response.data.redirect;
+        error.response.data.errors
       if ([401, 404].includes(error.response.status)) {
         setError(errorData);
-        window.location.href = errorData || "/";
+        setTimeout (() => {
+          window.location.href = error.response.data.redirect;
+        }, 4000);
+  
       } else {
         setError(
           "Error en la solicitud al servidor. Inténtalo de nuevo más tarde."
@@ -38,7 +41,7 @@ export const queryinvoicepayment = async (setError) => {
         error.response.data.errors || error.response.data.redirect;
       if ([401, 404].includes(error.response.status)) {
         setError(errorData);
-        window.location.href = errorData || "/";
+        window.location.href = error.response.data.redirect;
       } else {
         setError(
           "Error en la solicitud al servidor. Inténtalo de nuevo más tarde."
@@ -63,10 +66,10 @@ export const queryinvoicepending = async (setError) => {
   } catch (error) {
     if (error.response) {
       const errorData =
-        error.response.data.errors || error.response.data.redirect;
+        error.response.data.errors;
       if ([401, 404].includes(error.response.status)) {
         setError(errorData);
-        window.location.href = errorData || "/";
+        window.location.href = error.response.status.redirect;
       } else {
         setError(
           "Error en la solicitud al servidor. Inténtalo de nuevo más tarde."

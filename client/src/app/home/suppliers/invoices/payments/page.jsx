@@ -4,54 +4,35 @@ import Table from "@/components/common/table";
 import { queryinvoicepayment } from "@/app/api/authenticated/invoiceService";
 import { ProtectedRoute } from "@/components/middleware";
 export default function Invoicepayments() {
-  const [data, setInvoices] = useState([]);;
-  const [nit, setNit] = useState("N/A");
-  const [razonsoc, setRazonsoc] = useState("N/A");
+  const [data, setInvoices] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchInvoices = async () => {
       const invoices = await queryinvoicepayment(setError);
-      const formattedData = invoices.map((invoice, index) => ({
-        id: invoice.id || index + 1,
-        nit: invoice.nit || "N/A",
-        razonsoc: invoice.razonsoc || "N/A",
-        cont1: invoice.factura || "Sin factura",
-        cont2: invoice.fecfac || "Sin fecha",
-        cont3: invoice.fecvcto || "Sin vencimiento",
-        cont4: invoice.total || "0",
-        cont5: invoice.retencion || "0",
-        cont6: invoice.neto || "0",
-        cont7: invoice.fecpago || "Sin fecha de pago",
-        cont8: invoice.pagfac || "0",
-        cont9: invoice.total || "0",
-      }));
-      setInvoices(formattedData);
-      if (formattedData.length > 0) {
-        setNit(formattedData[0].nit);
-        setRazonsoc(formattedData[0].razonsoc);
-      } else {
-        setNit("N/A");
-        setRazonsoc("N/A");
-      }
+      setInvoices(invoices);
     };
     fetchInvoices();
   }, []);
 
-  const expandedData = data.map((invoice) => [
-    { label: "Fecha Pago", value: invoice.cont7 },
-    { label: "Pago Factura", value: invoice.cont8 },
-    { label: "Valor Pago", value: invoice.cont9 },
-    { label: "Neto", value: invoice.cont6 },
-  ]);
-
   const title = "Tus Facturas Pagadas";
   const headers = [
-    "Factura",
-    "Fecha Factura",
-    "Fecha Vencimiento",
-    "Total",
-    "Retencion",
+    "Factura", "Fecha Factura", "Fecha Vencimiento", "Total", "Retencion"
+  ];
+
+  const fields = [
+    'factura' || "Sin factura",
+    'fecfac' || "Sin fecha",
+    'fecvcto' || "Sin fecha",
+    'total' || "0",
+    'retencion' || "0",
+  ];
+
+  const expandedData = [
+    { label: "Neto", value: data[0]?.tot || "0", },
+    { label: "Fecha Pago", value: data[0]?.fecpago || "0",},
+    { label: "Pago Factura", value: data[0]?.pagfac || "0",},
+    { label: "Valor Pago", value: data[0]?.pagtot || "0", }
   ];
 
   return (
@@ -60,12 +41,11 @@ export default function Invoicepayments() {
     <Table
       data={data}
       title={title}
-      nit={nit}
-      razonsoc={razonsoc}
+      fields={fields}
       headers={headers}
       expandedData={expandedData}
       error={error}
-      keysToSearch={['cont1', 'cont2', 'cont3', 'cont7']}
+      keysToSearch={['factura', 'fecfac', 'fecvcto']}
     />
     </>
   );

@@ -91,7 +91,7 @@ export default function Registerusers() {
         <h1 className="text-2xl font-bold">Registro de Usuarios</h1>
       </header>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="options">
 
         <div className="stlvar">

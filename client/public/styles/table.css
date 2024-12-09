@@ -88,7 +88,6 @@
   cursor: not-allowed;
 }
 
-
 /* Responsividad */
 @media (max-width: 768px) {
   .responsive-table {
@@ -156,3 +155,70 @@
   box-shadow: 0 0 8px rgba(0, 115, 230, 0.2);
   background-color: #ffffff;
 } 
+
+.expanded-row {
+  background-color: #f0f8ff;
+  border-top: 1px solid #ddd;
+  transition: background-color 0.3s ease;
+}
+
+.expanded-row td {
+  padding: 15px;
+  vertical-align: top;
+}
+
+.expanded-row div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.expanded-row div > div {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  width: calc(50% - 7.5px);
+}
+
+.expanded-row div > div strong {
+  font-weight: 600;
+  color: #00796b;
+}
+
+.expanded-row div > div:first-child {
+  border-top: none;
+}
+
+.expanded-row div > div:last-child {
+  border-bottom: none;
+}
+
+.expanded-row div > div:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.expanded-row.active {
+  background-color: #e1f5fe;
+  border-left: 4px solid #00796b;
+}
+
+@media (max-width: 768px) {
+  .expanded-row div > div {
+    width: 100%;
+  }
+
+  .expanded-row {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .expanded-row div {
+    gap: 10px;
+  }
+}

@@ -14,15 +14,52 @@ export default function Formresetpass() {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState(null);
+  const [errores, setErrores] = useState({
+    newpass: false,
+    confpass: false,
+  });
+  const [formData, setFormData] = useState({
+    newpass: '',
+    confpass: '',
+  })
 
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
   const handleSubmit = async (event) => {
+    setLoading(true);
     event.preventDefault();
+
     if (!token) {
       setAlert("El token de validación no es válido.");
       return;
     }
-    setLoading(true);
-    await resetpass(event, setAlert, token);
+    let formularioValido = true;
+    let newErrors = { newpass: false, confpass: false };
+
+    if (formData.newpass.trim() === "") {
+      formularioValido = false;
+      newErrors.newpass = true;
+    }
+
+    if (formData.confpass.trim() === "") {
+      formularioValido = false;
+      newErrors.confpass = true;
+    }
+
+    setErrores(newErrors);
+
+    if (!formularioValido) {
+      const error = Object.keys(newErrors).find((camp) => newErrors[camp]);
+      document.getElementById(error).focus();
+    }
+
+    if (formularioValido) {
+      await resetpass(event, setAlert, token, setLoading, setType);
+    } else {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -59,17 +96,19 @@ export default function Formresetpass() {
             <h1 className="text-2xl font-bold text-foreground item">Restablecer Contraseña</h1>
           </header>
           <div className="form-container">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <div className="stlvar">
                 <label htmlFor="newpass">Nueva Contraseña</label>
-                <input type="password" name="newpass" id="newpass" />
+                <input type="password" name="newpass" id="newpass" value={formData.newpass}
+                onChange={handleChange} required style={{borderColor: errores.newpass ? 'red' : ''}} />
               </div>
               <div className="stlvar">
                 <label htmlFor="confpass">Confirmar Contraseña</label>
-                <input type="password" name="confpass" id="confpass" />
+                <input type="password" name="confpass" id="confpass" value={formData.confpass}
+                onChange={handleChange} required style={{borderColor: errores.confpass ? 'red' : ''}} />
               </div>
               <div className="btn">
-                <button type="submit">Restablecer</button>
+                <button type="submit">Restablecer</button> 
               </div>
             </form>
             {loading && <Loader alert={alert} type={type}/>}

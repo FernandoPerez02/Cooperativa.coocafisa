@@ -4,7 +4,7 @@ import ResultTable from "@/components/common/result_table";
 import { getSuppliers } from "@/app/api/authenticated/adminService";
 import { ProtectedRoute } from "@/components/middleware";
 
-export default function Invoices() {
+export default function Suppliers() {
     const [suppliers, setSuppliers] = useState([]);
     const [alert, setAlert] = useState("");
 

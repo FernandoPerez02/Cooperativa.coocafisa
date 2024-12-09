@@ -3,6 +3,7 @@ const router = express.Router();
 const queryDatabase = require("../../../connectionBD/queryDatabase");
 const {formatDate} = require("../../functions/helpers")
 const { isAuthenticated } = require('../../functions/helpers');
+const {formatPesos} = require('../../functions/helpers')
 
 router.get('/invoices',isAuthenticated, async (req, res) => {
     const nit = req.session.name;
@@ -12,7 +13,7 @@ router.get('/invoices',isAuthenticated, async (req, res) => {
     }
     try {
         const query = `
-            SELECT pagopro.nit, razonsoc, factura, fecfac, fecvcto, retencion, total, fecpago, pagfac
+            SELECT pagopro.nit, razonsoc, factura, fecfac, fecvcto, tot, retencion, total, fecpago, pagtot, pagfac
             FROM proveedor
             INNER JOIN pagopro ON proveedor.nit = pagopro.nit 
             WHERE pagopro.nit = ?;`;
@@ -22,6 +23,12 @@ router.get('/invoices',isAuthenticated, async (req, res) => {
              fecpago: formatDate(result.fecpago),
              fecfac: formatDate(result.fecfac),
              fecvcto: formatDate(result.fecvcto),
+             retencion: formatPesos(result.retencion),
+             total: formatPesos(result.total),
+             pagfac: formatPesos(result.pagfac),
+             tot: formatPesos(result.tot),
+             pagtot: formatPesos(result.pagtot),
+             
          }));
         return res.json(formatedResults);
     } catch (error) {
@@ -37,7 +44,7 @@ router.get('/invoicepayment', isAuthenticated, async (req, res) => {
     }
     try {
         const query = `
-            SELECT pagopro.nit, razonsoc, factura, fecfac, fecvcto, retencion, total, fecpago, pagfac
+            SELECT pagopro.nit, razonsoc, factura, fecfac, fecvcto, retencion, tot, total, pagtot, fecpago, pagfac
             FROM proveedor
             INNER JOIN pagopro ON proveedor.nit = pagopro.nit 
             WHERE pagopro.nit = ? and fecpago is not null;`;
@@ -47,6 +54,12 @@ router.get('/invoicepayment', isAuthenticated, async (req, res) => {
              fecpago: formatDate(result.fecpago),
              fecfac: formatDate(result.fecfac),
              fecvcto: formatDate(result.fecvcto),
+             retencion: formatPesos(result.retencion),
+             total: formatPesos(result.total),
+             pagfac: formatPesos(result.pagfac),
+             tot: formatPesos(result.tot),
+             pagtot: formatPesos(result.pagtot),
+
          }));
         return res.json(formatedResults);
     } catch (error) {
@@ -62,7 +75,7 @@ router.get('/invoicepending', isAuthenticated, async (req, res) => {
     }
     try {
         const query = `
-            SELECT pagopro.nit, razonsoc, factura, fecfac, fecvcto, retencion, total, fecpago, pagfac
+            SELECT pagopro.nit, razonsoc, factura, fecfac, fecvcto, tot, retencion, total, pagtot, fecpago, pagfac
             FROM proveedor
             INNER JOIN pagopro ON proveedor.nit = pagopro.nit
             WHERE pagopro.nit = ? and fecpago is null;`;
@@ -72,6 +85,11 @@ router.get('/invoicepending', isAuthenticated, async (req, res) => {
              fecpago: formatDate(result.fecpago),
              fecfac: formatDate(result.fecfac),
              fecvcto: formatDate(result.fecvcto),
+             retencion: formatPesos(result.retencion),
+             total: formatPesos(result.total),
+             pagfac: formatPesos(result.pagfac),
+             tot: formatPesos(result.tot),
+             pagtot: formatPesos(result.pagtot),
          }));
         return res.json(formatedResults);
     } catch (error) {

@@ -25,9 +25,9 @@ export const emailValidate = async (event, setAlert, setType, setLoading) => {
       }, 3000);
     }
   } catch (error) {
+    setType("error");
     if (error.response) {
       const errorData = error.response.data.message;
-      setType("error");
       setAlert(errorData);
       if ([400, 401, 404].includes(error.response.status)) {
         setAlert(errorData);
@@ -53,7 +53,7 @@ export const emailValidate = async (event, setAlert, setType, setLoading) => {
   }
 };
 
-export const resetpass = async (event, setAlert, token) => {
+export const resetpass = async (event, setAlert, token, setLoading, setType) => {
   const newpass = event.target.newpass.value.trim();
   const confpass = event.target.confpass.value.trim();
   try {
@@ -72,6 +72,7 @@ export const resetpass = async (event, setAlert, token) => {
       window.location.href = "/";
     }, 3000);
   } catch (error) {
+    setType("error");
     if (error.response) {
       const errorData =
         error.response.data.errors || error.response.data.message;
@@ -83,7 +84,7 @@ export const resetpass = async (event, setAlert, token) => {
       }
       setTimeout(() => {
         event.target.newpass.value = "";
-        event.target.confpass.value = "";
+        event.target.confpass.value = ""; 
         setLoading(false);
         setAlert("");
       }, 2000);
