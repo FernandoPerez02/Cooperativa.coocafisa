@@ -59,6 +59,7 @@ router.post("/schedulEmailings", (req, res) => {
           const results = await pool.query(query);
           if (results.length > 0) {
             await obtainData(results);
+            await resendEmails();
           } else {
             return "No hay registros para el reporte.";
           }

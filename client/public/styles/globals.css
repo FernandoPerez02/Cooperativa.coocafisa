@@ -105,6 +105,11 @@ input[type="number"]::-webkit-outer-spin-button {
   .text-header {
     font-size: 2rem;
   }
+}
 
-  
+.btn-resend {
+  margin-top: 220px;
+  cursor: pointer;
+  position: absolute;
+  margin-left: 1090px;
 }

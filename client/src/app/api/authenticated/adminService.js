@@ -162,3 +162,31 @@ export const getEmailsPending = async (setAlert) => {
           }
     }
 }
+
+export async function resendEmails(setMessage, setType, setLoading) {
+    try {
+        setType('success');
+        const response = await api.post("/shedulEmails/resendEmails");
+        const data = response.data;
+        setMessage(data.message);
+    } catch (error) {
+        setType('error');
+        if (error.response) {
+            const errorData = error.response.data.message;
+            if ([500].includes(error.response.status)) {
+                setError(errorData);
+            }
+        } else if (error.request) {
+            setError(`Nuestro servidor está temporalmente fuera de servicio.
+                Estamos haciendo todo lo posible para restablecer el servicio.
+                Por favor, intenta más tarde.`);
+        } else {
+            setError("Error en la solicitud al servidor.");
+        }
+        return [];
+    }
+    setTimeout(() => {
+        setLoading(false);
+        setMessage("");
+    }, 2000);
+}

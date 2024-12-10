@@ -35,14 +35,15 @@ const obtainData = async (query) => {
           const pdfPath = await generarReportePDF(data);
           await emailSend(data, pdfPath);
           emailsSent.push(...data);
-          await addStatusEmails(nit);
+          /* await addStatusEmails(nit); */
+          console.debug("Correo enviado con éxito.");
           } catch (error) {
             console.error(`Error al enviar correo para NIT ${nit}:`, error);
           }
         })
       );
 
-      if (emailsSent.length > 0) {
+      if (emailsSent.length > 80) {
       const summaryPdfBuffer = await generarResumenPDF(emailsSent);
       await sendNotificationEmail(emailsSent.length, summaryPdfBuffer);
       }
@@ -58,13 +59,9 @@ function addStatusEmails (nit)  {
   const query = `UPDATE pagopro SET send_email = true WHERE nit = ?`;
   const result = pool.query(query, [nit]);
   if (result.affectedRows === 0) {
-      return "No se actualizó el estado de los correos pendientes.";
-  }
-  if (error) {
-      console.log(error);
-      return error;
+      return json({menssage: "No se actualizó el estado de los correos pendientes."});
   } else {
-      return "Correos pendientes actualizados con éxito.";
+      return json({menssage: "Correos pendientes actualizados con éxito."});
   }
 
 }
