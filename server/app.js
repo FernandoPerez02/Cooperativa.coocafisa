@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
 const dotenv = require("dotenv");
+dotenv.config();
 const app = express();
 
 dotenv.config({ path: "./env/.env" });
@@ -9,7 +10,7 @@ app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://cooperativa-coocafisa.onrender.com",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
@@ -71,23 +72,6 @@ scheduleJob();
 
 app.use((err, req, res, next) => {
   res.status(500).json({ error: "Error inesperado en el servidor." });
-});
-
-const {generarReportePDF} = require("./services/email/report/generatepdf");
-
-app.get('/preview', async (req, res) => {
-  const sampleData = [
-      { nit: '1234561234', factura: '2345678901', fecha_factura: '1-Jun-24', fecha_vencimiento: '1-Jul-24', total: '$1000', retencion: '14.136',  neto: '658.750', fecpago: '2024-12-06', pago_factura: '658.000', valorPago: '1.786.000' },
-      { nit: '789012', factura: '3451645876', fecha_factura: '1-Jun-24', fecha_vencimiento: '1-Jul-24', total: '$2000', retencion: '14.136',  neto: '658.750', fecpago: '2024-12-05', pago_factura: '658.000', valorPago: '1.786.000' }
-  ];
-
-  try {
-      const pdfBuffer = await generarReportePDF(sampleData);
-      res.setHeader('Content-Type', 'application/pdf');
-      res.send(pdfBuffer);
-  } catch (error) {
-      res.status(500).send('Error al generar el PDF');
-  }
 });
 
 const port = process.env.PORT || 3001;

@@ -1,21 +1,27 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
-const accountTransport = require("../../env/account_transport.json");
+const dotenv  = require("dotenv");
+dotenv.config();
 
 const transporter = async () => {
   const oauth2Client = new google.auth.OAuth2(
-    accountTransport.auth.clientId,
-    accountTransport.auth.clientSecret,
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
     "https://developers.google.com/oauthplayground"
   );
 
   oauth2Client.setCredentials({
-    refresh_token: accountTransport.auth.refreshToken,
+    refresh_token: process.env.REFRESH_TOKEN,
   });
 
   try {
     const { token } = await oauth2Client.getAccessToken();
-    accountTransport.auth.accessToken = token;
+
+    const accountTransport = {
+      auth: {
+        accessToken: token,
+      },
+    };
     return nodemailer.createTransport(accountTransport);
   } catch (error) {
     throw error;
@@ -28,6 +34,7 @@ const emailSend = async (data, pdfBuffer) => {
     const { nit, razonsoc, fecpago, correo } = data[0];
 
     const mailOptions = {
+      service: "gmail",
       from: "contacto@coocafisa.com",
       to: correo,
       subject: "Informe diario",
