@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from 'react';
-import { api } from './authService';
+import { getSession } from '../authenticated/sessionService';
 
 const AuthContext = createContext();
 
@@ -17,8 +17,8 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await api.get('/managerSession/session');     
-                const { isAuthenticated, user, role } = response.data;
+                
+                const { isAuthenticated, user, role } = await getSession();
 
                 if (isAuthenticated) {
                     setUser(user);

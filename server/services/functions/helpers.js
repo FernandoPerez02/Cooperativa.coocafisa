@@ -10,10 +10,9 @@ function formatDate(dateString) {
     return date.toLocaleDateString('es-ES', options);
 }
 
-
 const isAuthenticated = (req, res, next) => {
     if (!req.session || !req.session.name) {
-        return res.status(404).json({ errors: "No estás autenticado.",redirect: "/" });
+        return res.status(404).json({ errors: "No estás autenticado." });
     }
         return next();
     }

@@ -1,21 +1,19 @@
 "use client";
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/api/auth/authContext';
 
 export function ProtectedRoute({ children, allowedRoles = []}) {
     const auth = useAuth();
     const { user, loading, role } = auth || {};
-    const router = useRouter();
     useEffect(() => {
         if (!loading) {
             if (!user) {
-                router.push('/');
+                window.location.href = '/';
             } else if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
-                router.push('/');
+                window.location.href = '/';
             }
         }
-    }, [user, loading, role, router, allowedRoles]);
+    }, [user, loading, role, allowedRoles]);
   
     if (loading) {
         return null;

@@ -24,52 +24,34 @@ export const auth = async (event, setAlert, setLoading, setType) => {
       event.target.nit.value = "";
       event.target.password.value = "";
       setTimeout(() => {
-        window.location.href = data.redirect;
         saveSession();
         setLoading(false);
+        window.location.href = data.redirect;
       }, 2000);
     }
+
   } catch (error) {
     setType("error");
-    if (error.response) {
-        const errorData = error.response.data.errors;
-        const errorRedirect = error.response.data.redirect;
-        if (error.response && error.response.status === 400) { 
-          const errorMessages = errorData.map((err) => err.msg).join(", "); 
-          setAlert(errorMessages || "Credenciales incorrectas.");
-        } else if ([401, 403, 404, 500].includes(error.response.status)) {
-          setAlert(errorData);
-          setTimeout(() => {
-            if (errorRedirect) {
-              window.location.href = errorRedirect;
-              setLoading(false);
-            } 
-            setLoading(false);
-          }, 3000);
-        } else {
-          setAlert("Error en la solicitud al servidor.");
-        }
-        setTimeout(() => {
-          setAlert("");
-          event.target.nit.value = "";
-          event.target.password.value = "";
-          setLoading(false);
-        }, 3000);
-      } else if (error.request) {
-        setAlert(`Nuestro servidor está temporalmente fuera de servicio.
-          Estamos haciendo todo lo posible para restablecer el servicio.
-          Por favor, intenta más tarde.`);
-      } else {
-        setAlert("Ocurrió un error al enviar la solicitud.");
-      }
-      setTimeout(() => {
-        event.target.nit.value = "";
-        event.target.password.value = "";
-        setLoading(false);
-        setAlert("");
-      }, 5000);
+    handleError(error); 
+    setLoading(false);
+    event.target.nit.value = "";
+    event.target.password.value = "";
   }
 };
+
+// Función de manejo de errores
+const handleError = (error) => {
+  if (error.response) {
+    const errorData1 = error.response.data.errors || [];
+    const errorMessages = errorData1.map(err => err.msg).join(", ");
+    setAlert(errorMessages || "Credenciales incorrectas.");
+  } else if (error.request) {
+    setAlert("Nuestro servidor está fuera de servicio. Intenta más tarde.");
+  } else {
+    setAlert("Ocurrió un error al enviar la solicitud.");
+  }
+};
+
 
 export const logout = async (event,setAlert, setType, setLoading) => {
   event.preventDefault();

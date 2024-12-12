@@ -12,6 +12,7 @@ export const saveSession = async () => {
       if (expirationDate > currentDate) {
         // Guarda solo los datos esenciales
         const sessionData = {
+          isAuthenticated: data.isAuthenticated,
           user: data.user,
           role: data.role,
           expiration: data.expiration,
