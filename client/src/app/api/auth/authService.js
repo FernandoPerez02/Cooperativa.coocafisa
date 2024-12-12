@@ -1,7 +1,8 @@
 import axios from "axios";
+import { saveSession } from "../authenticated/sessionService";
 
 export const api = axios.create({
-  baseURL: "https://cooperativa-coocafisa-server.onrender.com",
+  baseURL: 'https://cooperativa-coocafisa-server.onrender.com',
   withCredentials: true,
   headers: { 
     "Content-Type": "application/json",
@@ -24,6 +25,7 @@ export const auth = async (event, setAlert, setLoading, setType) => {
       event.target.password.value = "";
       setTimeout(() => {
         window.location.href = data.redirect;
+        saveSession();
         setLoading(false);
       }, 2000);
     }

@@ -10,7 +10,7 @@ app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: process.env.URL_CLIENT || `http://localhost:3000`,
+    origin: process.env.URL_CLIENT,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })

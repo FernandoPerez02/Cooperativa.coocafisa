@@ -45,7 +45,7 @@ router.post('/emailresetpass', async (req, res) => {
             const expiracionToken = new Date(Date.now() + 3600000);
             const userId = users[0].proveedor_id;
             await pool.query('UPDATE usuario SET token_pass = ?, token_expiracion_pass = ? WHERE proveedor_id = ?', [token, expiracionToken, userId]);
-            const baseUrl = process.env.URL_CLIENT || `http://localhost:3000`;
+            const baseUrl = process.env.URL_CLIENT;
             const enlace = `${baseUrl}/users/resetpassword/formpass?token=${token}`
             const emailSent = await resetMail(gmail, enlace);
             if (emailSent) {
