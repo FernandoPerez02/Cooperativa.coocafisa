@@ -15,11 +15,17 @@ const transporter = async () => {
   });
 
   try {
-    const { token } = await oauth2Client.getAccessToken();
+    const accessToken = await oauth2Client.getAccessToken();
 
     const accountTransport = {
+      service: "gmail",
       auth: {
-        accessToken: token,
+        type: "OAuth2",
+        user: process.env.EMAIL_USER,
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
+        accessToken: accessToken.token,
       },
     };
     return nodemailer.createTransport(accountTransport);
@@ -34,7 +40,6 @@ const emailSend = async (data, pdfBuffer) => {
     const { nit, razonsoc, fecpago, correo } = data[0];
 
     const mailOptions = {
-      service: "gmail",
       from: "contacto@coocafisa.com",
       to: correo,
       subject: "Informe diario",

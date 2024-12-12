@@ -117,7 +117,7 @@
 }
 
 /* Responsividad */
-@media (max-width: 768px) {
+@media (max-width: 350px) {
   .responsive-table {
     overflow-x: auto;
     border: none;

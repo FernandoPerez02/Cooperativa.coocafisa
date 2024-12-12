@@ -89,7 +89,7 @@
 }
 
 /* Responsividad */
-@media (max-width: 768px) {
+@media (max-width: 350px) {
   .responsive-table {
     overflow-x: auto;
     border: none;
@@ -207,7 +207,7 @@
   border-left: 4px solid #00796b;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 350px) {
   .expanded-row div > div {
     width: 100%;
   }
@@ -217,7 +217,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 350px) {
   .expanded-row div {
     gap: 10px;
   }

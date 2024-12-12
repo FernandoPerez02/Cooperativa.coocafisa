@@ -10,7 +10,7 @@ app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: "https://cooperativa-coocafisa.onrender.com",
+    origin: process.env.URL_CLIENT || `http://localhost:3000`,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
@@ -27,10 +27,9 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      /* secure: true, */
+      /* secure: true, */ 
       maxAge: 1000 * 60 * 15,
-      sameSite: "lax",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-
+      sameSite: "lax",
     },
   })
 );
@@ -72,6 +71,10 @@ scheduleJob();
 
 app.use((err, req, res, next) => {
   res.status(500).json({ error: "Error inesperado en el servidor." });
+});
+
+app.get('/servidor', (req, res) => {
+  res.send('Servidor en ejecución');
 });
 
 const port = process.env.PORT || 3001;

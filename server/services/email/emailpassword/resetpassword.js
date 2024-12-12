@@ -4,6 +4,7 @@ const pool = require('../../../connectionBD/db');
 const {transporter} = require('../emailService');
 const bcrypt = require('bcrypt');
 const { generarToken } = require('../../functions/helpers');
+require('dotenv').config();
 
 const resetMail = async (email, enlace) => {
     const transport = await transporter();
@@ -44,7 +45,8 @@ router.post('/emailresetpass', async (req, res) => {
             const expiracionToken = new Date(Date.now() + 3600000);
             const userId = users[0].proveedor_id;
             await pool.query('UPDATE usuario SET token_pass = ?, token_expiracion_pass = ? WHERE proveedor_id = ?', [token, expiracionToken, userId]);
-            const enlace = `http://localhost:3000/users/resetpassword/formpass?token=${token}`
+            const baseUrl = process.env.URL_CLIENT || `http://localhost:3000`;
+            const enlace = `${baseUrl}/users/resetpassword/formpass?token=${token}`
             const emailSent = await resetMail(gmail, enlace);
             if (emailSent) {
                 return res.status(200).json({
@@ -62,6 +64,7 @@ router.post('/emailresetpass', async (req, res) => {
             });
         }
     } catch (error) {
+        console.error(error);
         return res.status(400).json({
             message: "Ocurrió un error interno. Inténtalo más tarde.",
         });

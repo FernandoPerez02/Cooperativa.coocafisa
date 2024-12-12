@@ -122,13 +122,13 @@ body {
     width: 100px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 350px) {
     .options {
         grid-template-columns: 1fr 1fr;
     }
 }
 
-@media (min-width: 375px) {
+@media (min-width: 350px) {
     .logo {
         margin-right: 0px;
     }

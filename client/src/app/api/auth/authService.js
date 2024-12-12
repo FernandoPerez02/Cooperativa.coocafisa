@@ -82,6 +82,7 @@ export const logout = async (event,setAlert, setType, setLoading) => {
         setLoading(false);
         window.location.href = data.redirect;
       }, 2000);
+      sessionStorage.removeItem('SessionData')
     } 
   } catch (error) {
     errorData = error.response.data.error || error.response.data.errors;
