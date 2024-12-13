@@ -26,6 +26,7 @@ export default function Login() {
     useEffect(() => {
         if (type === "success") {
             saveSession();
+            console.log("Sesión iniciada exitosamente.");
         }
     }, [type]);
 

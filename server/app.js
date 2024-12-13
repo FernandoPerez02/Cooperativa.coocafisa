@@ -22,15 +22,16 @@ app.use(express.json());
 
 const redisClient = createClient({
   socket: {
-      connectTimeout: 10000, // 10 segundos
+      connectTimeout: 15000, 
       reconnectStrategy: (retries) => {
-          // Reintentar conexión con un límite
           if (retries > 5) {
               console.error('Máximo de intentos de reconexión alcanzado.');
               return new Error('No se pudo conectar a Redis después de varios intentos.');
           }
           console.log(`Intentando reconectar a Redis... (${retries})`);
-          return Math.min(retries * 100, 3000); // Espera incremental (100ms a 3s)
+          console.log(`Intentando conectar a Redis en: ${process.env.REDIS_URL}`);
+
+          return Math.min(retries * 100, 3000);
       },
   },
   url: process.env.REDIS_URL,
@@ -58,7 +59,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: true,
       maxAge: 1000 * 60 * 15,
       sameSite: "lax",
     },
