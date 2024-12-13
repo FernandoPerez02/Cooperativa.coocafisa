@@ -2,7 +2,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import "@public/styles/menu.css";
-import { logout } from "@/app/api/auth/authService";
+import { logout } from "@/api/auth/authService";
 import { Loader } from "@/components/common/preloader";
 
 export default function Menu({ menuOptions }) {

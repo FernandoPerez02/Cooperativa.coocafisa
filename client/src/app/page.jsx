@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import "@public/styles/formusers.css";
-import { auth } from "@/app/api/auth/authService";
+import { auth } from "@/api/auth/authService";
 import {Loader} from "@/components/common/preloader";
+import { saveSession } from "../api/authenticated/sessionService";
 
 export default function Login() {
     const [type, setType] = useState(false);
@@ -21,6 +22,12 @@ export default function Login() {
         const {name, value} = e.target;
         setFormData((prevData) => ({...prevData, [name]: value}));
     };
+
+    useEffect(() => {
+        if (type === "success") {
+            saveSession();
+        }
+    }, [type]);
 
     const handleSubmit = async (event) => {
         setLoading(true);

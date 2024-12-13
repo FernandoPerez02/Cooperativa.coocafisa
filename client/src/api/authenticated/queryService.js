@@ -1,4 +1,4 @@
-import { api } from "../auth/authService";
+import { api } from "../server";
 
 export const queryUsers = async (setError) => {
     try {

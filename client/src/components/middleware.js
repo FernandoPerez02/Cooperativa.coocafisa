@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from 'react';
-import { useAuth } from '@/app/api/auth/authContext';
+import { useAuth } from '@/api/auth/authContext';
 
 export function ProtectedRoute({ children, allowedRoles = []}) {
     const auth = useAuth();
@@ -8,9 +8,9 @@ export function ProtectedRoute({ children, allowedRoles = []}) {
     useEffect(() => {
         if (!loading) {
             if (!user) {
-                window.location.href = '/';
+                window.location.href = "/";
             } else if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
-                window.location.href = '/';
+                window.location.href = "/";
             }
         }
     }, [user, loading, role, allowedRoles]);

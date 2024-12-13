@@ -2,7 +2,7 @@
 import IndexLayout from "../home/layout";
 import { useState, useEffect } from "react";
 import ResultTable from "@/components/common/result_table";
-import { queryUsers } from "@/app/api/authenticated/queryService";
+import { queryUsers } from "@/api/authenticated/queryService";
 import { ProtectedRoute } from "../../components/middleware";
 
 export default function Users() {

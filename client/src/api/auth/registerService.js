@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "../server";
 export const adduser = async (event, setAlert, setType, setLoading) => {
     event.preventDefault();
     const nit = event.target.nit.value;  
@@ -6,7 +6,7 @@ export const adduser = async (event, setAlert, setType, setLoading) => {
     const pass = event.target.pass.value;
     const passcon = event.target.passcon.value;
     try {
-        const response = await axios.post('http://localhost:3001/adduser/newUser', {
+        const response = await api.post('/adduser/newUser', {
             nit, rol,
             pass, passcon
         });

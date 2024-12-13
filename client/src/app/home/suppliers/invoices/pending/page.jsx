@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Table from "@/components/common/table";
-import { queryinvoicepending } from "@/app/api/authenticated/invoiceService";
+import { queryinvoicepending } from "@/api/authenticated/invoiceService";
 import { ProtectedRoute } from "@/components/middleware";
 
 export default function InvoicePending() {

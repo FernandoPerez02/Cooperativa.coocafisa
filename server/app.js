@@ -11,7 +11,7 @@ app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: process.env.URL_CLIENT /* 'http://localhost:3000' */,
+    origin: process.env.URL_CLIENT,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
@@ -21,9 +21,33 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 const redisClient = createClient({
+  socket: {
+      connectTimeout: 10000, // 10 segundos
+      reconnectStrategy: (retries) => {
+          // Reintentar conexión con un límite
+          if (retries > 5) {
+              console.error('Máximo de intentos de reconexión alcanzado.');
+              return new Error('No se pudo conectar a Redis después de varios intentos.');
+          }
+          console.log(`Intentando reconectar a Redis... (${retries})`);
+          return Math.min(retries * 100, 3000); // Espera incremental (100ms a 3s)
+      },
+  },
   url: process.env.REDIS_URL,
 });
-redisClient.connect();
+
+async function initializeRedis() {
+  try {
+      await redisClient.connect();
+      console.log('Conectado a Redis exitosamente.');
+  } catch (err) {
+      console.error('Error crítico al conectar a Redis:', err.message);
+      // Aquí puedes enviar notificaciones o registrar en logs de producción
+  }
+}
+
+
+initializeRedis();
 
 app.use(
   session({
@@ -87,5 +111,5 @@ app.get('/servidor', (req, res) => {
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
-  console.log(`Servidor en ejecución en http://localhost:${port}`);
+  console.log(`Servidor en ejecución en ${process.env.URL_CLIENT}`);
 });

@@ -1,7 +1,7 @@
 "use client";   
 import { useEffect, useState } from "react";
 import ResultTable from "@/components/common/result_table";
-import { getSuppliers } from "@/app/api/authenticated/adminService";
+import { getSuppliers } from "@/api/authenticated/adminService";
 import { ProtectedRoute } from "@/components/middleware";
 
 export default function Suppliers() {

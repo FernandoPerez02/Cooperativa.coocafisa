@@ -1,5 +1,5 @@
 "use client"
-import { api } from "../auth/authService";
+import { api } from "../server";
 
 export const queryEmails = async (setError) => {
     try {

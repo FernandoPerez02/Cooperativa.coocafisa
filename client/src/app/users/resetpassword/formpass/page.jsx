@@ -1,8 +1,8 @@
 "use client";
 import "@public/styles/formusers.css";
 import { useEffect, useState } from "react";
-import { resetpass } from "@/app/api/auth/passwordService";
-import { getToken } from "@/app/api/auth/passwordService";
+import { resetpass } from "@/api/auth/passwordService";
+import { getToken } from "@/api/auth/passwordService";
 import AlertPopup from "@/components/common/alert";
 import { Loader } from "@/components/common/preloader";
 

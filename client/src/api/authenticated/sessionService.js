@@ -1,4 +1,4 @@
-import { api } from "../auth/authService";
+import { api } from "../server";
 
 export const saveSession = async () => {
   try {
@@ -10,7 +10,6 @@ export const saveSession = async () => {
       const currentDate = new Date();
 
       if (expirationDate > currentDate) {
-        // Guarda solo los datos esenciales
         const sessionData = {
           isAuthenticated: data.isAuthenticated,
           user: data.user,
@@ -32,50 +31,49 @@ export const saveSession = async () => {
   }
 };
 
-
 export const getSession = async () => {
-  const sessionData = sessionStorage.getItem('SessionData');
-  console.log("Datos recuperados de la sesión:", sessionData);
+  try {
+    const storedSession = sessionStorage.getItem('SessionData');
 
-  if (sessionData) {
-    try {
-      const parsedData = JSON.parse(sessionData);
+    let sessionData;
+    if (storedSession) {
+      sessionData = JSON.parse(storedSession);
+    } else {
+      const response = await api.get('/managerSession/session');
+      sessionData = response.data;
 
-      if (parsedData.expiration) {
-        const expirationDate = new Date(parsedData.expiration);
+      sessionStorage.setItem('SessionData', JSON.stringify(sessionData));
+    }
+
+    if (sessionData) {
+      if (sessionData.expiration) {
+        const expirationDate = new Date(sessionData.expiration);
         const currentTime = new Date();
 
         if (expirationDate > currentTime) {
           const timeRemaining = expirationDate - currentTime;
           const totalSeconds = Math.floor(timeRemaining / 1000);
-          const minute = Math.floor(totalSeconds / 60);
+          const minutes = Math.floor(totalSeconds / 60);
           const seconds = totalSeconds % 60;
 
           return {
-            ...parsedData,
+            ...sessionData,
             timeRemaining: {
-              minute,
-              seconds
-            }
-          } 
+              minutes,
+              seconds,
+            },
+          };
         } else {
-          console.warn("La sesión ha expirado.");
           sessionStorage.removeItem('SessionData');
           return null;
         }
       } else {
-        console.warn("El campo de expiración no está presente en la sesión.");
-        return parsedData; 
+        return sessionData;
       }
-    } catch (error) {
-      console.error("Error al parsear los datos de la sesión:", error);
-      sessionStorage.removeItem('SessionData');
-      return null;
     }
+    return null;
+  } catch (error) {
+    sessionStorage.removeItem('SessionData');
+    return null;
   }
-
-  console.warn("No hay datos de sesión almacenados.");
-  return null;
 };
-
-

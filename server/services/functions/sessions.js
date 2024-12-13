@@ -19,7 +19,7 @@ router.get('/logout', (req, res) => {
     if (err) {
       return res.status(500).json({ message: 'Error al cerrar sesión' });
     }
-    res.clearCookie('session_cookie_name');
+    res.clearCookie('SessionData');
     return res.status(200).json({ message: 'Cerrado sesión...', redirect: "/"});
   });
 });

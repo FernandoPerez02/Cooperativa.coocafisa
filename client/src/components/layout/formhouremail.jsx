@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import "@public/styles/programhour.css";
-import { programmatEmails, timerEmails } from "@/app/api/authenticated/adminService";
+import { programmatEmails, timerEmails } from "@/api/authenticated/adminService";
 import { Loader } from "../common/preloader";
 
 const HoraForm = () => {

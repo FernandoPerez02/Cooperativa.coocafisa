@@ -123,8 +123,8 @@ export default function InactivityHandler() {
 
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { logout } from "@/app/api/auth/authService";
-import { getSession } from "@/app/api/authenticated/sessionService";
+import { logout } from "@/api/auth/authService";
+import { getSession } from "@/api/authenticated/sessionService";
 import AlertPopup from "./common/alert";
 import { Loader } from "./common/preloader";
 import "@public/styles/alertInativity.css";
@@ -141,7 +141,6 @@ export default function InactivityHandler() {
       const sessionData = await getSession();
       if (sessionData?.timeRemaining) {
         const { minute, seconds } = sessionData.timeRemaining;
-        console.log(minute, seconds);
         setTimer({
           minutes: String(minute).padStart(2, "0"),
           seconds: String(seconds).padStart(2, "0"),
@@ -150,14 +149,12 @@ export default function InactivityHandler() {
         setTimer({ minutes: "00", seconds: "00" });
       }
     } catch (error) {
-      console.error("Error al recuperar la sesión:", error);
       setTimer({ minutes: "00", seconds: "00" });
     }
   }, []);
 
   useEffect(() => {
     expirationTime();
-    console.log("expirationTime", timer);
   }, [expirationTime]);
 
   useEffect(() => {

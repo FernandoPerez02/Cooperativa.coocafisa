@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
-import { emailValidate } from "@/app/api/auth/passwordService";
+import { emailValidate } from "@/api/auth/passwordService";
 import "@public/styles/formusers.css"
 import AlertPopup from "@/components/common/alert";
 import { Loader } from "@/components/common/preloader";

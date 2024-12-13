@@ -1,10 +1,10 @@
 "use client";
 import ResultTable from "@/components/common/result_table";
 import { useState, useEffect } from "react";
-import { getEmailsPending } from "@/app/api/authenticated/adminService";
+import { getEmailsPending } from "@/api/authenticated/adminService";
 import HoraForm from "@/components/layout/formhouremail";
 import { ProtectedRoute } from "../../../../components/middleware";
-import { resendEmails } from "@/app/api/authenticated/adminService";
+import { resendEmails } from "@/api/authenticated/adminService";
 import { Loader } from "@/components/common/preloader";
 
 export default function PendingEmails() {

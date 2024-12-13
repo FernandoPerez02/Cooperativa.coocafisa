@@ -1,13 +1,4 @@
-import axios from "axios";
-import { saveSession } from "../authenticated/sessionService";
-
-export const api = axios.create({
-  baseURL: 'https://cooperativa-coocafisa-server.onrender.com' /* 'http://localhost:3001' */,
-  withCredentials: true,
-  headers: { 
-    "Content-Type": "application/json",
-   },
-});
+import { api } from "../server";
 
 export const auth = async (event, setAlert, setLoading, setType) => {
   event.preventDefault();
@@ -27,7 +18,6 @@ export const auth = async (event, setAlert, setLoading, setType) => {
       setType("success");
       setAlert("");
       setTimeout(() => {
-        saveSession();
         clearInputs();
         setLoading(false);
         window.location.href = data.redirect;
@@ -38,8 +28,7 @@ export const auth = async (event, setAlert, setLoading, setType) => {
     setType("error");
   if (error.response) {
     const errorData = error.response.data.errors || [];
-    const errorMessages = errorData.map(err => err.msg).join(", ");
-    setAlert(errorMessages || "Credenciales incorrectas.");
+    setAlert(errorData ||"Credenciales incorrectas.");
   } else if (error.request) {
     setAlert("Nuestro servidor está fuera de servicio. Intenta más tarde.");
   } else {
@@ -66,10 +55,10 @@ export const logout = async (event,setAlert, setType, setLoading) => {
       setAlert(data.message);
       setTimeout(() => {
         setAlert("");
-        setLoading(false);
         window.location.href = data.redirect;
+        setLoading(false);
+        sessionStorage.removeItem('SessionData')
       }, 2000);
-      sessionStorage.removeItem('SessionData')
     } 
   } catch (error) {
     errorData = error.response.data.error || error.response.data.errors;
