@@ -36,7 +36,7 @@ const redisClient = createClient({
 
 async function initializeRedis() {
   try {
-      (await redisClient.connect()).catch(console.error)
+      (await redisClient.connect())
       console.log('Conectado a Redis cexitosamente.');
   } catch (err) {
       console.error('Error crítico al conectar a Redis:', err.message);
