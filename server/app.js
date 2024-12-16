@@ -2,7 +2,7 @@ var express = require("express");
 var cors = require("cors");
 var session = require("express-session");
 var { RedisStore } = require('connect-redis')
-var { createClient } = require("@redis/client");
+var Redis = require("ioredis");
 var dotenv = require("dotenv");
 var app = express();
 
@@ -20,48 +20,36 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const redisClient = createClient({
-  socket: {
-      connectTimeout: 15000, 
-      reconnectStrategy: (retries) => {
-          if (retries > 5) {
-              return new Error('No se pudo conectar a Redis después de varios intentos.');
-          }
-          return Math.min(retries * 100, 3000);
-      },
-  },
-  url: process.env.REDIS_URL,
-  legacyMode: true,
-});
+const redisClient = new Redis(process.env.REDIS_URL);
 
-async function initializeRedis() {
-  try {
-      (await redisClient.connect())
-      console.log('Conectado a Redis cexitosamente.');
-  } catch (err) {
-      console.error('Error crítico al conectar a Redis:', err.message);
-  }
-}
+redisClient.ping()
+  .then((result) => {
+    console.log("Conexión a Redis exitosa:", result); // Debería devolver "PONG"
+  })
+  .catch((err) => {
+    console.error("Error al conectar con Redis:", err);
+  });
 
-initializeRedis();
-
-app.use(
-  session({
-    store: new RedisStore({ client: redisClient,
-      ttl: 600
-     }),
-    key: "session_cookie_name",
-    secret: process.env.SESSION_SECRET || "esto es secreto",
+  var sessionMiddleware = session({
+    store: new RedisStore({ client: redisClient, ttl: 10000 }),
+    key: "session_cookie",
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    maxAge: 1000 * 60 * 10,
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: false,
       maxAge: 1000 * 60 * 10,
-      sameSite: "lax",
     },
-  })
-);
+  });
+  app.use(sessionMiddleware);
+
+app.use((req, res, next) => { 
+  console.log("Datos de sesión:", req.session.name, req.session.role, req.session.lastActivity );
+  next();
+});
 
 app.use((req, res, next) => {
   if (req.session && req.session.name) {
@@ -95,6 +83,7 @@ const emailsProgrammer = require("./services/user/admin/emailsProgrammer");
 app.use("/emailsprogrammer", emailsProgrammer);
 
 const { router: shedulEmails, scheduleJob } = require("./services/user/admin/shedulEmails");
+const { connect } = require("./connectionBD/db");
 app.use("/shedulEmails", shedulEmails);
 scheduleJob();
 

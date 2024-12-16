@@ -69,6 +69,7 @@ router.post('/login',
       req.session.name = usuario.nit;
       req.session.role = usuario.rol;
       req.session.lastActivity = Date.now();
+      console.log("Datos de sesión:", req.session.name, req.session.role, req.session.lastActivity );
 
       const redirectPath = usuario.rol === "Administrador"
         ? `/home`
