@@ -10,6 +10,7 @@ const obtainData = async (query) => {
   try {
     const [results] = query
     if (results.length > 0) {
+      var actualDate = new Date();
       const formattedResults = results.map((result) => ({
         ...result,
         fecpago: formatDate(result.fecpago),
@@ -18,6 +19,7 @@ const obtainData = async (query) => {
         tot: formatPesos(result.tot),
         pagfac: formatPesos(result.pagfac),
         pagtot: formatPesos(result.pagtot),
+        fecemi: formatDate(actualDate),
       }));
 
       const groupedResults = formattedResults.reduce((acc, current) => {
@@ -35,7 +37,7 @@ const obtainData = async (query) => {
           const pdfPath = await generarReportePDF(data);
           await emailSend(data, pdfPath);
           emailsSent.push(...data);
-          /* await addStatusEmails(nit); */
+          await addStatusEmails(nit);
           console.debug("Correo enviado con éxito.");
           } catch (error) {
             console.error(`Error al enviar correo para NIT ${nit}:`, error);
@@ -43,7 +45,7 @@ const obtainData = async (query) => {
         })
       );
 
-      if (emailsSent.length > 80) {
+      if (emailsSent.length > 0) {
       const summaryPdfBuffer = await generarResumenPDF(emailsSent);
       await sendNotificationEmail(emailsSent.length, summaryPdfBuffer);
       }

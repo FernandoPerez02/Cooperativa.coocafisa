@@ -58,7 +58,7 @@ export const logout = async (event,setAlert, setType, setLoading) => {
         window.location.href = data.redirect;
         setLoading(false);
         sessionStorage.removeItem('SessionData')
-      }, 2000);
+      }, 3000);
     } 
   } catch (error) {
     errorData = error.response.data.error || error.response.data.errors;
@@ -71,7 +71,7 @@ export const logout = async (event,setAlert, setType, setLoading) => {
       setType("error");
       setAlert("");
       setLoading(false);
-    }, 2000);
+    }, 3000);
   }
 }
 

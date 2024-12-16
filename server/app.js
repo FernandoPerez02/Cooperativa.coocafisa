@@ -1,8 +1,8 @@
 var express = require("express");
 var cors = require("cors");
 var session = require("express-session");
-var {RedisStore} = require('connect-redis')
-var {createClient} = require("@redis/client");
+var { RedisStore } = require('connect-redis')
+var { createClient } = require("@redis/client");
 var dotenv = require("dotenv");
 var app = express();
 
@@ -22,7 +22,7 @@ app.use(express.json());
 
 const redisClient = createClient({
   socket: {
-      connectTimeout: 15000, 
+      connectTimeout: 10000, 
       reconnectStrategy: (retries) => {
           if (retries > 5) {
               console.error('Máximo de intentos de reconexión alcanzado.');
@@ -43,10 +43,8 @@ async function initializeRedis() {
       console.log('Conectado a Redis exitosamente.');
   } catch (err) {
       console.error('Error crítico al conectar a Redis:', err.message);
-      // Aquí puedes enviar notificaciones o registrar en logs de producción
   }
 }
-
 
 initializeRedis();
 
@@ -60,8 +58,8 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: true,
-      maxAge: 1000 * 60 * 15,
-      sameSite: "lax",
+      maxAge: 1000 * 60 * 10,
+      sameSite: "none",
     },
   })
 );
@@ -98,7 +96,6 @@ const emailsProgrammer = require("./services/user/admin/emailsProgrammer");
 app.use("/emailsprogrammer", emailsProgrammer);
 
 const { router: shedulEmails, scheduleJob } = require("./services/user/admin/shedulEmails");
-const { RedisClient } = require("redis");
 app.use("/shedulEmails", shedulEmails);
 scheduleJob();
 
@@ -106,11 +103,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Error inesperado en el servidor." });
 });
 
-app.get('/servidor', (req, res) => {
-  res.send('Servidor en ejecución');
-});
-
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
-  console.log(`Servidor en ejecución en ${process.env.URL_CLIENT}`);
+  console.log(`Servidor en ejecución.`);
 });

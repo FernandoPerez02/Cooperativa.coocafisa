@@ -84,8 +84,8 @@ const sendNotificationEmail = async (count, pdfBuffer) => {
 };
 
 async function resendEmails () {
-  const query = `SELECT pagopro.nit, factura, fecfac, fecvcto, total, retencion, tot,
-        fecpago, pagfac, pagtot, str_to_Date(fecpago, '%e-%b-%y') AS fecpago, correo 
+  const query = `SELECT pagopro.nit, razonsoc, factura, fecfac, fecvcto, total, retencion, tot,
+        pagfac, pagtot, str_to_Date(fecpago, '%e-%b-%y') AS fecpago, correo 
         FROM proveedor INNER JOIN pagopro ON proveedor.nit = pagopro.nit 
         WHERE send_email = false AND proveedor.nit = pagopro.nit;`;
   const results = await pool.query(query);

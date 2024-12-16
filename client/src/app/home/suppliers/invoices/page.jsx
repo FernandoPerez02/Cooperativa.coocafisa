@@ -15,7 +15,7 @@ export default function Invoices() {
     fetchInvoices();
   }, []);
 
-  const title = "Tus Facturas Pagadas";
+  const title = "Tus Facturas";
   const headers = [
     "Factura", "Fecha Factura", "Fecha Vencimiento", "Total", "Retencion"
   ];

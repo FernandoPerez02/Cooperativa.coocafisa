@@ -1,186 +1,461 @@
-const PDFDocument = require('pdfkit');
+const puppeteer = require("puppeteer");
+const fs = require("fs");
+const path = require("path");
 
-const generarReportePDF = (data) => {
-    return new Promise((resolve) => {
-        const doc = new PDFDocument({ margin: 50, size: 'A4' });
-        const buffers = [];
+const generarReportePDF = async (data) => {
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
 
-        doc.on('data', buffers.push.bind(buffers));
-        doc.on('end', () => {
-            resolve(Buffer.concat(buffers));
-        });
+  const imgTag = `<img src="data:image/png;base64,${fs
+    .readFileSync(path.resolve("public/images/Logo.cooperativa.png"))
+    .toString("base64")}" alt="Logo" />`;
 
-        doc.registerFont('Times', "public/fonts/TIMES.TTF");
-        const logoPath = "public/images/Logo.cooperativa.png";
-        doc.image(logoPath, 50, 15, { width: 90 });
+  const htmlContent = `
+  <!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reporte de Pagos</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f7f6;
+        color: #333;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .header img {
+        width: 150px;
+        margin-right: 50px;
+      }
+      .text-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .header h1 {
+        color: #35653d;
+        font-size: 50px;
+        margin-top: -50px;
+      }
+      .header h2 {
+        color: #0f3e22;
+        font-size: 95px;
+        margin-top: -130px;
+      }
+      .header h3 {
+        color: #ffffff;
+        font-size: 28px;
+        margin-right: 200px;
+      }
+      .circle-de {
+        background: #0f3e22;
+        width: 45px;
+        border-radius: 20px;
+        margin-top: -45px;
+      }
+      .description {
+        text-align: center;
+        color: #333;
+        font-size: 20px;
+        margin-top: -40px;
+        margin-bottom: 20px;
+      }
+      .table-container {
+        max-width: 100%;
+        margin: 0 auto;
+        background: linear-gradient(145deg, #f5f5f5, #e0e0e0);
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        padding: 20px;
+      }
+      .table-header-info {
+        background-color: #4caf50;
+        color: white;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-bottom: 2px solid #2c6d2f;
+        display: flex;
+        justify-content: space-between;
+        font-family: "Roboto", sans-serif;
+        letter-spacing: 1px;
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+        font-size: 14px;
+        font-family: "Roboto", sans-serif;
+        color: #333;
+      }
+      .table thead {
+        background-color: #4caf50;
+        color: white;
+      }
+      .table thead th {
+        padding: 12px;
+        text-align: center;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+      }
+      .factura-container {
+        margin: 20px 0;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      .factura-container:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+      }
+      .factura-header {
+        background-color: #4caf50;
+        color: white;
+        padding: 12px;
+        font-weight: bold;
+        text-align: center;
+        font-size: 12px;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+      }
+      .factura-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 0 20px;
+        font-size: 14px;
+      }
+      .factura-details div {
+        padding: 15px;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+      }
+      .factura-details div:hover {
+        background-color: #e0e0e0;
+      }
+      .factura-details strong {
+        color: #4caf50;
+        font-weight: bold;
+      }
+      .factura-details div span {
+        color: #333;
+        font-size: 14px;
+      }
+      .footer {
+        margin-top: 30px;
+        text-align: center;
+        color: #777;
+        font-size: 12px;
+        font-family: "Roboto", sans-serif;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="text-title">
+        ${imgTag}
+        <h1>
+          Reporte
+          <h3 class="circle-de">de</h3>
+        </h1>
+      </div>
+      <h2><em>Pagos</em></h2>
+    </div>
 
-        const lineX = 175; 
-        const lineTop = 30; 
-        const lineBottom = 100;
+    <div class="description">
+      A continuación, encontrarás un resumen detallado de los pagos que se han
+      realizado durante el periodo actual.
+    </div>
 
-        doc.strokeColor("#cccccc").lineWidth(1); 
-        doc.moveTo(lineX, lineTop) 
-            .lineTo(lineX, lineBottom) 
-            .stroke(); 
+    <div class="table-container">
+      <div class="table-header-info">
+        <div>NIT: ${data[0].nit}</div>
+        <div>Razón Social: ${data[0].razonsoc}</div>
+        <div>Fecha Emisión: ${data[0].fecemi}</div>
+      </div>
 
-        doc
-            .fontSize(34)
-            .font("Times-Bold")
-            .fillColor("#35653D")
-            .text("Reporte", 10, 45, { align: "center" });
-            
-        doc
-            .circle(358, 60, 16)
-            .fillColor("#0f3e22")
-            .fill();
-        doc
-            .fontSize(20)
-            .font("Times-Bold")
-            .fillColor("#ffffff")
-            .text("de", 170, 52, { align: "center" });
+      <!-- Generación de facturas con su propia sección -->
+      ${data .map( (item) => `
+      <div class="factura-container">
+        <div class="factura-header">
+          <h3>Factura: ${item.factura}</h3>
+        </div>
+        <div class="factura-details">
+          <div>
+            <strong>Fecha Factura:</strong><br />
+            <span>${item.fecfac}</span>
+          </div>
+          <div>
+            <strong>Fecha Vencimiento:</strong><br />
+            <span>${item.fecvcto}</span>
+          </div>
+          <div>
+            <strong>Total:</strong><br />
+            <span>${item.total}</span>
+          </div>
+          <div>
+            <strong>Retención:</strong><br />
+            <span>${item.retencion}</span>
+          </div>
+          <div>
+            <strong>Neto:</strong><br />
+            <span>${item.tot}</span>
+          </div>
+          <div>
+            <strong>Fecha Pago:</strong><br />
+            <span>${item.fecpago}</span>
+          </div>
+          <div>
+            <strong>Pago Factura:</strong><br />
+            <span>${item.pagfac}</span>
+          </div>
+          <div>
+            <strong>Valor Pago:</strong><br />
+            <span>${item.pagtot}</span>
+          </div>
+        </div>
+      </div>
+      ` ) .join("")}
+    </div>
 
-        doc
-            .fontSize(50)
-            .font("Times-Bold")
-            .fillColor("#0f3e22")
-            .text("Pagos", 35, 74, { align: "center" });
+    <div class="footer">
+      Este informe es generado automáticamente y es confidencial. Por favor, no
+      lo comparta sin autorización.
+    </div>
+  </body>
+</html>`;
 
-        doc
-            .fontSize(12)
-            .font("Times-Roman")
-            .fillColor("#333333")
-            .text(
-                "Encontrarás a continuación un compendio de los pagos realizados a proveedores durante el periodo actual.",
-                50,
-                140,
-                { align: "center", width: 500 }
-            );
+  await page.setContent(htmlContent, {
+    waitUntil: "Reporte de Pagos Coocafisa-"`${data[0].fecemi}`,
+  });
+  const pdfBuffer = await page.pdf({
+    format: "A4",
+    printBackground: true,
+    margin: {
+      top: "20px",
+      bottom: "20px",
+      left: "20px",
+      right: "20px",
+    },
+    scale: 0.8,
+  });
 
-            const tableTop = 180;
-            const itemSpacing = 20;
-            const tableWidth = 575; // Ancho total del espacio disponible para la tabla
-            const columnWidths = [80, 60, 80, 80, 60, 60, 60, 80, 80, 70]; // Ancho inicial de columnas
-            
-            // Ajustar proporciones para que encajen dentro de tableWidth
-            const totalWidth = columnWidths.reduce((acc, w) => acc + w, 0);
-            const scaleFactor = tableWidth / totalWidth;
-            const adjustedWidths = columnWidths.map((width) => width * scaleFactor); // Ajustar los anchos
-            
-            // Dibujar fondo para encabezados
-            doc
-                .fillColor("#a8d08d")
-                .rect(10, tableTop - 15, tableWidth, 40)
-                .fill();
-            
-            // Encabezados de la tabla
-            const headers = [
-                "Nit",
-                "Factura",
-                "Fecha Factura",
-                "Fecha Vencimiento",
-                "Total",
-                "Retención",
-                "Neto",
-                "Fecha Pago",
-                "Pago Factura",
-                "Valor Pago",
-            ];
-            
-            // Dibujar encabezados
-            let colXPos = 10; // Margen izquierdo
-            doc.fontSize(10).fillColor("#323e2a");
-            
-            headers.forEach((header, i) => {
-                doc.text(header, colXPos, tableTop, {
-                    align: "center",
-                    width: adjustedWidths[i], // Usar ancho ajustado
-                });
-                colXPos += adjustedWidths[i]; // Incrementar posición según el ancho ajustado
-            });
-            
-            // Dibujar filas de datos
-            let rowTop = tableTop + 35;
-            
-            data.forEach((item) => {
-                doc.fillColor("#333333").fontSize(9); 
-            
-                const values = [
-                    item.nit,
-                    item.factura,
-                    item.fecfac,
-                    item.fecvcto,
-                    item.total,
-                    item.retencion,
-                    item.tot,
-                    item.fecpago,
-                    item.pagfac,
-                    item.pagtot,
-                ];
-            
-                colXPos = 10; // Reiniciar posición horizontal para cada fila
-                values.forEach((value, i) => {
-                    doc.text(value, colXPos, rowTop, {
-                        align: "center",
-                        width: adjustedWidths[i], // Usar ancho ajustado
-                    });
-                    colXPos += adjustedWidths[i]; // Incrementar posición según el ancho ajustado
-                });
-            
-                rowTop += itemSpacing; // Incrementar posición vertical para la siguiente fila
-            });
-            
-            // Texto final del informe
-            doc
-                .fillColor("#777777")
-                .fontSize(9) // Ajustar fuente para mensajes finales
-                .text(
-                    "Este informe es generado automáticamente y es confidencial.",
-                    50,
-                    rowTop + 40,
-                    { align: "center", width: tableWidth }
-                );
-            
-            doc.end();
-            
-    });
+  await browser.close();
+  return pdfBuffer;
 };
 
-const generarResumenPDF = (data) => {
-    return new Promise((resolve, reject) => {
-        const doc = new PDFDocument();
-        const buffers = [];
+const generarResumenPDF = async (data) => {
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
 
-        doc.on('data', buffers.push.bind(buffers));
-        doc.on('end', () => {
-            resolve(Buffer.concat(buffers));
-        });
+  const imgTag = `<img src="data:image/png;base64,${fs
+    .readFileSync(path.resolve("public/images/Logo.cooperativa.png"))
+    .toString("base64")}" alt="Logo" />`;
 
-        doc.fontSize(20).fillColor('#007BFF').text('Resumen de Destinatarios', { align: 'center', underline: true });
-        doc.moveDown(1.5);
+  const htmlContent = `
+  <!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reporte de Pagos a Proveedores</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f7f6;
+        color: #333;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .header img {
+        width: 150px;
+        margin-right: 50px;
+      }
+      .text-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .header h1 {
+        color: #35653d;
+        font-size: 50px;
+        margin-top: -50px;
+      }
+      .header h2 {
+        color: #0f3e22;
+        font-size: 95px;
+        margin-top: -130px;
+      }
+      .header h3 {
+        color: #ffffff;
+        font-size: 28px;
+        margin-right: 200px;
+      }
+      .circle-de {
+        background: #0f3e22;
+        width: 45px;
+        border-radius: 20px;
+        margin-top: -45px;
+      }
+      .description {
+        text-align: center;
+        color: #333;
+        font-size: 20px;
+        margin-top: -40px;
+        margin-bottom: 20px;
+      }
+      .table-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .table-header-info {
+        background-color: #4caf50;
+        color: white;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-bottom: 2px solid #2c6d2f;
+        display: flex;
+        justify-content: space-between;
+        font-family: "Roboto", sans-serif;
+        letter-spacing: 1px;
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+      }
+      .table thead {
+        background-color: #35653d;
+        color: white;
+      }
+      .table thead th {
+        padding: 12px 15px;
+        font-size: 16px;
+        text-transform: uppercase;
+      }
+      .table tbody tr {
+        transition: background-color 0.3s ease;
+      }
+      .table tbody tr:nth-child(even) {
+        background-color: #f4f7f6;
+      }
+      .table tbody tr:hover {
+        background-color: #e1f3e0;
+      }
+      .table tbody td {
+        padding: 12px 15px;
+        font-size: 14px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+      }
+      .table tbody td.highlight {
+        font-weight: bold;
+        color: #35653d;
+      }
+      .footer {
+        margin-top: 30px;
+        text-align: center;
+        color: #777;
+        font-size: 12px;
+        font-family: "Roboto", sans-serif;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="text-title">
+        ${imgTag}
+        <h1>
+          Reporte
+          <h3 class="circle-de">de</h3>
+        </h1>
+      </div>
+      <h2><em>Pagos</em></h2>
+    </div>
 
-        const tableTop = 150;
-        const itemSpacing = 25;
-        const headers = ["NIT", "Razón Social", "Correo"];
+    <div class="description">
+      A continuación, encontrarás un resumen detallado de los proveedores
+      notificados por pagos realizados durante el periodo actual.
+    </div>
 
-        doc.fillColor('#FFFFFF').fontSize(12).rect(50, tableTop - 10, 500, 20).fill('#007BFF');
-        headers.forEach((header, i) => {
-            doc.fillColor('#FFFFFF').text(header, 55 + i * 160, tableTop, { width: 160, align: 'center' });
-        });
+    <div class="table-container">
+      <div class="table-header-info">
+        <div>Fecha Emisión: ${data[0].fecemi}</div>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nit</th>
+            <th>Razón Social</th>
+            <th>Factura</th>
+            <th>Fecha Factura</th>
+            <th>Fecha Pago</th>
+            <th>Correo</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data .map( (item) => `
+          <tr>
+            <td>${item.nit}</td>
+            <td>${item.razonsoc}</td>
+            <td>${item.factura}</td>
+            <td>${item.fecfac}</td>
+            <td>${item.fecpago}</td>
+            <td>${item.correo}</td>
+          </tr>
+          ` ) .join("")}
+        </tbody>
+      </table>
+    </div>
 
-        let rowTop = tableTop + 20;
-        data.forEach(item => {
-            doc.fillColor('#FFFFFF').rect(50, rowTop - 10, 500, 20).fill('#F2F2F2');
-            doc.fillColor('#333333').text(item.nit, 55, rowTop, { width: 160, align: 'center' });
-            doc.text(item.razonsoc, 215, rowTop, { width: 160, align: 'center' });
-            doc.text(item.correo, 375, rowTop, { width: 180, align: 'center' });
-            rowTop += itemSpacing;
-        });
+    <div class="footer">Este informe es generado automáticamente.</div>
+  </body>
+</html>`;
 
-        doc.fillColor('#777777').fontSize(10).text('Este informe es generado automáticamente y es confidencial.', 0, rowTop + 40, { align: 'center' });
+  await page.setContent(htmlContent, {
+    waitUntil: "Reporte de Pagos a Proveedores-"`${data[0].fecemi}`,
+  });
+  const pdfBuffer = await page.pdf({
+    format: "A4",
+    printBackground: true,
+    margin: {
+      top: "20px",
+      bottom: "20px",
+      left: "20px",
+      right: "20px",
+    },
+    scale: 0.8,
+  });
 
-        doc.end();
-    });
+  await browser.close();
+  return pdfBuffer;
 };
-
 module.exports = { generarReportePDF, generarResumenPDF };
-

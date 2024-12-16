@@ -43,6 +43,7 @@ export const getSession = async () => {
       sessionData = response.data;
 
       sessionStorage.setItem('SessionData', JSON.stringify(sessionData));
+      console.log('Sesión iniciada:', sessionData);
     }
 
     if (sessionData) {
