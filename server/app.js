@@ -25,12 +25,8 @@ const redisClient = createClient({
       connectTimeout: 10000, 
       reconnectStrategy: (retries) => {
           if (retries > 5) {
-              console.error('Máximo de intentos de reconexión alcanzado.');
               return new Error('No se pudo conectar a Redis después de varios intentos.');
           }
-          console.log(`Intentando reconectar a Redis... (${retries})`);
-          console.log(`Intentando conectar a Redis en: ${process.env.REDIS_URL}`);
-
           return Math.min(retries * 100, 3000);
       },
   },

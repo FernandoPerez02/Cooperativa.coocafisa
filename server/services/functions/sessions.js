@@ -3,6 +3,9 @@ const router = express.Router();
 
 router.get('/session', (req, res) => {
   if (req.session && req.session.name) {
+    console.log('Datos de sesión:', req.session.name, req.session.name,
+      req.session.role,
+      req.session.cookie.expires,);
       return res.json({ 
         isAuthenticated: true,
         user: req.session.name,
@@ -10,7 +13,11 @@ router.get('/session', (req, res) => {
         expiration: req.session.cookie.expires,
        });
   } else {
-      return res.json({ isAuthenticated: false, user: null });
+    console.log('No hay sesión iniciada.', req.session, req.session.name);
+    console.log('Datos de sesión:', req.session.name,
+      req.session.role,
+      req.session.cookie.expires,);
+    return res.json({ isAuthenticated: false, user: null });
   }
 });
 
