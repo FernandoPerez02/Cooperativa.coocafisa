@@ -31,12 +31,13 @@ const redisClient = createClient({
       },
   },
   url: process.env.REDIS_URL,
+  legacyMode: true,
 });
 
 async function initializeRedis() {
   try {
-      await redisClient.connect();
-      console.log('Conectado a Redis exitosamente.');
+      (await redisClient.connect()).catch(console.error)
+      console.log('Conectado a Redis cexitosamente.');
   } catch (err) {
       console.error('Error crítico al conectar a Redis:', err.message);
   }
@@ -46,7 +47,9 @@ initializeRedis();
 
 app.use(
   session({
-    store: new RedisStore({ client: redisClient }),
+    store: new RedisStore({ client: redisClient,
+      ttl: 600
+     }),
     key: "session_cookie_name",
     secret: process.env.SESSION_SECRET || "esto es secreto",
     resave: false,
@@ -55,7 +58,7 @@ app.use(
       httpOnly: true,
       secure: true,
       maxAge: 1000 * 60 * 10,
-      sameSite: "none",
+      sameSite: "lax",
     },
   })
 );
