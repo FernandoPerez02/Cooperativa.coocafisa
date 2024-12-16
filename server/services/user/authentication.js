@@ -69,13 +69,20 @@ router.post('/login',
       req.session.name = usuario.nit;
       req.session.role = usuario.rol;
       req.session.lastActivity = Date.now();
-      console.log("Datos de sesión:", req.session.name, req.session.role, req.session.lastActivity );
 
-      const redirectPath = usuario.rol === "Administrador"
+      req.session.save((err) => {
+        if (err) {
+          console.error("Error al guardar la sesión:", err);
+          return res.status(500).json({ errors: "Error interno del servidor." });
+        }
+
+        const redirectPath = usuario.rol === "Administrador"
         ? `/home`
         : "/home/suppliers/invoices";
 
-      return res.status(200).json({ redirect: redirectPath });
+        console.log("Datos de sesión:", req.session.name, req.session.role, req.session.lastActivity );
+        return res.status(200).json({ redirect: redirectPath });
+        });
     } catch (error) {
       return res.status(500).json({ errors: "Error en el servidor. Inténtalo de nuevo más tarde.", redirect: "/" });
     }

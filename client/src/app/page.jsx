@@ -4,11 +4,13 @@ import "@public/styles/formusers.css";
 import { auth } from "@/api/auth/authService";
 import {Loader} from "@/components/common/preloader";
 import { saveSession } from "../api/authenticated/sessionService";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
     const [type, setType] = useState(false);
     const [alert, setAlert] = useState(null);
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
     const [errores, setErrores] = useState({
         nit: false,
         password: false,
@@ -26,7 +28,7 @@ export default function Login() {
     useEffect(() => {
         if (type === "success") {
             saveSession();
-            console.log("Sesión iniciada exitosamente.");
+            setFormData({nit: "", password: ""});
         }
     }, [type]);
 
@@ -54,7 +56,7 @@ export default function Login() {
     }
 
     if (formularioValido) {
-        await auth(event, setAlert, setLoading, setType);
+        await auth(event, setAlert, setLoading, setType, router);
     } else {
         setLoading(false);
     }

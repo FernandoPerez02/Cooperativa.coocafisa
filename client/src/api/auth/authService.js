@@ -5,11 +5,6 @@ export const auth = async (event, setAlert, setLoading, setType) => {
   const nit = event.target.nit.value.trim();
   const password = event.target.password.value.trim();
 
-  const clearInputs = () => {
-    event.target.nit.value = "";
-    event.target.password.value = "";
-  };
-
   try {
     const res = await api.post("/auth/login", { nit, password });
     const data = res.data;
@@ -18,7 +13,8 @@ export const auth = async (event, setAlert, setLoading, setType) => {
       setType("success");
       setAlert("");
       setTimeout(() => {
-        clearInputs();
+        event.target.nit.value = "";
+        event.target.password.value = "";
         setLoading(false);
         window.location.href = data.redirect;
       }, 2000);
@@ -27,8 +23,14 @@ export const auth = async (event, setAlert, setLoading, setType) => {
   } catch (error) {
     setType("error");
   if (error.response) {
-    const errorData = error.response.data.errors || [];
+    const errorData = error.response.data.errors || [400,401,403,404,500];
+    const errorRedirect = error.response.data.redirect;
     setAlert(errorData ||"Credenciales incorrectas.");
+    setTimeout(() => {
+      if (errorRedirect) {
+          window.location.href = errorRedirect;
+      }
+  }, 2000);
   } else if (error.request) {
     setAlert("Nuestro servidor está fuera de servicio. Intenta más tarde.");
   } else {
@@ -36,9 +38,10 @@ export const auth = async (event, setAlert, setLoading, setType) => {
   } 
 } finally {
   setTimeout(() => {
+    event.target.nit.value = "";
+    event.target.password.value = "";
     setAlert("");
     setType("");
-    clearInputs();
     setLoading(false);
   }, 2000);
 }

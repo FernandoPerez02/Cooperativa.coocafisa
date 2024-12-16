@@ -40,7 +40,7 @@ redisClient.ping()
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
       maxAge: 1000 * 60 * 10,
     },
   });
@@ -83,7 +83,6 @@ const emailsProgrammer = require("./services/user/admin/emailsProgrammer");
 app.use("/emailsprogrammer", emailsProgrammer);
 
 const { router: shedulEmails, scheduleJob } = require("./services/user/admin/shedulEmails");
-const { connect } = require("./connectionBD/db");
 app.use("/shedulEmails", shedulEmails);
 scheduleJob();
 
