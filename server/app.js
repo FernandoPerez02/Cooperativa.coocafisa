@@ -31,10 +31,9 @@ redisClient.ping()
   });
 
   var sessionMiddleware = session({
-    store: new RedisStore({ client: redisClient, ttl: 10000 }),
+    store: new RedisStore({ client: redisClient, ttl: 1000 * 60 * 10 }),
     key: "session_cookie",
     secret: process.env.SESSION_SECRET,
-    resave: false,
     maxAge: 1000 * 60 * 10,
     resave: false,
     saveUninitialized: false,
@@ -44,6 +43,7 @@ redisClient.ping()
       maxAge: 1000 * 60 * 10,
     },
   });
+  app.set('trust proxy', 1);
   app.use(sessionMiddleware);
 
 app.use((req, res, next) => { 
