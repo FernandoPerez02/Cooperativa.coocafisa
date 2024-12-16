@@ -22,7 +22,7 @@ app.use(express.json());
 
 const redisClient = createClient({
   socket: {
-      connectTimeout: 10000, 
+      connectTimeout: 15000, 
       reconnectStrategy: (retries) => {
           if (retries > 5) {
               return new Error('No se pudo conectar a Redis después de varios intentos.');
