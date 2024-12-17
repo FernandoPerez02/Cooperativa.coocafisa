@@ -24,14 +24,14 @@ const redisClient = new redis(process.env.REDIS_URL);
 
 redisClient.ping()
   .then((result) => {
-    console.log('Conexión a Redis exitosa:', result);  // Debería devolver "PONG"
+    console.log('Conexión a Redis exitosa:', result); 
   })
   .catch((err) => {
     console.error('Error al conectar con Redis:', err);
   });
 
 var sessionMiddleware = session({
-  store: new RedisStore({ client: redisClient, ttl: 1000 * 60 * 10 }),  // 10 minutos
+  store: new RedisStore({ client: redisClient, ttl: 1000 * 60 * 10 }),
   key: 'session_cookie',
   secret: process.env.SESSION_SECRET,
   resave: true,
@@ -39,7 +39,8 @@ var sessionMiddleware = session({
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 1000 * 60 * 10,  // 10 minutos
+    maxAge: 1000 * 60 * 10,
+    sameSite: 'strict',
   },
 });
 
@@ -53,7 +54,7 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   if (req.session && req.session.name) {
-    req.session.lastActivity = Date.now();  // Actualiza la actividad de la sesión
+    req.session.lastActivity = Date.now();
   }
   next();
 });
@@ -89,6 +90,25 @@ scheduleJob();
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: 'Error inesperado en el servidor.' });
+});
+
+app.get("/", (req, res) => {
+  if (req.session.views) {
+    req.session.views++;
+  } else {
+    req.session.views = 1;
+  }
+  res.send(`Número de visitas: ${req.session.views}`);
+});
+
+app.get('/api/session', (req, res) => {
+  if (!req.session.visits) {
+    req.session.visits = 1;
+  } else {
+    req.session.visits += 1;
+  }
+
+  res.json({ message: 'Sesión activa', visits: req.session.visits });
 });
 
 const port = process.env.PORT || 3001;

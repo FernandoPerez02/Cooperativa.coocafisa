@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/session', (req, res) => {
+  console.log('Datos de sesión:', req.session.name, req.session.role, req.session.cookie.expires);
   if (req.session && req.session.name) {
-    console.log('Datos de sesión:', req.session.name, req.session.role, req.session.cookie.expires);
+    console.log('Datos de sesión activas:', req.session.name, req.session.role, req.session.cookie.expires);
     return res.json({ 
       isAuthenticated: true,
       user: req.session.name,
