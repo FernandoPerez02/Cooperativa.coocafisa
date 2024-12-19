@@ -19,7 +19,6 @@ export function AuthProvider({ children }) {
             try {
                 
                 const { isAuthenticated, user, role } = await getSession();
-                console.log("Estos son los datos de la session: ", user, isAuthenticated, role);
 
                 if (isAuthenticated) {
                     setUser(user);
@@ -27,12 +26,11 @@ export function AuthProvider({ children }) {
                 } else {
                     resetAuth();
                 }
-            } catch {
+            } catch (error){
+                console.log('Error al obtener la sesión:', error);
                 resetAuth();
             } finally {
-                setTimeout(() => {
                     setLoading(false);
-                }, 3000);
             }
         };
         checkSession();

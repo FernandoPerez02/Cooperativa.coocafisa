@@ -51,7 +51,7 @@ export const auth = async (event, setAlert, setLoading, setType) => {
 export const logout = async (event,setAlert, setType, setLoading) => {
   event.preventDefault();
   try {
-    const response = await api.get('/managerSession/logout');
+    const response = await api.post('/managerSession/logout');
     const data = response.data;
     if (response.status === 200) {
       setType("success");
@@ -60,16 +60,10 @@ export const logout = async (event,setAlert, setType, setLoading) => {
         setAlert("");
         window.location.href = data.redirect;
         setLoading(false);
-        sessionStorage.removeItem('SessionData')
       }, 3000);
     } 
   } catch (error) {
-    errorData = error.response.data.error || error.response.data.errors;
-    if (error.response && error.response.status === 400) { 
-      setAlert(errorData);
-    } else {
-      setAlert("Error al cerrar sesión.");
-    }
+    setAlert("Error al cerrar sesión.");
     setTimeout(() => {
       setType("error");
       setAlert("");

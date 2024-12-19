@@ -2,11 +2,10 @@ const express = require("express");
 const router = express.Router();
 const queryDatabase = require("../../../connectionBD/queryDatabase");
 const {formatDate} = require("../../functions/helpers")
-const { isAuthenticated } = require('../../functions/helpers');
-const { roleMiddleware } = require('../../functions/helpers');
+const { roleMiddleware } = require('../authMiddleware');
 const { formatPesos } = require("../../functions/helpers");
 
-router.get("/emails", isAuthenticated, roleMiddleware('Administrador'), async (req, res) => {
+router.get("/emails", roleMiddleware('Administrador'), async (req, res) => {
     try {
         const query = `SELECT pagopro.nit, factura, str_to_Date(fecpago, '%e-%b-%y') AS fecpago, razonsoc, correo
         FROM proveedor INNER JOIN pagopro ON proveedor.nit = pagopro.nit
@@ -22,7 +21,7 @@ router.get("/emails", isAuthenticated, roleMiddleware('Administrador'), async (r
     }
 });
 
-router.get('/suppliers', async (req, res) => {
+router.get('/suppliers', roleMiddleware('Administrador'), async (req, res) => {
     try {
         const query = 'SELECT nit, razonsoc, direcc, correo, telefono, celular, fecha_registro FROM proveedor';
         const results = await queryDatabase(query);
@@ -35,7 +34,7 @@ router.get('/suppliers', async (req, res) => {
     }
 });
 
-router.get('/paymentsSuppliers', async (req, res) => {
+router.get('/paymentsSuppliers', roleMiddleware('Administrador'), async (req, res) => {
     try {
         const query = `SELECT nit, factura, fecfac, fecvcto, total, retencion, tot,
 	        fecpago, pagfac, pagtot FROM pagopro WHERE fecpago IS NOT NULL`;
@@ -50,7 +49,6 @@ router.get('/paymentsSuppliers', async (req, res) => {
         }));
         return res.json(formatedResults);
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ error: "Error en la solicitud al servidor. Intenta de nuevo mas tarde." });
     }
 });
@@ -72,7 +70,6 @@ router.get('/pendingEmails', async (req, res) => {
         }));
         return res.json(formatedResults);
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ error: "Error en la solicitud al servidor. Intenta de nuevo mas tarde." });
     }
 });

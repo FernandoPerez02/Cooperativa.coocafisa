@@ -135,6 +135,7 @@ dist
 *.PDF
 .env
 .env.local
+.testAuth
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 

@@ -8,9 +8,9 @@ export function ProtectedRoute({ children, allowedRoles = []}) {
     useEffect(() => {
         if (!loading) {
             if (!user) {
-                window.location.href = "/";
+                console.log('No estás autenticado.');
             } else if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
-                window.location.href = "/";
+                console.log('No tiene permiso para acceder a esta ruta.');
             }
         }
     }, [user, loading, role, allowedRoles]);

@@ -64,7 +64,7 @@ router.post("/schedulEmailings", (req, res) => {
             return "No hay registros para el reporte.";
           }
         } catch (error) {
-          console.log(error);
+          return "Error al enviar el reporte.";
         }
       });
   

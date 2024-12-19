@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../connectionBD/db');
 const bcrypt = require('bcrypt');
+const { roleMiddleware } = require('./authMiddleware');
 
-router.post('/newUser', async (req, res) => {
+router.post('/newUser', roleMiddleware('Administrador'), async (req, res) => {
     const { nit, rol, pass, passcon } = req.body;
     try {
         const [regusuario] = await pool.query(`SELECT nit, proveedor.proveedor_id FROM usuario

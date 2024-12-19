@@ -3,6 +3,7 @@ const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const pool = require("../../connectionBD/db");
 const moment = require('moment');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 const validateeUser = async (nit) => {
@@ -11,6 +12,20 @@ const validateeUser = async (nit) => {
     usuario INNER JOIN proveedor ON usuario.proveedor_id = proveedor.proveedor_id WHERE nit = ?`, [nit]);
   return resultUser.length > 0 ? resultUser[0] : null;
   }
+
+function generateTokenValidation (user) {
+    const payload = {
+        name: user.nit,
+        role: user.rol,
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN
+    });
+    return token;
+    
+}
+
 router.post('/login',
   [
     body("nit").isLength({ min: 5 }).withMessage("Una de las credenciales ingresadas no es correcta."),
@@ -66,23 +81,17 @@ router.post('/login',
 
       await pool.query("UPDATE usuario SET intentos_fallidos = 0 WHERE proveedor_id = ?", [usuario.proveedor_id]);
 
-      req.session.name = usuario.nit;
-      req.session.role = usuario.rol;
-      req.session.lastActivity = Date.now();
-
-      req.session.save((err) => {
-        if (err) {
-          console.error("Error al guardar la sesión:", err);
-          return res.status(500).json({ errors: "Error interno del servidor." });
-        }
-
-        const redirectPath = usuario.rol === "Administrador"
+      const token = generateTokenValidation(usuario);
+      const redirectPath = usuario.rol === "Administrador"
         ? `/home`
         : "/home/suppliers/invoices";
-
-        console.log("Datos de sesión:", req.session.name, req.session.role, req.session.lastActivity );
-        return res.status(200).json({ redirect: redirectPath });
-        });
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 1000 * 60 * 10,
+        })
+        res.status(200).json({ redirect: redirectPath });
     } catch (error) {
       return res.status(500).json({ errors: "Error en el servidor. Inténtalo de nuevo más tarde.", redirect: "/" });
     }

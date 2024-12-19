@@ -23,8 +23,6 @@ const Table = ({ data, keysToSearch, fields, title, headers, expandedData, error
     setFilteredData(data);
   }, [data]); 
 
-  console.log(filteredData)
-
   const getPageRange = () => {
     const start = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     const end = Math.min(totalPages, start + maxVisiblePages - 1);

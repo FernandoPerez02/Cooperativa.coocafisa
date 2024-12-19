@@ -10,25 +10,9 @@ function formatDate(dateString) {
     return date.toLocaleDateString('es-ES', options);
 }
 
-const isAuthenticated = (req, res, next) => {
-    if (!req.session || !req.session.name) {
-        return res.status(404).json({ errors: "No estás autenticado." });
-    }
-        return next();
-    }
-
-const roleMiddleware = (role) => (req, res, next) => {
-    if (!req.session || !req.session.role) {
-        return res.status(404).json({ errors: "No tienes permisos para acceder a esta ruta.", redirect: "/" });
-    } else if (req.session.role !== role) {
-        return res.status(403).json({ errors: "No tienes el rol adecuado para acceder a esta ruta." });
-    }
-    next();
-};
-
 function generarToken () {
-    return crypto.randomBytes(20).toString('hex');
-}
+    return crypto.randomBytes(32).toString('hex');
+};
 
 function formatPesos (number) {
     return new Intl.NumberFormat('es-Co', {
@@ -41,4 +25,4 @@ function formatPesos (number) {
     }).format(number);
 }
 
-module.exports = { formatDate, isAuthenticated, roleMiddleware, generarToken, formatPesos };
+module.exports = { formatDate, generarToken, formatPesos };
