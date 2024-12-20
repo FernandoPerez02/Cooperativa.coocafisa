@@ -87,10 +87,10 @@ router.post('/login',
         : "/home/suppliers/invoices";
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none',
+            secure: process.env.NODE_ENV,
+            sameSite: 'lax',
             maxAge: 1000 * 60 * 10,
-        })
+        });
         res.status(200).json({ redirect: redirectPath });
     } catch (error) {
       return res.status(500).json({ errors: "Error en el servidor. Inténtalo de nuevo más tarde.", redirect: "/" });

@@ -27,7 +27,6 @@ export function AuthProvider({ children }) {
                     resetAuth();
                 }
             } catch (error){
-                console.log('Error al obtener la sesión:', error);
                 resetAuth();
             } finally {
                     setLoading(false);

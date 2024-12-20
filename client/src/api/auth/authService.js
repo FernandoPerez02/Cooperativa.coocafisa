@@ -1,4 +1,4 @@
-import { api } from "../server";
+import { api } from "../serverApi";
 
 export const auth = async (event, setAlert, setLoading, setType) => {
   event.preventDefault();
@@ -8,7 +8,6 @@ export const auth = async (event, setAlert, setLoading, setType) => {
   try {
     const res = await api.post("/auth/login", { nit, password });
     const data = res.data;
-
     if (res.status === 200) {
       setType("success");
       setAlert("");
@@ -47,11 +46,10 @@ export const auth = async (event, setAlert, setLoading, setType) => {
 }
 };
 
-
 export const logout = async (event,setAlert, setType, setLoading) => {
   event.preventDefault();
   try {
-    const response = await api.post('/managerSession/logout');
+    const response = await api.post('/logout');
     const data = response.data;
     if (response.status === 200) {
       setType("success");
@@ -60,7 +58,7 @@ export const logout = async (event,setAlert, setType, setLoading) => {
         setAlert("");
         window.location.href = data.redirect;
         setLoading(false);
-      }, 3000);
+      }, 1000);
     } 
   } catch (error) {
     setAlert("Error al cerrar sesión.");

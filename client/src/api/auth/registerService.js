@@ -1,4 +1,4 @@
-import { api } from "../server";
+import { api } from "../serverApi";
 export const adduser = async (event, setAlert, setType, setLoading) => {
     event.preventDefault();
     const nit = event.target.nit.value;  

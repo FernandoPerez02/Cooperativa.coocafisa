@@ -1,5 +1,5 @@
 "use client"
-import { api } from "../server";
+import { api } from "../serverApi";
 
 export const queryEmails = async (setError) => {
     try {

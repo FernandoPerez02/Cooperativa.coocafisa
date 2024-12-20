@@ -49,6 +49,11 @@ const { router: shedulEmails, scheduleJob } = require('./services/user/admin/she
 app.use('/shedulEmails', verifyToken, shedulEmails);
 scheduleJob();
 
+app.post('/logout', (req, res) => {
+  res.clearCookie('token', { path: '/' });
+  res.status(200).json({ message: 'Serrando sesión...', redirect: '/' });
+});
+
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: 'Error inesperado en el servidor.' });

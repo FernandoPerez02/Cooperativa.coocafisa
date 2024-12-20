@@ -1,4 +1,4 @@
-import { api } from "../server";
+import { api } from "../serverApi";
 
 export const getSession = async () => {
   try {
@@ -13,9 +13,6 @@ export const getSession = async () => {
         const totalSeconds = Math.floor(timeRemaining / 1000);
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = totalSeconds % 60;
-
-        console.log('Tiempo restante:', minutes, seconds);
-
         return {
           ...sessionData,
           timeRemaining: {
