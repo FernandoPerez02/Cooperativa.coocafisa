@@ -87,8 +87,8 @@ router.post('/login',
         : "/home/suppliers/invoices";
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV,
-            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'None',
             maxAge: 1000 * 60 * 10,
         });
         res.status(200).json({ redirect: redirectPath });

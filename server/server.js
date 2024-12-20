@@ -10,6 +10,8 @@ app.use(cookieParser());
 dotenv.config({ path: './env/.env' });
 app.use(express.static('public'));
 
+app.set('trust proxy', 1);
+
 app.use(
   cors({
     origin: process.env.URL_CLIENT,
