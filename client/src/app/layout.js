@@ -20,9 +20,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="h-full">
-        <AuthProvider>
           {children}
-        </AuthProvider>
         <footer>
           <h5>
             <img src="/images/Drau.png" alt="imgautor" className="imgautors" />

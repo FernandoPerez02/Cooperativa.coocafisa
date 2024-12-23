@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from "react";
 import "@public/styles/table.css";
 import Search from "./search";
+import { Loader } from "./preloader";
 
 const ResultTable = ({ data, keysToSearch, title, headers, fields, error }) => {
   const [filteredData, setFilteredData] = useState(data);
   const [originalData, setOriginalData] = useState(data);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 10;
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -26,6 +28,9 @@ const ResultTable = ({ data, keysToSearch, title, headers, fields, error }) => {
   useEffect(() => {
     setOriginalData(data);
     setFilteredData(data);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   }, [data]);
 
   const handleFilter = (filtered) => {
@@ -57,6 +62,8 @@ const ResultTable = ({ data, keysToSearch, title, headers, fields, error }) => {
       </div>
       {error ? (
         <div className="error-message">{error}</div>
+      ) : loading ? (
+        <Loader/> 
       ) : filteredData.length === 0 ? (
         <div className="loading-message">No se encontraron registros...</div>
       ) : (

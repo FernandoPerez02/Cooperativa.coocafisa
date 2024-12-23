@@ -1,4 +1,4 @@
-import { api } from "../server";
+import { api } from "../serverApi";
 
 export const emailValidate = async (event, setAlert, setType, setLoading) => {
   event.preventDefault();

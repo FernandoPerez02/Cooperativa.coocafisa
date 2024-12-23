@@ -1,4 +1,4 @@
-import { api } from "../server";
+import { api } from "../serverApi";
 
 export const auth = async (event, setAlert, setLoading, setType) => {
   event.preventDefault();
@@ -8,9 +8,10 @@ export const auth = async (event, setAlert, setLoading, setType) => {
   try {
     const res = await api.post("/auth/login", { nit, password });
     const data = res.data;
-
     if (res.status === 200) {
       setType("success");
+      const token = data.token;
+      sessionStorage.setItem("Token", token);
       setAlert("");
       setTimeout(() => {
         event.target.nit.value = "";
@@ -47,11 +48,10 @@ export const auth = async (event, setAlert, setLoading, setType) => {
 }
 };
 
-
 export const logout = async (event,setAlert, setType, setLoading) => {
   event.preventDefault();
   try {
-    const response = await api.get('/managerSession/logout');
+    const response = await api.post('/logout');
     const data = response.data;
     if (response.status === 200) {
       setType("success");
@@ -59,17 +59,12 @@ export const logout = async (event,setAlert, setType, setLoading) => {
       setTimeout(() => {
         setAlert("");
         window.location.href = data.redirect;
+        sessionStorage.removeItem("Token");
         setLoading(false);
-        sessionStorage.removeItem('SessionData')
-      }, 3000);
+      }, 1000);
     } 
   } catch (error) {
-    errorData = error.response.data.error || error.response.data.errors;
-    if (error.response && error.response.status === 400) { 
-      setAlert(errorData);
-    } else {
-      setAlert("Error al cerrar sesión.");
-    }
+    setAlert("Error al cerrar sesión.");
     setTimeout(() => {
       setType("error");
       setAlert("");

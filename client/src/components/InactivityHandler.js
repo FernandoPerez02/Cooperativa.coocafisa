@@ -67,7 +67,7 @@ export default function InactivityHandler() {
 
   const handleLogout = async (event) => {
     event.preventDefault();
-    setSessionState("active");
+    setSessionState(false);
     setLoading(true);
     await logout(event, setAlert, setType, setLoading);
   };

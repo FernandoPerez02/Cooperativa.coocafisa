@@ -1,4 +1,4 @@
-import { api } from "../server";
+import { api } from "../serverApi";
 export const queryInvoices = async (setError) => {
   try {
     const response = await api.get("/queryIndex/invoices");

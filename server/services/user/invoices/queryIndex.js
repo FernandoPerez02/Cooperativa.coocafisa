@@ -2,11 +2,10 @@ const express = require("express");
 const router = express.Router();
 const queryDatabase = require("../../../connectionBD/queryDatabase");
 const {formatDate} = require("../../functions/helpers")
-const { isAuthenticated } = require('../../functions/helpers');
 const {formatPesos} = require('../../functions/helpers')
 
-router.get('/invoices',isAuthenticated, async (req, res) => {
-    const nit = req.session.name;
+router.get('/invoices', async (req, res) => {
+    const nit = req.user.name;
 
     if (!nit) {
         return res.status(401).json({ error: "No has iniciado sesión." });
@@ -36,8 +35,8 @@ router.get('/invoices',isAuthenticated, async (req, res) => {
     }
 });
 
-router.get('/invoicepayment', isAuthenticated, async (req, res) => {
-    const nit = req.session.name;
+router.get('/invoicepayment', async (req, res) => {
+    const nit = req.user.name;
 
     if (!nit) {
         return res.status(401).json({ error: "No has iniciado sesión." });
@@ -67,8 +66,8 @@ router.get('/invoicepayment', isAuthenticated, async (req, res) => {
     }
 });
 
-router.get('/invoicepending', isAuthenticated, async (req, res) => {
-    const nit = req.session.name;
+router.get('/invoicepending', async (req, res) => {
+    const nit = req.user.name;
 
     if (!nit) {
         return res.status(401).json({ error: "No has iniciado sesión." });

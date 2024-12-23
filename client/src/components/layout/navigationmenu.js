@@ -1,6 +1,6 @@
 "use client";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "@public/styles/menu.css";
 import { logout } from "@/api/auth/authService";
 import { Loader } from "@/components/common/preloader";

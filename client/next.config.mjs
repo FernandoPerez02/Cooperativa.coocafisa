@@ -14,6 +14,8 @@ const nextConfig = {
         chunkFilename: 'static/css/[id].css',
       }));
 
+      
+
     return config;
   },
 };

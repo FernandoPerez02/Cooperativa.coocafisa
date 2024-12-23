@@ -1,4 +1,4 @@
-import { api } from "../server";
+import { api } from "../serverApi";
 
 export const queryUsers = async (setError) => {
     try {
