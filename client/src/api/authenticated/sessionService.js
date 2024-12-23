@@ -5,14 +5,7 @@ export const getSession = async () => {
     const response = await api.get('/managerSession/session');
     const sessionData = response.data;
     if (sessionData?.expiration) {
-      const expirationDate = new Date(sessionData.expiration * 1000);
-      const currentTime = new Date();
-
-      if (expirationDate > currentTime) {
-        const timeRemaining = expirationDate - currentTime;
-        const totalSeconds = Math.floor(timeRemaining / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
+        const { minutes, seconds } = sessionData.expiration;
         return {
           ...sessionData,
           timeRemaining: {
@@ -23,7 +16,6 @@ export const getSession = async () => {
       } else {
         console.warn('La sesión ha expirado.');
       }
-    }
 
     return {
       isAuthenticated: false,
@@ -39,6 +31,17 @@ export const getSession = async () => {
       role: null,
       expiration: null,
     };
+  }
+};
+
+export const sessionToken = async () => {
+  try {
+    if (sessionStorage.getItem("Token")) {
+      return sessionStorage.getItem("Token");
+    }
+    return null;
+  } catch (error) {
+    return null;
   }
 };
 

@@ -1,11 +1,24 @@
 const jwt = require('jsonwebtoken');
 function verifyToken (req, res, next) {
-    const token = req.cookies.token;
-    if (!token) {
-        return res.status(403).json({ errors: "No estás autenticado. Token no encontrado." });
+    let token = null;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.split(' ')[1];
+        console.log("Token de header: ", token);
+        console.log("token hasde: ", req.headers.authorization);
     }
+
+    if (!token && req.cookies && req.cookies.token) {
+        token = req.cookies.token;
+        console.log("Token de cookie: ", token);
+    }
+
+    if (!token) {
+        return res.status(403).json({ error: 'No estás autenticado. Token no encontrado.' });
+    }
+
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("Token decodificado: ",decoded);
         req.user = decoded;
         next();
     } catch (error) {

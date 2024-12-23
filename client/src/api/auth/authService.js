@@ -10,6 +10,8 @@ export const auth = async (event, setAlert, setLoading, setType) => {
     const data = res.data;
     if (res.status === 200) {
       setType("success");
+      const token = data.token;
+      sessionStorage.setItem("Token", token);
       setAlert("");
       setTimeout(() => {
         event.target.nit.value = "";
@@ -57,6 +59,7 @@ export const logout = async (event,setAlert, setType, setLoading) => {
       setTimeout(() => {
         setAlert("");
         window.location.href = data.redirect;
+        sessionStorage.removeItem("Token");
         setLoading(false);
       }, 1000);
     } 

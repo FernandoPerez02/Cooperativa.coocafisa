@@ -2,9 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+
 const { verifyToken } = require('./services/user/authMiddleware');
 const app = express();
 app.use(cookieParser());
+app.use(morgan('dev'));
 
 
 dotenv.config({ path: './env/.env' });
