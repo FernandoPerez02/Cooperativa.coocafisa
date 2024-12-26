@@ -16,10 +16,11 @@ export default function InactivityHandler() {
   const expirationTime = useCallback(async () => {
     try {
       const sessionData = await getSession();
+      console.log("sessionData: ", sessionData.timeRemaining);
       if (sessionData?.timeRemaining) {
-        const { minute, seconds } = sessionData.timeRemaining;
+        const { minutes, seconds } = sessionData.timeRemaining;
         setTimer({
-          minutes: String(minute).padStart(2, "0"),
+          minutes: String(minutes).padStart(2, "0"),
           seconds: String(seconds).padStart(2, "0"),
         });
       } else {
@@ -71,6 +72,8 @@ export default function InactivityHandler() {
     setLoading(true);
     await logout(event, setAlert, setType, setLoading);
   };
+
+  console.log("tiempo  de la session: ", timer);
 
   const renderAlert = () => {
     if (sessionState === "inactive") {
