@@ -16,7 +16,6 @@ export default function InactivityHandler() {
   const expirationTime = useCallback(async () => {
     try {
       const sessionData = await getSession();
-      console.log("sessionData: ", sessionData.timeRemaining);
       if (sessionData?.timeRemaining) {
         const { minutes, seconds } = sessionData.timeRemaining;
         setTimer({
@@ -72,8 +71,6 @@ export default function InactivityHandler() {
     setLoading(true);
     await logout(event, setAlert, setType, setLoading);
   };
-
-  console.log("tiempo  de la session: ", timer);
 
   const renderAlert = () => {
     if (sessionState === "inactive") {

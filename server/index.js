@@ -1,4 +1,4 @@
-const express = require('express');
+/* const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
@@ -68,4 +68,10 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log('Servidor en ejecución.');
+}); */
+
+const app = require('../src/app');
+
+app.listen(app.get('port'), () => {
+  console.log('Server running on port', app.get('port'));
 });

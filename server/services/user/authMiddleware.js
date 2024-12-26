@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-function verifyToken (req, res, next) {
+async function verifyToken (req, res, next) {
     let token = null;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
         token = req.headers.authorization.split(' ')[1];
@@ -15,6 +15,19 @@ function verifyToken (req, res, next) {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const now = Math.floor(Date.now() / 1000);
+        const exp = decoded.exp;
+        const remainingTime = exp - now;
+
+        if (remainingTime < 5 * 60) {
+            const user = await validateUser(decoded.name);
+            if (!user) {
+                return res.status(401).json({ message: 'Unauthorized' });
+            }
+
+            const newToken = generateTokenValidation(user);
+            res.setHeader('Authorization', `Bearer ${newToken}`);
+        }
         req.user = decoded;
         next();
     } catch (error) {
