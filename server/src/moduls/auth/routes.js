@@ -9,7 +9,7 @@ router.get('/prueba', consult);
 
 async function consult(req, res, next) {
     try {
-        const items = await controller.consultUser(req.body);
+        const items = await controller.consultUser();
         request.success(req, res, items, 200);
     } catch (err) {
         next(err);

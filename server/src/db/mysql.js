@@ -32,9 +32,33 @@ function connectMysql() {
 }
 connectMysql();
 
-function query(table, data) {
+function query(table, fields, params = '1=1') {
     return new Promise((resolve, reject) => {
-        connection.query(`SELECT * FROM ${table} WHERE ${data}`, (err, result) => {
+        connection.query(`SELECT ${fields} FROM ${table} WHERE ${params}`, (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function insert(table, data) {
+    return new Promise((resolve, reject) => {
+        connection.query(`INSERT INTO ${table} SET ?`, data, (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function update(table, data, params) {
+    return new Promise((resolve, reject) => {
+        connection.query(`UPDATE ${table} SET ? WHERE ${params}`, data, (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function remove (table, params) {
+    return new Promise((resolve, reject) => {
+        connection.query(`DELETE FROM ${table} WHERE ${params}`, (err, result) => {
             return err ? reject(err) : resolve(result);
         });
     });
@@ -42,4 +66,7 @@ function query(table, data) {
 
 module.exports = {
     query,
+    insert,
+    update,
+    remove,
 };
